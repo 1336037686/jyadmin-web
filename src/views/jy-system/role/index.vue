@@ -3,10 +3,10 @@
     <el-card class="box-card" shadow="always">
       <el-form :inline="true" :model="queryForm" label-width="100px">
         <el-form-item label="角色名称：">
-          <el-input v-model="queryForm.name" placeholder="标签名称" />
+          <el-input v-model="queryForm.name" placeholder="角色名称" />
         </el-form-item>
         <el-form-item label="角色编码：">
-          <el-input v-model="queryForm.code" placeholder="标签编码" />
+          <el-input v-model="queryForm.code" placeholder="角色编码" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">查 询</el-button>
@@ -36,7 +36,14 @@
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="name" label="角色名称" />
         <el-table-column prop="code" label="角色编码" />
-        <el-table-column prop="description" label="角色描述" width="800" />
+        <el-table-column prop="sort" label="角色排序" />
+        <el-table-column prop="status" label="角色状态">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> 启 用 </el-tag>
+            <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> 禁 用 </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="description" label="角色描述" width="400" />
       </el-table>
     </el-card>
 
@@ -52,8 +59,9 @@
       />
     </div>
 
-    <jy-tag-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
-    <jy-tag-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <jy-role-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
+    <jy-role-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+
   </div>
 </template>
 
@@ -61,9 +69,11 @@
 import roleApi from '@/api/jy-role'
 import JyTagForm from '@/views/jy-blog/tag/tag-form'
 import JyTagDetail from '@/views/jy-blog/tag/tag-detail'
+import JyRoleDetail from "@/views/jy-system/role/jy-role-detail";
+import JyRoleForm from "@/views/jy-system/role/jy-role-form";
 export default {
   name: 'JyRole',
-  components: { JyTagDetail, JyTagForm },
+  components: {JyRoleForm, JyRoleDetail, JyTagDetail, JyTagForm },
   data() {
     return {
       queryForm: {

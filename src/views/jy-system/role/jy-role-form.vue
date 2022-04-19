@@ -9,14 +9,23 @@
   >
     <div>
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-        <el-form-item label="标签名称" prop="name">
+        <el-form-item label="角色名称" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="标签编码" prop="code">
+        <el-form-item label="角色编码" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="标签简介" prop="intro">
-          <el-input v-model="form.intro" type="textarea" />
+        <el-form-item label="角色状态" prop="sort">
+          <el-radio-group v-model="form.status">
+            <el-radio-button :label="0">禁用</el-radio-button>
+            <el-radio-button :label="1">启用</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="角色排序" prop="sort">
+          <el-input v-model="form.sort" />
+        </el-form-item>
+        <el-form-item label="角色描述" prop="description">
+          <el-input v-model="form.description" type="textarea" />
         </el-form-item>
       </el-form>
     </div>
@@ -28,9 +37,9 @@
 </template>
 
 <script>
-import jyTagApi from '@/api/jy-tag'
+import roleApi from '@/api/jy-role'
 export default {
-  name: 'JyTagForm',
+  name: 'JyRoleForm',
   props: {
     title: {
       type: String,
@@ -53,7 +62,9 @@ export default {
         id: '',
         name: '',
         code: '',
-        intro: ''
+        status: 1,
+        sort: 0,
+        description: ''
       },
       rules: {
         name: [
@@ -96,7 +107,7 @@ export default {
       })
     },
     handleCreate() {
-      jyTagApi.add(this.form).then(response => {
+      roleApi.add(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '添加成功' })
         this.$parent.getList()
         this.tmpVisible = false
@@ -108,7 +119,7 @@ export default {
       })
     },
     handleUpdate() {
-      jyTagApi.update(this.form).then(response => {
+      roleApi.update(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '修改成功' })
         this.$parent.getList()
         this.tmpVisible = false
@@ -120,7 +131,7 @@ export default {
       })
     },
     getById(id) {
-      jyTagApi.getById(id).then(response => {
+      roleApi.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '获取数据失败' })

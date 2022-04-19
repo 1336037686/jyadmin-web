@@ -50,16 +50,16 @@
           <el-col v-if="form.type === 1" :span="12">
             <el-form-item label="是否缓存" prop="cache">
               <el-radio-group v-model="form.cache">
-                <el-radio-button label="0">否</el-radio-button>
-                <el-radio-button label="1">是</el-radio-button>
+                <el-radio-button :label="0">否</el-radio-button>
+                <el-radio-button :label="1">是</el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="状态" prop="status">
               <el-radio-group v-model="form.status">
-                <el-radio-button label="0">禁用</el-radio-button>
-                <el-radio-button label="1">启用</el-radio-button>
+                <el-radio-button :label="0">禁用</el-radio-button>
+                <el-radio-button :label="1">启用</el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -68,16 +68,16 @@
           <el-col :span="12">
             <el-form-item label="是否显示" prop="visiable">
               <el-radio-group v-model="form.visiable">
-                <el-radio-button label="0">否</el-radio-button>
-                <el-radio-button label="1">是</el-radio-button>
+                <el-radio-button :label="0">否</el-radio-button>
+                <el-radio-button :label="1">是</el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否外链" prop="link">
               <el-radio-group v-model="form.link">
-                <el-radio-button label="0">否</el-radio-button>
-                <el-radio-button label="1">是</el-radio-button>
+                <el-radio-button :label="0">否</el-radio-button>
+                <el-radio-button :label="1">是</el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -154,15 +154,15 @@ export default {
       type: 'insert',
       form: {
         id: '',
-        type: '0',
+        type: 0,
         name: '',
         code: '',
         parentId: '',
         icon: '',
-        cache: '0',
-        visiable: '0',
-        link: '0',
-        status: '1',
+        cache: 0,
+        visiable: 0,
+        link: 0,
+        status: 1,
         url: '',
         sort: '',
         component: '',

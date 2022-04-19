@@ -11,21 +11,33 @@
       <el-descriptions :column="2" border>
         <el-descriptions-item>
           <template slot="label">
-            标签名称
+            角色名称
           </template>
           {{ form.name }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            标签编码
+            角色编码
           </template>
           {{ form.code }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            简介
+            角色状态
           </template>
-          {{ form.intro }}
+          {{ form.status === 0 ? '禁用' : '启用' }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            角色排序
+          </template>
+          {{ form.sort }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            角色描述
+          </template>
+          {{ form.description }}
         </el-descriptions-item>
       </el-descriptions>
     </div>
@@ -36,9 +48,9 @@
 </template>
 
 <script>
-import jyTagApi from '@/api/jy-tag'
+import roleApi from '@/api/jy-role'
 export default {
-  name: 'JyTagDetail',
+  name: 'JyRoleDetail',
   props: {
     title: {
       type: String,
@@ -60,7 +72,9 @@ export default {
         id: '',
         name: '',
         code: '',
-        intro: ''
+        status: '',
+        sort: '',
+        description: ''
       }
     }
   },
@@ -78,7 +92,7 @@ export default {
   },
   methods: {
     getById(id) {
-      jyTagApi.getById(id).then(response => {
+      roleApi.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '获取数据失败' })
