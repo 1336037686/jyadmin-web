@@ -2,7 +2,7 @@
   <div style="margin: 10px">
 
     <el-row style="margin-top: 10px">
-      <el-col :span="11" style="padding-right: 15px">
+      <el-col :span="9" style="padding-right: 15px">
         <el-card class="box-card" shadow="never">
           <div slot="header" class="clearfix">
             <span>组别</span>
@@ -12,9 +12,9 @@
               <el-form-item label="组别名称：">
                 <el-input v-model="groupQueryForm.name" placeholder="组别名称" />
               </el-form-item>
-              <el-form-item label="组别编码：">
-                <el-input v-model="groupQueryForm.code" placeholder="组别标识" />
-              </el-form-item>
+<!--              <el-form-item label="组别编码：">-->
+<!--                <el-input v-model="groupQueryForm.code" placeholder="组别标识" />-->
+<!--              </el-form-item>-->
               <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="groupHandleQuery">查 询</el-button>
                 <el-button type="info" icon="el-icon-circle-close" @click="groupHandleReset">重 置</el-button>
@@ -56,7 +56,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="13">
+      <el-col :span="15">
         <el-card v-if="!groupSelectData.current" class="box-card" shadow="never">
           <div slot="header" class="clearfix">
             <span>数据接口</span>

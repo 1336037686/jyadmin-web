@@ -11,21 +11,33 @@
       <el-descriptions :column="2" border>
         <el-descriptions-item>
           <template slot="label">
-            标签名称
+            用户名
           </template>
-          {{ form.name }}
+          {{ form.username }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            标签编码
+            昵称
           </template>
-          {{ form.code }}
+          {{ form.nickname }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            简介
+            电话
           </template>
-          {{ form.intro }}
+          {{ form.phone }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            类型
+          </template>
+          {{ form.type === 0 ? '普通用户' : '管理员' }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            状态
+          </template>
+          {{ form.status === 0 ? '禁用' : '启用' }}
         </el-descriptions-item>
       </el-descriptions>
     </div>
@@ -36,9 +48,9 @@
 </template>
 
 <script>
-import jyTagApi from '@/api/jy-tag'
+import userApi from '@/api/jy-user'
 export default {
-  name: 'JyTagDetail',
+  name: 'JyUserDetail',
   props: {
     title: {
       type: String,
@@ -58,9 +70,11 @@ export default {
       tmpVisible: this.visible,
       form: {
         id: '',
-        name: '',
-        code: '',
-        intro: ''
+        username: '',
+        nickname: '',
+        phone: '',
+        type: '',
+        status: ''
       }
     }
   },
@@ -78,7 +92,7 @@ export default {
   },
   methods: {
     getById(id) {
-      jyTagApi.getById(id).then(response => {
+      userApi.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '获取数据失败' })

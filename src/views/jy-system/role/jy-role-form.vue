@@ -15,7 +15,7 @@
         <el-form-item label="角色编码" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="角色状态" prop="sort">
+        <el-form-item label="角色状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio-button :label="0">禁用</el-radio-button>
             <el-radio-button :label="1">启用</el-radio-button>
