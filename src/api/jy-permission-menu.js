@@ -16,6 +16,21 @@ export default {
     })
   },
 
+  getFromRole(id) {
+    return request({
+      url: '/api/permission/menu/query/role/' + id,
+      method: 'get'
+    })
+  },
+
+  list(query) {
+    return request({
+      url: '/api/permission/menu/list',
+      method: 'get',
+      params: query
+    })
+  },
+
   layer(query) {
     return request({
       url: '/api/permission/menu/layer',
@@ -29,6 +44,14 @@ export default {
       url: '/api/permission/menu/create',
       method: 'post',
       data
+    })
+  },
+
+  addFromRole(roleId, menuIds) {
+    return request({
+      url: '/api/permission/menu/create/role/' + roleId,
+      method: 'post',
+      data: menuIds
     })
   },
 

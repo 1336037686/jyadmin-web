@@ -17,7 +17,7 @@
       <div style="margin-top: 5px">
         <el-button type="primary" icon="el-icon-view" @click="handleShow">查 看</el-button>
         <el-button type="success" icon="el-icon-plus" @click="handleCreate">新 增</el-button>
-        <el-button type="success" icon="el-icon-menu" @click="handleCreate">菜 单</el-button>
+        <el-button type="success" icon="el-icon-menu" @click="handleMenu">菜 单</el-button>
         <el-button type="warning" icon="el-icon-edit-outline" @click="handleUpdate">修 改</el-button>
         <el-button type="danger" icon="el-icon-delete" @click="handleRemove">删 除</el-button>
       </div>
@@ -61,19 +61,19 @@
 
     <jy-role-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
     <jy-role-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <jy-role-menu :id="menuEditData.id" :name="menuEditData.name" :title="menuEditData.title" :visible.sync="menuEditData.visiable" />
 
   </div>
 </template>
 
 <script>
 import roleApi from '@/api/jy-role'
-import JyTagForm from '@/views/jy-blog/tag/tag-form'
-import JyTagDetail from '@/views/jy-blog/tag/tag-detail'
 import JyRoleDetail from "@/views/jy-system/role/jy-role-detail";
 import JyRoleForm from "@/views/jy-system/role/jy-role-form";
+import JyRoleMenu from "@/views/jy-system/role/jy-role-menu";
 export default {
   name: 'JyRole',
-  components: {JyRoleForm, JyRoleDetail, JyTagDetail, JyTagForm },
+  components: {JyRoleMenu, JyRoleForm, JyRoleDetail},
   data() {
     return {
       queryForm: {
@@ -92,6 +92,12 @@ export default {
       editData: {
         visiable: false,
         title: '',
+        id: null
+      },
+      menuEditData: {
+        visiable: false,
+        title: '',
+        name: '',
         id: null
       },
       showData: {
@@ -130,21 +136,32 @@ export default {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.showData.title = '查看标签'
+      this.showData.title = '查看角色'
       this.showData.id = this.selectData.current.id
       this.showData.visiable = true
     },
     handleCreate() {
-      this.editData.title = '新增标签'
+      this.editData.title = '新增角色'
       this.editData.id = null
       this.editData.visiable = true
+    },
+    handleMenu() {
+      if (!this.selectData.current) {
+        this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
+        return
+      }
+
+      this.menuEditData.title = '菜单权限配置'
+      this.menuEditData.id = this.selectData.current.id
+      this.menuEditData.name = this.selectData.current.name
+      this.menuEditData.visiable = true
     },
     handleUpdate() {
       if (!this.selectData.current) {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.editData.title = '修改标签'
+      this.editData.title = '修改角色'
       this.editData.id = this.selectData.current.id
       this.editData.visiable = true
     },
