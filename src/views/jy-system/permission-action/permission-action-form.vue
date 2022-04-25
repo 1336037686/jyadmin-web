@@ -27,7 +27,7 @@
           />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input v-model="form.sort" />
+          <el-input type="number" v-model="form.sort" />
         </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input v-model="form.description" type="textarea" />
@@ -76,6 +76,7 @@ export default {
         name: '',
         code: '',
         parentId: '0',
+        sort: '',
         groupId: '',
         status: 1,
         description: ''

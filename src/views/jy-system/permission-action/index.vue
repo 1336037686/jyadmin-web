@@ -2,29 +2,18 @@
   <div style="margin: 10px">
 
     <el-row style="margin-top: 10px">
-      <el-col :span="9" style="padding-right: 15px">
+      <el-col :span="6" style="padding-right: 15px">
         <el-card class="box-card" shadow="never">
           <div slot="header" class="clearfix">
-            <span>组别</span>
+            <span>接口分组</span>
           </div>
           <div>
-            <el-form :inline="true" :model="groupQueryForm" label-width="100px" size="mini">
-              <el-form-item label="组别名称：">
-                <el-input v-model="groupQueryForm.name" placeholder="组别名称" />
-              </el-form-item>
-<!--              <el-form-item label="组别编码：">-->
-<!--                <el-input v-model="groupQueryForm.code" placeholder="组别标识" />-->
-<!--              </el-form-item>-->
+            <el-form :inline="true" label-width="100px" size="mini">
               <el-form-item>
-                <el-button type="primary" icon="el-icon-search" @click="groupHandleQuery">查 询</el-button>
-                <el-button type="info" icon="el-icon-circle-close" @click="groupHandleReset">重 置</el-button>
-              </el-form-item>
-              <br>
-              <el-form-item>
-                <el-button type="primary" icon="el-icon-view" @click="groupHandleShow">查 看</el-button>
-                <el-button type="success" icon="el-icon-plus" @click="groupHandleCreate">新 增</el-button>
-                <el-button type="warning" icon="el-icon-edit-outline" @click="groupHandleUpdate">修 改</el-button>
-                <el-button type="danger" icon="el-icon-delete" @click="groupHandleRemove">删 除</el-button>
+                <el-button type="primary" size="mini"  icon="el-icon-view" @click="groupHandleShow"></el-button>
+                <el-button type="success" size="mini"  icon="el-icon-plus" @click="groupHandleCreate"></el-button>
+                <el-button type="warning" size="mini"  icon="el-icon-edit-outline" @click="groupHandleUpdate"></el-button>
+                <el-button type="danger"  size="mini" icon="el-icon-delete" @click="groupHandleRemove"></el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -37,29 +26,16 @@
             :header-cell-style="{background:'#FAFAFA'}"
             @row-click="groupHandleTableRowClick"
           >
-            <el-table-column type="selection" width="55" align="center" />
-            <el-table-column prop="name" label="组别名称" width="120" />
-            <el-table-column prop="code" label="组别标识" width="120" />
-            <el-table-column prop="sort" label="排序" width="100" align="center" />
-            <el-table-column prop="description" label="描述" />
+            <el-table-column type="index" label="序号" align="center" width="80"/>
+            <el-table-column prop="name" label="分组名称"  />
+            <el-table-column prop="code" label="标识" align="center" width="100" />
           </el-table>
-          <div style="text-align: center;margin-top: 10px">
-            <el-pagination
-              v-model="groupTableData.pageNumber"
-              background
-              layout="prev, pager, next"
-              :page-size="groupTableData.pageSize"
-              :hide-on-single-page="true"
-              :total="groupTableData.total"
-              @current-change="groupHandleChangePage"
-            />
-          </div>
         </el-card>
       </el-col>
-      <el-col :span="15">
+      <el-col :span="18">
         <el-card v-if="!groupSelectData.current" class="box-card" shadow="never">
           <div slot="header" class="clearfix">
-            <span>数据接口</span>
+            <span>接口列表</span>
           </div>
           <div>
             <el-alert title="请先指定某个分组" type="info" :closable="false" />
@@ -67,7 +43,7 @@
         </el-card>
         <el-card v-if="groupSelectData.current" class="box-card" shadow="never">
           <div slot="header" class="clearfix">
-            <span>数据接口【{{ groupSelectData.current.name }} - {{ groupSelectData.current.code }}】</span>
+            <span>接口列表</span>
           </div>
           <div>
             <el-form :inline="true" :model="actionQueryForm" label-width="90px" size="mini">
@@ -78,15 +54,15 @@
                 <el-input v-model="actionQueryForm.code" placeholder="权限标识" />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" icon="el-icon-search" @click="actionHandleQuery">查 询</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="getActionList">查 询</el-button>
                 <el-button type="info" icon="el-icon-circle-close" @click="actionHandleReset">重 置</el-button>
               </el-form-item>
               <br>
               <el-form-item>
-                <el-button type="primary" icon="el-icon-view" @click="actionHandleShow">查 看</el-button>
-                <el-button type="success" icon="el-icon-plus" @click="actionHandleCreate">新 增</el-button>
-                <el-button type="warning" icon="el-icon-edit-outline" @click="actionHandleUpdate">修 改</el-button>
-                <el-button type="danger" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
+                <el-button type="primary" size="mini" icon="el-icon-view" @click="actionHandleShow">查 看</el-button>
+                <el-button type="success" size="mini" icon="el-icon-plus" @click="actionHandleCreate">新 增</el-button>
+                <el-button type="warning" size="mini" icon="el-icon-edit-outline" @click="actionHandleUpdate">修 改</el-button>
+                <el-button type="danger"  size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -100,12 +76,11 @@
             :header-cell-style="{background:'#FAFAFA'}"
             @row-click="actionHandleTableRowClick"
           >
-            <el-table-column type="selection" width="55" align="center" />
-            <el-table-column prop="name" label="接口名称" width="120" />
-            <el-table-column prop="code" label="权限标识" width="120" />
-            <el-table-column prop="sort" label="排序" width="100" align="center" />
-            <el-table-column prop="description" label="描述" />
-            <el-table-column prop="status" label="状态" width="180" align="center">
+            <el-table-column type="selection" width="60" align="center" />
+            <el-table-column prop="name" label="接口名称" width="200" align="center" />
+            <el-table-column prop="code" label="权限标识" width="200" align="center" />
+            <el-table-column prop="sort" label="排序" align="center" width="200"  />
+            <el-table-column prop="status" label="状态" width="250" align="center">
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.status"
@@ -119,19 +94,8 @@
                 />
               </template>
             </el-table-column>
+            <el-table-column prop="description" label="描述" />
           </el-table>
-
-          <div style="text-align: center;margin-top: 10px">
-            <el-pagination
-              v-model="actionTableData.pageNumber"
-              background
-              layout="prev, pager, next"
-              :page-size="actionTableData.pageSize"
-              :hide-on-single-page="true"
-              :total="actionTableData.total"
-              @current-change="actionHandleChangePage"
-            />
-          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -168,19 +132,8 @@ export default {
   components: { JyPermissionActionDetail, JyPermissionActionForm, JyPermissionGroupDetail, JyPermissionGroupForm },
   data() {
     return {
-      // group
-      groupQueryForm: {
-        name: '',
-        code: ''
-      },
       groupTableData: {
-        pageNumber: 1,
-        pageSize: 10,
-        pages: 1,
-        total: 1,
-        records: [],
-        hasPrevious: false,
-        hasNext: false
+        records: []
       },
       groupEditData: {
         visiable: false,
@@ -194,7 +147,6 @@ export default {
       },
       groupSelectData: {
         current: null,
-        record: []
       },
       // action
       actionQueryForm: {
@@ -203,13 +155,7 @@ export default {
         code: ''
       },
       actionTableData: {
-        pageNumber: 1,
-        pageSize: 10,
-        pages: 1,
-        total: 1,
-        records: [],
-        hasPrevious: false,
-        hasNext: false
+        records: []
       },
       actionEditData: {
         visiable: false,
@@ -227,7 +173,6 @@ export default {
         current: null,
         record: []
       }
-
     }
   },
   created() {
@@ -236,20 +181,18 @@ export default {
   methods: {
     // group
     getGroupList() {
-      const queryForm = { ...this.groupQueryForm, pageNumber: this.groupTableData.pageNumber, pageSize: this.groupTableData.pageSize }
-      groupApi.getList(queryForm).then(response => {
-        this.groupTableData = response
+      groupApi.getList().then(response => {
+        this.groupTableData.records = response.data
+        if (!this.groupTableData.records && this.groupTableData.records.length === 0) {
+          this.groupSelectData.current = null
+          return
+        }
+
+        let firstRow = this.groupTableData.records[0]
+        this.groupSelectData.current = firstRow
+        this.$refs.table.setCurrentRow(firstRow)
+        this.getActionList()
       })
-    },
-    groupHandleQuery() {
-      this.groupTableData.pageNumber = 1
-      this.getGroupList()
-    },
-    groupHandleReset() {
-      this.groupQueryForm.name = ''
-      this.groupQueryForm.code = ''
-      this.groupTableData.pageNumber = 1
-      this.getGroupList()
     },
     groupHandleShow() {
       if (!this.groupSelectData.current) {
@@ -275,8 +218,8 @@ export default {
       this.groupEditData.visiable = true
     },
     groupHandleRemove() {
-      const selectRows = this.$refs.table.selection
-      if (!selectRows || selectRows.length === 0) {
+      const selectRow = this.groupSelectData.current
+      if (!selectRow) {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
@@ -285,8 +228,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        const ids = []
-        for (let i = 0; i < this.$refs.table.selection.length; i++) ids.push(this.$refs.table.selection[i].id)
+        const ids = [selectRow.id]
         groupApi.remove(ids).then(response => {
           this.getGroupList()
           this.$notify.success({ title: '成功', message: '删除成功' })
@@ -297,28 +239,16 @@ export default {
     },
     groupHandleTableRowClick(row, column, event) {
       this.groupSelectData.current = row
-      this.$refs.table.toggleRowSelection(row)
-
       // 获取接口信息
+      this.actionSelectData.current = null
       this.getActionList()
-      this.actionHandleClean()
     },
-    groupHandleChangePage(page) {
-      this.groupTableData.pageNumber = page
-      this.getGroupList()
-    },
-
     // action
     getActionList() {
       this.actionQueryForm.groupId = this.groupSelectData.current.id
-      const queryForm = { ...this.actionQueryForm, pageNumber: this.actionTableData.pageNumber, pageSize: this.actionTableData.pageSize }
-      actionApi.getList(queryForm).then(response => {
-        this.actionTableData = response
+      actionApi.list(this.actionQueryForm).then(response => {
+        this.actionTableData.records = response.data
       })
-    },
-    actionHandleQuery() {
-      this.actionTableData.pageNumber = 1
-      this.getActionList()
     },
     actionHandleReset() {
       this.actionQueryForm.name = ''
@@ -343,7 +273,6 @@ export default {
       this.actionEditData.visiable = true
     },
     actionHandleUpdate() {
-      console.log(this.actionSelectData.current)
       if (!this.actionSelectData.current) {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
@@ -377,13 +306,6 @@ export default {
     actionHandleTableRowClick(row, column, event) {
       this.actionSelectData.current = row
       this.$refs.actionTable.toggleRowSelection(row)
-    },
-    actionHandleChangePage(page) {
-      this.actionTableData.pageNumber = page
-      this.getActionList()
-    },
-    actionHandleClean() {
-      this.actionSelectData.current = null
     },
     actionStatusChange(data) {
       api.update(data).then(response => {

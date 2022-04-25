@@ -3,7 +3,7 @@ import request from '@/utils/request-api'
 export default {
   getList(query) {
     return request({
-      url: '/api/permission/group/query',
+      url: '/api/permission/group/list',
       method: 'get',
       params: query
     })
