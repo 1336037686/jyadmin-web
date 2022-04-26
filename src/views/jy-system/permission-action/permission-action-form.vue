@@ -8,28 +8,23 @@
     width="30%"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="100px">
-        <el-form-item label="接口名称" prop="name">
+      <el-form ref="form" :rules="rules" size="mini" :model="form" label-width="120px">
+        <el-form-item label="接口名称：" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="权限标识" prop="code">
+        <el-form-item label="权限标识：" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-switch
-            v-model="form.status"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            active-text="启用"
-            inactive-text="禁用"
-            :active-value="1"
-            :inactive-value="0"
-          />
+        <el-form-item label="状态：" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio-button :label="0">禁用</el-radio-button>
+            <el-radio-button :label="1">启用</el-radio-button>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
+        <el-form-item label="排序：" prop="sort">
           <el-input type="number" v-model="form.sort" />
         </el-form-item>
-        <el-form-item label="描述" prop="description">
+        <el-form-item label="描述：" prop="description">
           <el-input v-model="form.description" type="textarea" />
         </el-form-item>
       </el-form>

@@ -8,17 +8,17 @@
     width="30%"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-        <el-form-item label="组别名称" prop="name">
+      <el-form ref="form" :rules="rules" size="mini" :model="form" label-width="120px">
+        <el-form-item label="组别名称：" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="组别编码" prop="code">
+        <el-form-item label="组别编码：" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
+        <el-form-item label="排序：" prop="sort">
           <el-input type="number" v-model="form.sort" />
         </el-form-item>
-        <el-form-item label="组别描述" prop="description">
+        <el-form-item label="组别描述：" prop="description">
           <el-input v-model="form.description" type="textarea" />
         </el-form-item>
       </el-form>

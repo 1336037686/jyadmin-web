@@ -8,7 +8,7 @@
     width="40%"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+      <el-form ref="form" :rules="rules" size="mini" :model="form" label-width="80px">
         <el-row>
           <el-col :span="24">
             <el-form-item label="菜单类型" prop="type">
