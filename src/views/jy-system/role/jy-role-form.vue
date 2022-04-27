@@ -8,23 +8,23 @@
     width="30%"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-        <el-form-item label="角色名称" prop="name">
+      <el-form ref="form" :rules="rules" size="mini" :model="form" label-width="120px">
+        <el-form-item label="角色名称：" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="角色编码" prop="code">
+        <el-form-item label="角色编码：" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="角色状态" prop="status">
+        <el-form-item label="角色状态：" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio-button :label="0">禁用</el-radio-button>
             <el-radio-button :label="1">启用</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="角色排序" prop="sort">
+        <el-form-item label="角色排序：" prop="sort">
           <el-input v-model="form.sort" />
         </el-form-item>
-        <el-form-item label="角色描述" prop="description">
+        <el-form-item label="角色描述：" prop="description">
           <el-input v-model="form.description" type="textarea" />
         </el-form-item>
       </el-form>

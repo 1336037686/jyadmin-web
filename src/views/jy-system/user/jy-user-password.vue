@@ -8,28 +8,25 @@
     width="30%"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+      <el-form ref="form" :rules="rules" size="mini" :model="form" label-width="120px">
         <el-row>
           <el-col :span="24">
-            <el-form-item label="角色名称" prop="name">
+            <el-form-item label="用户名称：" prop="name">
               <el-input v-model="form.name" readonly />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="角色菜单" prop="parentId">
-              <el-select v-model="form.menuIds" placeholder="请选择" multiple filterable style="width: 100%">
-                <el-option
-                  v-for="item in menus"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                >
-                  <span style="float: left">{{ item.name }}</span>
-                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.code }}</span>
-                </el-option>
-              </el-select>
+            <el-form-item label="用户密码：" prop="password">
+              <el-input type="password" v-model="form.password" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="确认用户密码：" prop="checkPass">
+              <el-input  type="password" v-model="form.checkPass" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -43,9 +40,9 @@
 </template>
 
 <script>
-import menuApi from '@/api/jy-permission-menu'
+import userApi from '@/api/jy-user'
 export default {
-  name: 'JyRoleMenu',
+  name: 'JyUserPassword',
   props: {
     title: {
       type: String,
@@ -65,23 +62,49 @@ export default {
     }
   },
   data() {
+
+    let validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      }
+      else if (value.length < 6 || value.length > 12) {
+        callback(new Error('长度在 6 到 12 个字符'));
+      }
+      else {
+        if (this.form.checkPass !== '') {
+          this.$refs.form.validateField('checkPass');
+        }
+        callback();
+      }
+    };
+    let validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      }
+      else if (value.length < 6 || value.length > 12) {
+        callback(new Error('长度在 6 到 12 个字符'));
+      }
+      else if (value !== this.form.password) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
+
     return {
       tmpVisible: this.visible,
-      type: 'insert',
-      menus: [],
       form: {
         id: '',
         name: '',
-        menuIds: []
+        password: '',
+        checkPass: ''
       },
       rules: {
-        name: [
-          { required: true, message: '请输入标签名称', trigger: 'blur' },
-          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+        password: [
+          { required: true, validator: validatePass, trigger: 'blur' },
         ],
-        code: [
-          { required: true, message: '请输入标签编码', trigger: 'blur' },
-          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+        checkPass: [
+          { required: true, validator: validatePass2, trigger: 'blur' }
         ]
       }
     }
@@ -91,8 +114,6 @@ export default {
       this.tmpVisible = newVal
       if (newVal) {
         this.form.name = this.name
-        this.getMenu()
-        this.getFromRole()
       }
     },
     tmpVisible(newVal) {
@@ -101,18 +122,7 @@ export default {
     deep: true
   },
   methods: {
-    getMenu() {
-      menuApi.list({ 'status': '1' }).then(response => {
-        this.menus = response.data
-      })
-    },
-    getFromRole() {
-      menuApi.getFromRole(this.id).then(response => {
-        this.form.menuIds = response.data
-      })
-    },
     handleSubmit(formName) {
-      console.log(this.form)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.handleUpdate()
@@ -120,7 +130,7 @@ export default {
       })
     },
     handleUpdate() {
-      menuApi.addFromRole(this.id, this.form.menuIds).then(response => {
+      userApi.updatePassword({id: this.id, password: this.form.password}).then(response => {
         this.$notify.success({ title: '成功', message: '设置成功' })
         this.$parent.getList()
         this.tmpVisible = false

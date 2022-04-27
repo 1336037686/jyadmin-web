@@ -31,6 +31,13 @@ export default {
     })
   },
 
+  tree () {
+    return request({
+      url: '/api/permission/action/tree',
+      method: 'get'
+    })
+  },
+
   add(data) {
     return request({
       url: '/api/permission/action/create',

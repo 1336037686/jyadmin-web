@@ -3,7 +3,7 @@
 
     <el-row style="margin-top: 10px">
       <el-col :span="6" style="padding-right: 15px">
-        <el-card class="box-card" shadow="never">
+        <el-card class="box-card" shadow="always">
           <div slot="header" class="clearfix">
             <span>接口分组</span>
           </div>
@@ -33,7 +33,7 @@
         </el-card>
       </el-col>
       <el-col :span="18">
-        <el-card v-if="!groupSelectData.current" class="box-card" shadow="never">
+        <el-card v-if="!groupSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
             <span>接口列表</span>
           </div>
@@ -41,7 +41,7 @@
             <el-alert title="请先指定某个分组" type="info" :closable="false" />
           </div>
         </el-card>
-        <el-card v-if="groupSelectData.current" class="box-card" shadow="never">
+        <el-card v-if="groupSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
             <span>接口列表</span>
           </div>

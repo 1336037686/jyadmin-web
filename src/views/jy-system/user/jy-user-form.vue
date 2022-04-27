@@ -8,26 +8,26 @@
     width="30%"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-        <el-form-item label="用户名" prop="username">
+      <el-form ref="form" :rules="rules" size="mini" :model="form" label-width="120px">
+        <el-form-item label="用户名：" prop="username">
           <el-input v-model="form.username" />
         </el-form-item>
-        <el-form-item label="密码" prop="password" v-if="type === 'insert'">
+        <el-form-item label="密码：" prop="password" v-if="type === 'insert'">
           <el-input v-model="form.password" />
         </el-form-item>
-        <el-form-item label="昵称" prop="nickname">
+        <el-form-item label="昵称：" prop="nickname">
           <el-input v-model="form.nickname" />
         </el-form-item>
-        <el-form-item label="电话" prop="phone">
+        <el-form-item label="电话：" prop="phone">
           <el-input v-model="form.phone" />
         </el-form-item>
-        <el-form-item label="用户类型" prop="type">
+        <el-form-item label="用户类型：" prop="type">
           <el-radio-group v-model="form.type">
             <el-radio-button :label="0">普通用户</el-radio-button>
             <el-radio-button :label="1">管理员</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="用户状态" prop="status">
+        <el-form-item label="用户状态：" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio-button :label="0">禁用</el-radio-button>
             <el-radio-button :label="1">启用</el-radio-button>

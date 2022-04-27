@@ -22,7 +22,7 @@
         <el-button type="success" size="mini"  icon="el-icon-plus" @click="handleCreate">新 增</el-button>
         <el-button type="success" size="mini"  icon="el-icon-user-solid" @click="handleRole">角色分配</el-button>
         <el-button type="warning" size="mini"  icon="el-icon-edit-outline" @click="handleUpdate">修 改</el-button>
-        <el-button type="warning" size="mini"  icon="el-icon-s-tools" @click="handleUpdate">修改密码</el-button>
+        <el-button type="warning" size="mini"  icon="el-icon-s-tools" @click="handleUpdatePassword">重置密码</el-button>
         <el-button type="danger"  size="mini" icon="el-icon-delete" @click="handleRemove">删 除</el-button>
       </div>
     </el-card>
@@ -71,6 +71,7 @@
     <jy-user-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
     <jy-user-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
     <jy-user-role :id="roleEditData.id" :name="roleEditData.name" :title="roleEditData.title" :visible.sync="roleEditData.visiable" />
+    <jy-user-password :id="passwordEditData.id" :name="passwordEditData.name" :title="passwordEditData.title" :visible.sync="passwordEditData.visiable" />
   </div>
 </template>
 
@@ -79,9 +80,10 @@ import userApi from '@/api/jy-user'
 import JyUserDetail from "@/views/jy-system/user/jy-user-detail";
 import JyUserForm from "@/views/jy-system/user/jy-user-form";
 import JyUserRole from "@/views/jy-system/user/jy-user-role";
+import JyUserPassword from "@/views/jy-system/user/jy-user-password";
 export default {
   name: 'JyTag',
-  components: {JyUserRole, JyUserForm, JyUserDetail },
+  components: {JyUserPassword, JyUserRole, JyUserForm, JyUserDetail },
   data() {
     return {
       queryForm: {
@@ -104,6 +106,12 @@ export default {
         id: null
       },
       roleEditData: {
+        visiable: false,
+        title: '',
+        name: '',
+        id: null
+      },
+      passwordEditData: {
         visiable: false,
         title: '',
         name: '',
@@ -160,7 +168,7 @@ export default {
         return
       }
 
-      this.roleEditData.title = '用户角色配置'
+      this.roleEditData.title = '角色分配'
       this.roleEditData.id = this.selectData.current.id
       this.roleEditData.name = this.selectData.current.username
       this.roleEditData.visiable = true
@@ -173,6 +181,17 @@ export default {
       this.editData.title = '修改用户'
       this.editData.id = this.selectData.current.id
       this.editData.visiable = true
+    },
+    handleUpdatePassword() {
+      if (!this.selectData.current) {
+        this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
+        return
+      }
+
+      this.passwordEditData.title = '重置密码'
+      this.passwordEditData.id = this.selectData.current.id
+      this.passwordEditData.name = this.selectData.current.username
+      this.passwordEditData.visiable = true
     },
     handleRemove() {
       const selectRows = this.$refs.table.selection
