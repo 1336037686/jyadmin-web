@@ -1,6 +1,6 @@
 <template>
   <div style="margin: 10px">
-    <el-card class="box-card" shadow="never">
+    <el-card class="box-card" shadow="always">
       <el-form :inline="true" :model="queryForm" size="mini" label-width="100px">
         <el-form-item label="用户名：">
           <el-input v-model="queryForm.username" placeholder="用户名" />
@@ -27,7 +27,7 @@
       </div>
     </el-card>
 
-    <el-card class="box-card" shadow="never" style="margin-top: 5px">
+    <el-card class="box-card" shadow="always " style="margin-top: 5px">
       <el-table
         ref="table"
         :data="tableData.records"
@@ -53,7 +53,9 @@
             <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> 禁 用 </el-tag>
           </template>
         </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" width="220" align="center"/>
       </el-table>
+
     </el-card>
 
     <div style="text-align: center;margin-top: 10px">

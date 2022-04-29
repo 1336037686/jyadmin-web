@@ -79,8 +79,8 @@
             <el-table-column type="selection" width="60" align="center" />
             <el-table-column prop="name" label="接口名称" width="200" align="center" />
             <el-table-column prop="code" label="权限标识" width="200" align="center" />
-            <el-table-column prop="sort" label="排序" align="center" width="200"  />
-            <el-table-column prop="status" label="状态" width="250" align="center">
+            <el-table-column prop="sort" label="排序" align="center" width="80"  />
+            <el-table-column prop="status" label="状态" width="150" align="center">
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.status"
@@ -94,7 +94,8 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="description" label="描述" />
+            <el-table-column prop="createTime" label="创建时间" width="220" align="center"/>
+            <el-table-column prop="description" label="描述" :show-overflow-tooltip="true" />
           </el-table>
         </el-card>
       </el-col>

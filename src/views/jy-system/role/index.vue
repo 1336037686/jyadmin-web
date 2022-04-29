@@ -47,7 +47,8 @@
                 <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> 禁 用 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="description" label="角色描述" width="450" />
+            <el-table-column prop="createTime" label="创建时间" width="220" align="center"/>
+            <el-table-column prop="description" label="角色描述" width="380" />
           </el-table>
         </el-card>
         <div style="text-align: center;margin-top: 10px">
