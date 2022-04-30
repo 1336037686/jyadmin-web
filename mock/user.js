@@ -1,7 +1,7 @@
 
 const tokens = {
   admin: {
-    token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY1MTI0NjUwMn0.p33d5Wk-TdYPmddggh_eMnV6OZGlesGT7TwnYjWF_-c'
+    token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY1NDg0OTMwOH0.V8E4r1URaaF5npZBSyUncUiRzP9GlOUaHDPQR0zcJlI'
   },
   editor: {
     token: 'editor-token'
@@ -9,7 +9,7 @@ const tokens = {
 }
 
 const users = {
-  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY1MTI0NjUwMn0.p33d5Wk-TdYPmddggh_eMnV6OZGlesGT7TwnYjWF_-c': {
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY1NDg0OTMwOH0.V8E4r1URaaF5npZBSyUncUiRzP9GlOUaHDPQR0zcJlI': {
     roles: ['admin'],
     introduction: 'I am a super administrator',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',

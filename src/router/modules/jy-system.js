@@ -44,7 +44,7 @@ const tableRouter = {
     },
     {
       path: 'handle-log',
-      component: () => import('@/views/jy-blog/tag/index'),
+      component: () => import('@/views/jy-system/log/index'),
       name: 'jy-system-handle-log',
       meta: { title: '操作日志管理', icon: 'table' }
     }
