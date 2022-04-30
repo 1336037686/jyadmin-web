@@ -3,10 +3,10 @@
     <el-card class="box-card" shadow="always">
       <el-form :inline="true" :model="queryForm" label-width="100px">
         <el-form-item label="操作用户：">
-          <el-input v-model="queryForm.username" placeholder="标签名称" />
+          <el-input v-model="queryForm.username" placeholder="操作用户" />
         </el-form-item>
         <el-form-item label="操作名称：">
-          <el-input v-model="queryForm.handleName" placeholder="标签编码" />
+          <el-input v-model="queryForm.handleName" placeholder="操作名称" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">查 询</el-button>
@@ -55,9 +55,9 @@
                 更多详情<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>请求参数</el-dropdown-item>
-                <el-dropdown-item>返回数据</el-dropdown-item>
-                <el-dropdown-item>异常内容</el-dropdown-item>
+                <el-dropdown-item command="1" @click.native="handleShowParam(1, '请求参数', scope.row)">请求参数</el-dropdown-item>
+                <el-dropdown-item command="2" @click.native="handleShowParam(2, '返回数据', scope.row)">返回数据</el-dropdown-item>
+                <el-dropdown-item command="3" @click.native="handleShowParam(3, '异常内容', scope.row)">异常内容</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -77,16 +77,35 @@
       />
     </div>
 
-    <jy-tag-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <jy-log-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+
+    <el-drawer
+      size="40%"
+      :wrapperClosable="false"
+      :title="showParam.title"
+      :visible.sync="showParam.visiable"
+      >
+      <div class="json-editor" style="margin: 5px">
+        <codemirror class="code" v-model="showParam.code" :options="showParam.cmOptions"></codemirror>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
 <script>
 import logApi from '@/api/jy-log'
-import JyTagDetail from '@/views/jy-blog/tag/tag-detail'
+import JyLogDetail from "@/views/jy-system/log/log-detail";
+
+import {codemirror} from 'vue-codemirror'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/keymap/sublime' //sublime编辑器效果
+import "codemirror/theme/dracula.css"// 配置里面也需要theme设置为monokai
+import "codemirror/mode/vue/vue.js" // 配置里面也需要mode设置为vue
+import 'codemirror/addon/selection/active-line' //光标行背景高亮，配置里面也需要styleActiveLine设置为true
+
 export default {
   name: 'JyLog',
-  components: { JyTagDetail },
+  components: { JyLogDetail, codemirror },
   data() {
     return {
       queryForm: {
@@ -110,7 +129,23 @@ export default {
       selectData: {
         current: null,
         record: []
-      }
+      },
+      showParam: {
+        visiable: false,
+        title: '',
+        // 代码
+        code: 'hello world',
+        cmOptions: {
+          tabSize: 4,// tab的空格个数
+          theme: 'monokai',//主题样式
+          lineNumbers: true,//是否显示行数
+          lineWrapping: false, //是否自动换行
+          styleActiveLine: true,//line选择是是否加亮
+          matchBrackets: true,//括号匹配
+          mode: "json", //实现javascript代码高亮
+          readOnly: true//只读
+        }
+      },
     }
   },
   created() {
@@ -128,8 +163,8 @@ export default {
       this.getList()
     },
     handleReset() {
-      this.queryForm.name = ''
-      this.queryForm.code = ''
+      this.queryForm.handleName = ''
+      this.queryForm.username = ''
       this.tableData.pageNumber = 1
       this.getList()
     },
@@ -138,7 +173,7 @@ export default {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.showData.title = '查看标签'
+      this.showData.title = '查看日志'
       this.showData.id = this.selectData.current.id
       this.showData.visiable = true
     },
@@ -170,10 +205,33 @@ export default {
     handleChangePage(page) {
       this.tableData.pageNumber = page
       this.getList()
+    },
+    handleShowParam(command, title, row) {
+      this.showParam.title = title
+      this.showParam.visiable = true
+      this.showParam.code = command === 1 ? row.requestParam : (command === 2 ? row.responseData : row.errorDesc )
     }
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
+  .code {
+    height: 100%;
+    position: relative;
 
+    ::v-deep {
+      .CodeMirror {
+        height: auto;
+        min-height: 500px;
+      }
+
+      .CodeMirror-scroll {
+        min-height: 500px;
+      }
+
+      .cm-s-rubyblue span.cm-string {
+        color: #F08047;
+      }
+    }
+  }
 </style>
