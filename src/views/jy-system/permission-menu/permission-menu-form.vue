@@ -314,7 +314,7 @@ export default {
         parentId: null,
         icon: '',
         cache: 0,
-        visiable: 0,
+        visiable: 1,
         link: 0,
         status: 1,
         url: '',

@@ -15,10 +15,10 @@
       </el-form>
 
       <div style="margin-top: 5px">
-        <el-button type="primary" size="mini" icon="el-icon-view" @click="handleShow">查 看</el-button>
-        <el-button type="success" size="mini" icon="el-icon-plus" @click="handleCreate">新 增</el-button>
-        <el-button type="warning" size="mini" icon="el-icon-edit-outline" @click="handleUpdate">修 改</el-button>
-        <el-button type="danger" size="mini" icon="el-icon-delete" @click="handleRemove">删 除</el-button>
+        <el-button type="primary" size="mini" icon="el-icon-view" @click="handleShow" v-permission="['menu:show']">查 看</el-button>
+        <el-button type="success" size="mini" icon="el-icon-plus" @click="handleCreate" v-permission="['menu:add']">新 增</el-button>
+        <el-button type="warning" size="mini" icon="el-icon-edit-outline" @click="handleUpdate" v-permission="['menu:update']">修 改</el-button>
+        <el-button type="danger" size="mini" icon="el-icon-delete" @click="handleRemove" v-permission="['menu:delete']">删 除</el-button>
       </div>
     </el-card>
 
@@ -40,14 +40,14 @@
             @row-click="handleTableRowClick"
           >
             <el-table-column type="selection" width="55" align="center"/>
-            <el-table-column prop="name" label="菜单标题" width="130"/>
-            <el-table-column prop="code" label="菜单标识" width="100" align="center"/>
+            <el-table-column prop="name" label="菜单标题" width="180"/>
+            <!-- <el-table-column prop="code" label="菜单标识" width="200" align="center"/>-->
             <el-table-column prop="icon" label="图标" width="80" align="center">
               <template slot-scope="scope">
                 <i :class="scope.row.icon"/>
               </template>
             </el-table-column>
-            <el-table-column prop="type" label="菜单类别" width="80" align="center">
+            <el-table-column prop="type" label="菜单类别" width="100" align="center">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.type === 0" size="mini" effect="plain"> C 目 录</el-tag>
                 <el-tag v-if="scope.row.type === 1" size="mini" effect="plain" type="success"> M 菜 单</el-tag>
@@ -77,7 +77,7 @@
                 <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> 禁 用</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="sort" label="排序" width="60" align="center"/>
+            <el-table-column prop="sort" label="排序" width="80" align="center"/>
           </el-table>
         </el-card>
       </el-col>
@@ -85,7 +85,7 @@
         <el-card class="box-card" shadow="always" style="margin-top: 5px">
           <div slot="header" class="clearfix">
             <span>接口分配</span>
-            <el-button style="float: right;" size="mini" type="primary" icon="el-icon-circle-check" @click="handleUpdateMenuActions">保存</el-button>
+            <el-button style="float: right;" size="mini" type="primary" icon="el-icon-circle-check" @click="handleUpdateMenuActions" v-permission="['menu:addAction']">保存</el-button>
           </div>
 
           <el-tree
@@ -116,8 +116,9 @@ import menuApi from '@/api/jy-permission-menu'
 import actionApi from '@/api/jy-permission-action'
 import JyPermissionMenuForm from '@/views/jy-system/permission-menu/permission-menu-form'
 import JyPermissionMenuDetail from '@/views/jy-system/permission-menu/permission-menu-detail'
-
+import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
+  directives: { permission },
   name: 'JyPermissionMenu',
   components: { JyPermissionMenuDetail, JyPermissionMenuForm},
   data() {

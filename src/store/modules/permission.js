@@ -1,38 +1,7 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import Layout from '@/layout'
+import {getMenus} from "@/api/jy-auth";
 
-/**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
- */
-function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
-  } else {
-    return true
-  }
-}
-
-/**
- * Filter asynchronous routing tables by recursion
- * @param routes asyncRoutes
- * @param roles
- */
-export function filterAsyncRoutes(routes, roles) {
-  const res = []
-
-  routes.forEach(route => {
-    const tmp = { ...route }
-    if (hasPermission(roles, tmp)) {
-      if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
-      }
-      res.push(tmp)
-    }
-  })
-
-  return res
-}
 
 const state = {
   routes: [],
@@ -46,17 +15,64 @@ const mutations = {
   }
 }
 
+// 路由拼接
+function loadView(view) {
+  if (!view) return view
+  return function(resolve) {
+    require([`@/views/${view}`], resolve)
+  }
+}
+
+// 将请求数据转换为 element-admin 路由的数据格式
+export function convert(routes) {
+  const res = []
+  routes.forEach(route => {
+    const tmp = { ...route }
+    // 如果是按钮
+    if (tmp.type === 2) return
+    let tmpObj = {}
+    // 当设置 true 的时候该路由不会在侧边栏出现 如401，login等页面，或者如一些编辑页面/edit/1
+    tmpObj.hidden = tmp.visiable === 0
+    // 路由路径
+    tmpObj.path = tmp.url
+    // 设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题
+    tmpObj.name = tmp.code
+    // 如果不是外链
+    if (tmp.link === 0) {
+      // 组件
+      if (tmp.path === "Layout") tmpObj.component = Layout
+      else tmpObj.component = loadView(tmp.path)
+    }
+    tmpObj.meta = {}
+    // 设置该路由在侧边栏和面包屑中展示的名字
+    tmpObj.meta.title = tmp.name
+    // 设置该路由的图标，支持 svg-class，也支持 el-icon-x element-ui 的 icon
+    tmpObj.meta.icon = tmp.icon
+    // 如果设置为true，则不会被 <keep-alive> 缓存(默认 false)
+    tmpObj.meta.noCache = !(tmp.cache === 0)
+    // children
+    if (tmp.children && tmp.children.length > 0) {
+      tmpObj.children = convert(tmp.children)
+    }
+    res.push(tmpObj)
+  })
+  return res
+}
+
 const actions = {
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit }) {
     return new Promise(resolve => {
-      let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      }
-      commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
+      getMenus().then(response => {
+        let { data } = response
+        // 动态路由
+        let accessedRoutes = convert(data)
+        // 其他异步路由
+        // accessedRoutes = accessedRoutes.concat(asyncRoutes)
+        commit('SET_ROUTES', accessedRoutes)
+        resolve(accessedRoutes)
+      }).catch(error => {
+        reject(error)
+      })
     })
   }
 }
