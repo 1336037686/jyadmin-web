@@ -45,12 +45,12 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="菜单编码：" prop="code">
+              <el-form-item label="目录编码：" prop="code">
                 <el-input v-model="form.code" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="菜单图标：" prop="icon">
+              <el-form-item label="目录图标：" prop="icon">
                 <el-input v-model="form.icon" />
               </el-form-item>
             </el-col>
@@ -208,7 +208,7 @@
         <el-row v-if="form.type === 2">
           <el-row>
             <el-col :span="12">
-              <el-form-item label="菜单名称：" prop="name">
+              <el-form-item label="按钮名称：" prop="name">
                 <el-input v-model="form.name" />
               </el-form-item>
             </el-col>
@@ -227,18 +227,10 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="菜单编码：" prop="code">
+              <el-form-item label="权限编码：" prop="code">
                 <el-input v-model="form.code" />
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item label="菜单图标：" prop="icon">
-                <el-input v-model="form.icon" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-
             <el-col :span="12">
               <el-form-item label="状态：" prop="status">
                 <el-radio-group v-model="form.status">
@@ -247,26 +239,16 @@
                 </el-radio-group>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="12">
               <el-form-item label="排序：" prop="sort">
                 <el-input v-model="form.sort" />
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="调用方法：" prop="method">
-                <el-input v-model="form.method" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="样式：" prop="style">
-                <el-input v-model="form.style" />
-              </el-form-item>
-            </el-col>
-          </el-row>
         </el-row>
-        <el-form-item label="菜单描述：" prop="description">
+        <el-form-item label="描述：" prop="description">
           <el-input v-model="form.description" type="textarea" />
         </el-form-item>
       </el-form>

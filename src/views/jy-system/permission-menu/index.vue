@@ -40,8 +40,8 @@
             @row-click="handleTableRowClick"
           >
             <el-table-column type="selection" width="55" align="center"/>
-            <el-table-column prop="name" label="菜单标题" width="180"/>
-            <!-- <el-table-column prop="code" label="菜单标识" width="200" align="center"/>-->
+            <el-table-column prop="name" label="菜单标题" width="180" :show-overflow-tooltip="true"/>
+            <el-table-column prop="code" label="菜单标识" width="180" align="center" :show-overflow-tooltip="true" />
             <el-table-column prop="icon" label="图标" width="80" align="center">
               <template slot-scope="scope">
                 <i :class="scope.row.icon"/>
@@ -54,8 +54,8 @@
                 <el-tag v-if="scope.row.type === 2" size="mini" effect="plain" type="warning"> B 按 钮</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="url" label="路由地址" align="center"/>
-            <el-table-column prop="path" label="组件路径" align="center"/>
+            <el-table-column prop="url" label="路由地址" align="center" :show-overflow-tooltip="true" />
+            <el-table-column prop="path" label="组件路径" align="center" :show-overflow-tooltip="true"/>
             <el-table-column prop="link" label="外链" width="80" align="center">
               <template slot-scope="scope">
                 {{ scope.row.link === 0 ? '否' : '是' }}
