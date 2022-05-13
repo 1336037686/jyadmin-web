@@ -207,9 +207,11 @@ export default {
       this.getList()
     },
     handleShowParam(command, title, row) {
+      console.log(command, title, row)
       this.showParam.title = title
       this.showParam.visiable = true
       this.showParam.code = command === 1 ? row.requestParam : (command === 2 ? row.responseData : row.errorDesc )
+      this.showParam.code = this.showParam.code ? this.showParam.code : ''
     }
   }
 }
