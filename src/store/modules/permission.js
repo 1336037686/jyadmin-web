@@ -52,6 +52,8 @@ export function convert(routes) {
     tmpObj.meta.noCache = !(tmp.cache === 0)
     // children
     if (tmp.children && tmp.children.length > 0) {
+      // if set true, will always show the root menu
+      // tmpObj.alwaysShow = true
       tmpObj.children = convert(tmp.children)
     }
     res.push(tmpObj)

@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
       <el-row style="height: auto;margin-top: 300px">
-        <el-col :span="5" offset="18">
+        <el-col :span="5" :offset="18">
           <el-card>
             <el-form ref="loginForm" :model="loginForm" :rules="loginRules"  autocomplete="on" label-position="left">
               <div class="title-container">
