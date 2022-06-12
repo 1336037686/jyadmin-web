@@ -1,7 +1,6 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 import Layout from '@/layout'
-import {getMenus} from "@/api/jy-auth";
-
+import { getMenus } from '@/api/jy-auth'
 
 const state = {
   routes: [],
@@ -52,9 +51,13 @@ export function convert(routes) {
     tmpObj.meta.noCache = !(tmp.cache === 0)
     // children
     if (tmp.children && tmp.children.length > 0) {
-      // if set true, will always show the root menu
-      // tmpObj.alwaysShow = true
-      tmpObj.children = convert(tmp.children)
+      const children = convert(tmp.children)
+      // 如果子节点不为空，才设置子菜单
+      if (children && children.length > 0) {
+        tmpObj.children = children
+        // if set true, will always show the root menu
+        tmpObj.alwaysShow = true
+      }
     }
     res.push(tmpObj)
   })
@@ -68,6 +71,7 @@ const actions = {
         let { data } = response
         // 动态路由
         let accessedRoutes = convert(data)
+        console.log(accessedRoutes)
         // 其他异步路由
         // accessedRoutes = accessedRoutes.concat(asyncRoutes)
         commit('SET_ROUTES', accessedRoutes)
