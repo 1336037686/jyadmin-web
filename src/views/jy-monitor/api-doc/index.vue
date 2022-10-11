@@ -9,7 +9,7 @@ export default {
   name: "ApiDoc",
   data() {
     return {
-      iframeUrl: 'http://localhost:8080/doc.html'
+      iframeUrl: 'http://localhost:8081/doc.html'
     }
   },
   mounted(){

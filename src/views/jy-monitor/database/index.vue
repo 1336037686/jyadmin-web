@@ -9,7 +9,7 @@ export default {
   name: "DataBase",
   data() {
     return {
-      iframeUrl: 'http://localhost:8080/druid'
+      iframeUrl: 'http://localhost:8081/druid'
     }
   },
   mounted(){

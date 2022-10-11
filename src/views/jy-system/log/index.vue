@@ -22,6 +22,9 @@
 
     <el-card class="box-card" shadow="always" style="margin-top: 5px">
       <el-table
+        v-loading="loading"
+        element-loading-text = "加载中，请稍后..."
+        element-loading-spinner = "el-icon-loading"
         ref="table"
         :data="tableData.records"
         highlight-current-row
@@ -112,6 +115,7 @@ export default {
         username: '',
         handleName: ''
       },
+      loading: false,
       tableData: {
         pageNumber: 1,
         pageSize: 10,
@@ -153,9 +157,11 @@ export default {
   },
   methods: {
     getList() {
+      this.loading = true
       const queryForm = { ...this.queryForm, pageNumber: this.tableData.pageNumber, pageSize: this.tableData.pageSize }
       logApi.getList(queryForm).then(response => {
         this.tableData = response
+        this.loading = false
       })
     },
     handleQuery() {
