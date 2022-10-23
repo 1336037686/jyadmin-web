@@ -44,7 +44,7 @@
             <el-table-column prop="code" label="菜单标识" width="180" align="center" :show-overflow-tooltip="true" />
             <el-table-column prop="icon" label="图标" width="80" align="center">
               <template slot-scope="scope">
-                <i :class="scope.row.icon"/>
+                <e-icon :icon-name="scope.row.icon" style="font-size: 20px"/>
               </template>
             </el-table-column>
             <el-table-column prop="type" label="菜单类别" width="100" align="center">
