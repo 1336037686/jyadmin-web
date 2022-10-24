@@ -28,6 +28,9 @@
     </el-card>
 
     <el-card class="box-card" shadow="always " style="margin-top: 5px">
+      <div slot="header" class="clearfix">
+        <span><i class="el-icon-caret-right"/> 用户列表</span>
+      </div>
       <el-table
         ref="table"
         :data="tableData.records"

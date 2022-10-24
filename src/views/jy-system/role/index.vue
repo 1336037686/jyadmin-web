@@ -26,7 +26,7 @@
       <el-col :span="18">
         <el-card class="box-card" shadow="always" style="margin-top: 5px">
           <div slot="header" class="clearfix">
-            <span>角色列表</span>
+            <span><i class="el-icon-caret-right"/> 角色列表</span>
           </div>
           <el-table
             ref="table"

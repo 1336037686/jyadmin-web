@@ -20,6 +20,7 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
+// 图标选择器
 import eIconPicker from 'e-icon-picker'
 import 'e-icon-picker/lib/symbol.js' // 基本彩色图标库
 import 'e-icon-picker/lib/index.css' // 基本样式，包含基本图标

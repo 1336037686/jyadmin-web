@@ -8,11 +8,11 @@
     width="40%"
   >
     <div>
-      <el-form ref="form" :rules="rules" size="mini" :model="form" label-width="120px">
+      <el-form ref="form" :rules="rules" :model="form" label-width="110px">
         <el-row>
           <el-col :span="24">
             <el-form-item label="菜单类型：" prop="type">
-              <el-radio-group v-model="form.type" :disabled="type === 'update'">
+              <el-radio-group v-model="form.type" :disabled="type === 'update'" @change="menuTypeChange">
                 <el-radio-button :label="0">目录</el-radio-button>
                 <el-radio-button :label="1">菜单</el-radio-button>
                 <el-radio-button :label="2">按钮</el-radio-button>
@@ -25,7 +25,7 @@
         <el-row v-if="form.type === 0">
           <el-row>
             <el-col :span="12">
-              <el-form-item label="菜单名称：" prop="name">
+              <el-form-item label="目录名称：" prop="name">
                 <el-input v-model="form.name" />
               </el-form-item>
             </el-col>
@@ -247,6 +247,7 @@
             </el-col>
           </el-row>
         </el-row>
+
         <el-form-item label="描述：" prop="description">
           <el-input v-model="form.description" type="textarea" />
         </el-form-item>
@@ -318,6 +319,34 @@ export default {
         code: [
           { required: true, message: '不能为空', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+        ],
+        parentId: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        icon: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        visiable: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        cache: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        link: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        url: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        path: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        sort: [
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { type: 'number', message: '必须为数字值' }
         ]
       },
       menus: []
@@ -345,22 +374,8 @@ export default {
     deep: true
   },
   methods: {
-    /**
-     * @description 图标弹窗框显示时触发
-     * @author 饺子
-     */
-    popoverShow() {
-      this.$nextTick(() => {
-        this.activeName = 'name0'
-      })
-    },
-    /**
-     * @description 给icon绑定的点击事件
-     * @author 饺子
-     * @param { String } icon 图标
-     */
-    setIcon(icon) {
-      this.$set(this.form, 'icon', icon)
+    menuTypeChange() {
+      this.clearFormValidate('form')
     },
     handleSubmit(formName) {
       this.$refs[formName].validate((valid) => {
@@ -416,9 +431,12 @@ export default {
       }
     },
     resetForm(formName) {
-      this.form.id = null
       this.$refs[formName].resetFields()
+      this.form.id = null
       this.tmpVisible = false
+    },
+    clearFormValidate(formName) {
+      this.$refs[formName].clearValidate()
     }
   }
 }
