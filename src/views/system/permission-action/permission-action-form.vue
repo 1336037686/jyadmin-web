@@ -8,17 +8,23 @@
     width="30%"
   >
     <div>
-      <el-form ref="form" :rules="rules" size="mini" :model="form" label-width="120px">
-        <el-form-item label="组别名称：" prop="name">
+      <el-form ref="form" :rules="rules" :model="form" label-width="120px">
+        <el-form-item label="接口名称：" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="组别编码：" prop="code">
+        <el-form-item label="权限标识：" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="排序：" prop="sort">
-          <el-input type="number" v-model="form.sort" />
+        <el-form-item label="状态：" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio-button :label="0">禁用</el-radio-button>
+            <el-radio-button :label="1">启用</el-radio-button>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="组别描述：" prop="description">
+        <el-form-item label="排序：" prop="sort">
+          <el-input v-model="form.sort" />
+        </el-form-item>
+        <el-form-item label="描述：" prop="description">
           <el-input v-model="form.description" type="textarea" />
         </el-form-item>
       </el-form>
@@ -31,15 +37,23 @@
 </template>
 
 <script>
-import api from '@/api/jy-permission-group'
+import api from '@/api/jy-permission-action'
 export default {
-  name: 'JyPermissionGroupForm',
+  name: 'JyPermissionActionForm',
   props: {
     title: {
       type: String,
       default: 'Demo'
     },
     id: {
+      type: String,
+      default: null
+    },
+    groupName: {
+      type: String,
+      default: null
+    },
+    groupId: {
       type: String,
       default: null
     },
@@ -55,18 +69,28 @@ export default {
       form: {
         id: '',
         name: '',
-        parentId: '0',
         code: '',
+        parentId: '0',
+        sort: '',
+        groupId: '',
+        status: 1,
         description: ''
       },
       rules: {
         name: [
-          { required: true, message: '请输入类别名称', trigger: 'blur' },
+          { required: true, message: '不能为空', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ],
         code: [
-          { required: true, message: '请输入类别编码', trigger: 'blur' },
+          { required: true, message: '不能为空', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        sort: [
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { type: 'number', message: '必须为数字值' }
         ]
       }
     }
@@ -84,6 +108,7 @@ export default {
           this.type = 'insert'
         }
       }
+      this.form.groupId = this.groupId
     },
     tmpVisible(newVal) {
       this.$emit('update:visible', newVal)
@@ -102,7 +127,7 @@ export default {
     handleCreate() {
       api.add(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '添加成功' })
-        this.$parent.getGroupList()
+        this.$parent.getActionList()
         this.tmpVisible = false
 
         this.resetForm('form')
@@ -114,7 +139,7 @@ export default {
     handleUpdate() {
       api.update(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '修改成功' })
-        this.$parent.getGroupList()
+        this.$parent.getActionList()
         this.tmpVisible = false
 
         this.resetForm('form')
@@ -131,8 +156,8 @@ export default {
       })
     },
     resetForm(formName) {
-      this.form.id = null
       this.$refs[formName].resetFields()
+      this.form.id = null
       this.tmpVisible = false
     }
   }

@@ -57,8 +57,8 @@
 
 <script>
 import jyCategoryApi from '@/api/jy-category'
-import JyCategoryForm from '@/views/jy-blog/category/category-form'
-import JyCategoryDetail from '@/views/jy-blog/category/category-detail'
+import JyCategoryForm from '@/views/blog/category/category-form'
+import JyCategoryDetail from '@/views/blog/category/category-detail'
 export default {
   name: 'JyCategory',
   components: { JyCategoryDetail, JyCategoryForm },

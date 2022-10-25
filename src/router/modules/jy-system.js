@@ -14,37 +14,37 @@ const tableRouter = {
   children: [
     {
       path: 'user',
-      component: () => import('@/views/jy-system/user/index'),
+      component: () => import('@/views/system/user/index'),
       name: 'jy-system-user',
       meta: { title: '用户管理', icon: 'table' }
     },
     {
       path: 'role',
-      component: () => import('@/views/jy-system/role/index'),
+      component: () => import('@/views/system/role/index'),
       name: 'jy-system-role',
       meta: { title: '角色管理', icon: 'table' }
     },
     {
       path: 'permission-group',
-      component: () => import('@/views/jy-system/permission-action/index'),
+      component: () => import('@/views/system/permission-action/index'),
       name: 'jy-system-permission-group',
       meta: { title: '接口管理', icon: 'table' }
     },
     {
       path: 'menu',
-      component: () => import('@/views/jy-system/permission-menu/index'),
+      component: () => import('@/views/system/permission-menu/index'),
       name: 'jy-system-permission-menu',
       meta: { title: '菜单管理', icon: 'table' }
     },
     {
       path: 'datadict',
-      component: () => import('@/views/jy-blog/tag/index'),
+      component: () => import('@/views/blog/tag/index'),
       name: 'jy-system-datadict',
       meta: { title: '数据字典管理', icon: 'table' }
     },
     {
       path: 'handle-log',
-      component: () => import('@/views/jy-system/log/index'),
+      component: () => import('@/views/system/log/index'),
       name: 'jy-system-handle-log',
       meta: { title: '操作日志管理', icon: 'table' }
     }

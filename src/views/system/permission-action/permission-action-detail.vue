@@ -11,17 +11,35 @@
       <el-descriptions :column="2" border>
         <el-descriptions-item>
           <template slot="label">
-            菜单名称
+            组别名称
           </template>
           {{ form.name }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            菜单标识
+            组别编码
           </template>
           {{ form.code }}
         </el-descriptions-item>
         <el-descriptions-item>
+          <template slot="label">
+            状态
+          </template>
+          {{ form.status === 1 ? '启用' : '禁用' }}
+        </el-descriptions-item>
+        <el-descriptions-item >
+          <template slot="label">
+            排序
+          </template>
+          {{ form.sort }}
+        </el-descriptions-item>
+        <el-descriptions-item span="2">
+          <template slot="label">
+            所属权限组
+          </template>
+          {{ groupName }}
+        </el-descriptions-item>
+        <el-descriptions-item span="2">
           <template slot="label">
             描述
           </template>
@@ -36,15 +54,19 @@
 </template>
 
 <script>
-import api from '@/api/jy-permission-menu'
+import api from '@/api/jy-permission-action'
 export default {
-  name: 'JyPermissionMenuDetail',
+  name: 'JyPermissionActionDetailVue',
   props: {
     title: {
       type: String,
       default: 'Demo'
     },
     id: {
+      type: String,
+      default: null
+    },
+    groupName: {
       type: String,
       default: null
     },
@@ -60,6 +82,7 @@ export default {
         id: '',
         name: '',
         code: '',
+        sort: '',
         description: ''
       }
     }

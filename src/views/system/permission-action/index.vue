@@ -10,15 +10,18 @@
           <div>
             <el-form :inline="true" label-width="100px" size="mini">
               <el-form-item>
-                <el-button type="primary" size="mini"  icon="el-icon-view" @click="groupHandleShow"></el-button>
-                <el-button type="success" size="mini"  icon="el-icon-plus" @click="groupHandleCreate"></el-button>
-                <el-button type="warning" size="mini"  icon="el-icon-edit-outline" @click="groupHandleUpdate"></el-button>
-                <el-button type="danger"  size="mini" icon="el-icon-delete" @click="groupHandleRemove"></el-button>
+                <el-button v-permission="['action:api-show']" type="primary" size="mini"  icon="el-icon-view" @click="groupHandleShow"></el-button>
+                <el-button v-permission="['action:api-add']" type="success" size="mini"  icon="el-icon-plus" @click="groupHandleCreate"></el-button>
+                <el-button v-permission="['action:api-update']" type="warning" size="mini"  icon="el-icon-edit-outline" @click="groupHandleUpdate"></el-button>
+                <el-button v-permission="['action:api-delete']" type="danger"  size="mini" icon="el-icon-delete" @click="groupHandleRemove"></el-button>
               </el-form-item>
             </el-form>
           </div>
           <el-table
             ref="table"
+            v-loading="groupTableData.loading"
+            element-loading-text="加载中，请稍后..."
+            element-loading-spinner="el-icon-loading"
             :data="groupTableData.records"
             highlight-current-row
             style="width: 100%"
@@ -59,16 +62,19 @@
               </el-form-item>
               <br>
               <el-form-item>
-                <el-button type="primary" size="mini" icon="el-icon-view" @click="actionHandleShow">查 看</el-button>
-                <el-button type="success" size="mini" icon="el-icon-plus" @click="actionHandleCreate">新 增</el-button>
-                <el-button type="warning" size="mini" icon="el-icon-edit-outline" @click="actionHandleUpdate">修 改</el-button>
-                <el-button type="danger"  size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
+                <el-button v-permission="['action:group-show']" type="primary" size="mini" icon="el-icon-view" @click="actionHandleShow">查 看</el-button>
+                <el-button v-permission="['action:group-add']" type="success" size="mini" icon="el-icon-plus" @click="actionHandleCreate">新 增</el-button>
+                <el-button v-permission="['action:group-update']" type="warning" size="mini" icon="el-icon-edit-outline" @click="actionHandleUpdate">修 改</el-button>
+                <el-button v-permission="['action:group-delete']" type="danger"  size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
               </el-form-item>
             </el-form>
           </div>
 
           <el-table
             ref="actionTable"
+            v-loading="actionTableData.loading"
+            element-loading-text="加载中，请稍后..."
+            element-loading-spinner="el-icon-loading"
             :data="actionTableData.records"
             highlight-current-row
             style="width: 100%"
@@ -122,18 +128,20 @@
 <script>
 import groupApi from '@/api/jy-permission-group'
 import actionApi from '@/api/jy-permission-action'
-import JyPermissionGroupForm from '@/views/jy-system/permission-action/permission-group-form'
-import JyPermissionGroupDetail from '@/views/jy-system/permission-action/permission-group-detail'
-import JyPermissionActionForm from '@/views/jy-system/permission-action/permission-action-form'
-import JyPermissionActionDetail from '@/views/jy-system/permission-action/permission-action-detail'
-import api from '@/api/jy-permission-action'
+import JyPermissionGroupForm from '@/views/system/permission-action/permission-group-form'
+import JyPermissionGroupDetail from '@/views/system/permission-action/permission-group-detail'
+import JyPermissionActionForm from '@/views/system/permission-action/permission-action-form'
+import JyPermissionActionDetail from '@/views/system/permission-action/permission-action-detail'
+import permission from '@/directive/permission/index.js' // 权限判断指令
 
 export default {
   name: 'JyPermissionGroup',
+  directives: { permission },
   components: { JyPermissionActionDetail, JyPermissionActionForm, JyPermissionGroupDetail, JyPermissionGroupForm },
   data() {
     return {
       groupTableData: {
+        loading: false,
         records: []
       },
       groupEditData: {
@@ -156,6 +164,7 @@ export default {
         code: ''
       },
       actionTableData: {
+        loading: false,
         records: []
       },
       actionEditData: {
@@ -182,6 +191,7 @@ export default {
   methods: {
     // group
     getGroupList() {
+      this.groupTableData.loading = true
       groupApi.getList().then(response => {
         this.groupTableData.records = response.data
         if (!this.groupTableData.records && this.groupTableData.records.length === 0) {
@@ -192,6 +202,7 @@ export default {
         let firstRow = this.groupTableData.records[0]
         this.groupSelectData.current = firstRow
         this.$refs.table.setCurrentRow(firstRow)
+        this.groupTableData.loading = false
         this.getActionList()
       })
     },
@@ -246,9 +257,11 @@ export default {
     },
     // action
     getActionList() {
+      this.actionTableData.loading = true
       this.actionQueryForm.groupId = this.groupSelectData.current.id
       actionApi.list(this.actionQueryForm).then(response => {
         this.actionTableData.records = response.data
+        this.actionTableData.loading = false
       })
     },
     actionHandleReset() {
@@ -309,7 +322,7 @@ export default {
       this.$refs.actionTable.toggleRowSelection(row)
     },
     actionStatusChange(data) {
-      api.update(data).then(response => {
+      actionApi.update(data).then(response => {
         this.$notify.success({ title: '成功', message: '状态修改成功' })
         this.getActionList()
         this.tmpVisible = false

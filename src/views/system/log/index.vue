@@ -97,7 +97,7 @@
 
 <script>
 import logApi from '@/api/jy-log'
-import JyLogDetail from "@/views/jy-system/log/log-detail";
+import JyLogDetail from "@/views/system/log/log-detail";
 
 import {codemirror} from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'

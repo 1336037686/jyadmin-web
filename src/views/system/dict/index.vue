@@ -56,8 +56,8 @@
 
 <script>
 import dictApi from '@/api/jy-dict'
-import JyDictForm from '@/views/jy-system/dict/jy-dict-form'
-import JyDictDetail from '@/views/jy-system/dict/jy-dict-detail'
+import JyDictForm from '@/views/system/dict/jy-dict-form'
+import JyDictDetail from '@/views/system/dict/jy-dict-detail'
 import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
   directives: { permission },

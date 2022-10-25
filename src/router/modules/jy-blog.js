@@ -14,13 +14,13 @@ const tableRouter = {
   children: [
     {
       path: 'category',
-      component: () => import('@/views/jy-blog/category/index'),
+      component: () => import('@/views/blog/category/index'),
       name: 'jy-blog-category',
       meta: { title: '类别管理', icon: 'table' }
     },
     {
       path: 'tag',
-      component: () => import('@/views/jy-blog/tag/index'),
+      component: () => import('@/views/blog/tag/index'),
       name: 'jy-blog-tag',
       meta: { title: '标签管理', icon: 'table' }
     }

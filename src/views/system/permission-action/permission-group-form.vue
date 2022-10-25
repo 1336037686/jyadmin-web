@@ -5,26 +5,20 @@
     :close-on-press-escape="false"
     :close-on-click-modal="false"
     :show-close="false"
-    width="30%"
+    width="28%"
   >
     <div>
-      <el-form ref="form" :rules="rules" size="mini" :model="form" label-width="120px">
-        <el-form-item label="角色名称：" prop="name">
+      <el-form ref="form" :rules="rules" :model="form" label-width="100px">
+        <el-form-item label="组别名称：" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="角色编码：" prop="code">
+        <el-form-item label="组别编码：" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="角色状态：" prop="status">
-          <el-radio-group v-model="form.status">
-            <el-radio-button :label="0">禁用</el-radio-button>
-            <el-radio-button :label="1">启用</el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="角色排序：" prop="sort">
+        <el-form-item label="排序：" prop="sort">
           <el-input v-model="form.sort" />
         </el-form-item>
-        <el-form-item label="角色描述：" prop="description">
+        <el-form-item label="组别描述：" prop="description">
           <el-input v-model="form.description" type="textarea" />
         </el-form-item>
       </el-form>
@@ -37,9 +31,9 @@
 </template>
 
 <script>
-import roleApi from '@/api/jy-role'
+import api from '@/api/jy-permission-group'
 export default {
-  name: 'JyRoleForm',
+  name: 'JyPermissionGroupForm',
   props: {
     title: {
       type: String,
@@ -61,19 +55,22 @@ export default {
       form: {
         id: '',
         name: '',
+        parentId: '0',
         code: '',
-        status: 1,
-        sort: 0,
         description: ''
       },
       rules: {
         name: [
-          { required: true, message: '请输入标签名称', trigger: 'blur' },
+          { required: true, message: '不能为空', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ],
         code: [
-          { required: true, message: '请输入标签编码', trigger: 'blur' },
+          { required: true, message: '不能为空', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+        ],
+        sort: [
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { type: 'number', message: '必须为数字值' }
         ]
       }
     }
@@ -107,9 +104,9 @@ export default {
       })
     },
     handleCreate() {
-      roleApi.add(this.form).then(response => {
+      api.add(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '添加成功' })
-        this.$parent.getList()
+        this.$parent.getGroupList()
         this.tmpVisible = false
 
         this.resetForm('form')
@@ -119,9 +116,9 @@ export default {
       })
     },
     handleUpdate() {
-      roleApi.update(this.form).then(response => {
+      api.update(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '修改成功' })
-        this.$parent.getList()
+        this.$parent.getGroupList()
         this.tmpVisible = false
 
         this.resetForm('form')
@@ -131,7 +128,7 @@ export default {
       })
     },
     getById(id) {
-      roleApi.getById(id).then(response => {
+      api.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '获取数据失败' })

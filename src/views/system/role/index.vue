@@ -15,10 +15,10 @@
       </el-form>
 
       <div style="margin-top: 5px">
-        <el-button type="primary" size="mini"  icon="el-icon-view" @click="handleShow">查 看</el-button>
-        <el-button type="success" size="mini"  icon="el-icon-plus" @click="handleCreate">新 增</el-button>
-        <el-button type="warning" size="mini"  icon="el-icon-edit-outline" @click="handleUpdate">修 改</el-button>
-        <el-button type="danger"  size="mini" icon="el-icon-delete" @click="handleRemove">删 除</el-button>
+        <el-button v-permission="['role:show']" type="primary" size="mini"  icon="el-icon-view" @click="handleShow">查 看</el-button>
+        <el-button v-permission="['role:add']" type="success" size="mini"  icon="el-icon-plus" @click="handleCreate">新 增</el-button>
+        <el-button v-permission="['role:update']" type="warning" size="mini"  icon="el-icon-edit-outline" @click="handleUpdate">修 改</el-button>
+        <el-button v-permission="['role:delete']" type="danger"  size="mini" icon="el-icon-delete" @click="handleRemove">删 除</el-button>
       </div>
     </el-card>
 
@@ -30,6 +30,9 @@
           </div>
           <el-table
             ref="table"
+            v-loading="tableData.loading"
+            element-loading-text="加载中，请稍后..."
+            element-loading-spinner="el-icon-loading"
             :data="tableData.records"
             highlight-current-row
             style="width: 100%"
@@ -64,10 +67,17 @@
         </div>
       </el-col>
       <el-col :span="6" style="padding-left: 10px">
-        <el-card class="box-card" shadow="always" style="margin-top: 5px">
+        <el-card
+          class="box-card"
+          shadow="always"
+          style="margin-top: 5px"
+          v-loading="selectData.loading"
+          element-loading-text="加载中，请稍后..."
+          element-loading-spinner="el-icon-loading"
+        >
         <div slot="header" class="clearfix">
-          <span>菜单分配</span>
-          <el-button style="float: right;" size="mini" type="primary" icon="el-icon-circle-check" @click="handleUpdateRoleMenus">保存</el-button>
+          <span><i class="el-icon-caret-right"/> 菜单分配</span>
+          <el-button v-permission="['role:menu']" style="float: right;" size="mini" type="primary" icon="el-icon-circle-check" @click="handleUpdateRoleMenus">保存</el-button>
         </div>
           <el-tree
             :data="menuTreeData"
@@ -100,11 +110,13 @@
 <script>
 import roleApi from '@/api/jy-role'
 import menuApi from '@/api/jy-permission-menu'
-import JyRoleDetail from "@/views/jy-system/role/jy-role-detail";
-import JyRoleForm from "@/views/jy-system/role/jy-role-form";
+import JyRoleDetail from "@/views/system/role/jy-role-detail"
+import JyRoleForm from "@/views/system/role/jy-role-form"
+import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
   name: 'JyRole',
-  components: {JyRoleForm, JyRoleDetail},
+  directives: { permission },
+  components: { JyRoleForm, JyRoleDetail },
   data() {
     return {
       queryForm: {
@@ -112,6 +124,7 @@ export default {
         code: ''
       },
       tableData: {
+        loading: false,
         pageNumber: 1,
         pageSize: 10,
         pages: 1,
@@ -131,6 +144,7 @@ export default {
         id: null
       },
       selectData: {
+        loading: false,
         current: null,
         record: []
       },
@@ -143,9 +157,11 @@ export default {
   },
   methods: {
     getList() {
+      this.tableData.loading = true
       const queryForm = { ...this.queryForm, pageNumber: this.tableData.pageNumber, pageSize: this.tableData.pageSize }
       roleApi.getList(queryForm).then(response => {
         this.tableData = response
+        this.tableData.loading = false
       })
     },
     handleQuery() {
@@ -215,22 +231,26 @@ export default {
     },
 
     getTree() {
+      this.selectData.loading = true
       menuApi.layer().then(response => {
         this.menuTreeData = response.data
+        this.selectData.loading = false
       })
     },
     getRoleMenus() {
-      this.$refs.menuTree.setCheckedKeys([]);
+      this.selectData.loading = true
+      this.$refs.menuTree.setCheckedKeys([])
       if (!this.selectData.current) return
       menuApi.getFromRole(this.selectData.current.id).then(response => {
         let checkedKeys = response.data
         checkedKeys = !checkedKeys ? [] : checkedKeys
-        this.$refs.menuTree.setCheckedKeys(checkedKeys);
+        this.$refs.menuTree.setCheckedKeys(checkedKeys)
+        this.selectData.loading = false
       })
     },
     handleUpdateRoleMenus() {
       if (!this.selectData.current) {
-        this.$notify.warning({title: '警告', message: '请先选择一条数据'})
+        this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
       let checkedNodes = this.$refs.menuTree.getCheckedNodes()
@@ -246,7 +266,7 @@ export default {
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '设置失败' })
       })
-    },
+    }
   }
 }
 </script>

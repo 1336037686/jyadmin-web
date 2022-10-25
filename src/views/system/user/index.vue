@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px">
     <el-card class="box-card" shadow="always">
-      <el-form :inline="true" :model="queryForm" size="mini" label-width="100px">
+      <el-form :inline="true" :model="queryForm" size="mini" label-width="80px">
         <el-form-item label="用户名：">
           <el-input v-model="queryForm.username" placeholder="用户名" />
         </el-form-item>
@@ -18,21 +18,24 @@
       </el-form>
 
       <div style="margin-top: 5px">
-        <el-button type="primary" size="mini"  icon="el-icon-view" @click="handleShow">查 看</el-button>
-        <el-button type="success" size="mini"  icon="el-icon-plus" @click="handleCreate">新 增</el-button>
-        <el-button type="success" size="mini"  icon="el-icon-user-solid" @click="handleRole">角色分配</el-button>
-        <el-button type="warning" size="mini"  icon="el-icon-edit-outline" @click="handleUpdate">修 改</el-button>
-        <el-button type="warning" size="mini"  icon="el-icon-s-tools" @click="handleUpdatePassword">重置密码</el-button>
-        <el-button type="danger"  size="mini" icon="el-icon-delete" @click="handleRemove">删 除</el-button>
+        <el-button v-permission="['user:show']" type="primary" size="mini" icon="el-icon-view" @click="handleShow">查 看</el-button>
+        <el-button v-permission="['user:add']" type="success" size="mini" icon="el-icon-plus" @click="handleCreate">新 增</el-button>
+        <el-button v-permission="['user:role']" type="success" size="mini" icon="el-icon-user-solid" @click="handleRole">角色分配</el-button>
+        <el-button v-permission="['user:update']" type="warning" size="mini" icon="el-icon-edit-outline" @click="handleUpdate">修 改</el-button>
+        <el-button v-permission="['user:resetpwd']" type="warning" size="mini" icon="el-icon-s-tools" @click="handleUpdatePassword">重置密码</el-button>
+        <el-button v-permission="['user:delete']" type="danger" size="mini" icon="el-icon-delete" @click="handleRemove">删 除</el-button>
       </div>
     </el-card>
 
     <el-card class="box-card" shadow="always " style="margin-top: 5px">
       <div slot="header" class="clearfix">
-        <span><i class="el-icon-caret-right"/> 用户列表</span>
+        <span><i class="el-icon-caret-right" /> 用户列表</span>
       </div>
       <el-table
         ref="table"
+        v-loading="tableData.loading"
+        element-loading-text="加载中，请稍后..."
+        element-loading-spinner="el-icon-loading"
         :data="tableData.records"
         highlight-current-row
         style="width: 100%"
@@ -44,7 +47,7 @@
         <el-table-column prop="username" label="用户名" />
         <el-table-column prop="nickname" label="昵称" />
         <el-table-column prop="phone" label="电话" />
-        <el-table-column prop="type" label="用户类型" >
+        <el-table-column prop="type" label="用户类型">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.type === 1" size="mini" effect="plain"> 管理员 </el-tag>
             <el-tag v-if="scope.row.type === 0" size="mini" effect="plain" type="success"> 普通用户 </el-tag>
@@ -56,7 +59,7 @@
             <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> 禁 用 </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" width="220" align="center"/>
+        <el-table-column prop="createTime" label="创建时间" width="220" align="center" />
       </el-table>
 
     </el-card>
@@ -82,13 +85,15 @@
 
 <script>
 import userApi from '@/api/jy-user'
-import JyUserDetail from "@/views/jy-system/user/jy-user-detail";
-import JyUserForm from "@/views/jy-system/user/jy-user-form";
-import JyUserRole from "@/views/jy-system/user/jy-user-role";
-import JyUserPassword from "@/views/jy-system/user/jy-user-password";
+import JyUserDetail from '@/views/system/user/jy-user-detail'
+import JyUserForm from '@/views/system/user/jy-user-form'
+import JyUserRole from '@/views/system/user/jy-user-role'
+import JyUserPassword from '@/views/system/user/jy-user-password'
+import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
   name: 'JyTag',
-  components: {JyUserPassword, JyUserRole, JyUserForm, JyUserDetail },
+  directives: { permission },
+  components: { JyUserPassword, JyUserRole, JyUserForm, JyUserDetail },
   data() {
     return {
       queryForm: {
@@ -97,6 +102,7 @@ export default {
         phone: ''
       },
       tableData: {
+        loading: false,
         pageNumber: 1,
         pageSize: 10,
         pages: 1,
@@ -138,8 +144,10 @@ export default {
   },
   methods: {
     getList() {
+      this.tableData.loading = true
       const queryForm = { ...this.queryForm, pageNumber: this.tableData.pageNumber, pageSize: this.tableData.pageSize }
       userApi.getList(queryForm).then(response => {
+        this.tableData.loading = false
         this.tableData = response
       })
     },

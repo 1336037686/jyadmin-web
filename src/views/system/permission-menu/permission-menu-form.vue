@@ -102,7 +102,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="排序：" prop="sort">
-                <el-input v-model="form.sort" />
+                <el-input v-model.number="form.sort" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -185,7 +185,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="排序：" prop="sort">
-                <el-input v-model="form.sort" />
+                <el-input v-model.number="form.sort" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -242,7 +242,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="排序：" prop="sort">
-                <el-input v-model="form.sort" />
+                <el-input v-model.number="form.sort" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -304,7 +304,7 @@ export default {
         link: 0,
         status: 1,
         url: '',
-        sort: '',
+        sort: null,
         component: '',
         path: '',
         method: '',

@@ -97,7 +97,7 @@
           style="margin-top: 5px"
         >
           <div slot="header" class="clearfix">
-            <span>接口分配</span>
+            <span><i class="el-icon-caret-right"/> 接口分配</span>
             <el-button v-permission="['menu:addAction']" style="float: right;" size="mini" type="primary" icon="el-icon-circle-check" @click="handleUpdateMenuActions">保存</el-button>
           </div>
 
@@ -128,8 +128,8 @@
 <script>
 import menuApi from '@/api/jy-permission-menu'
 import actionApi from '@/api/jy-permission-action'
-import JyPermissionMenuForm from '@/views/jy-system/permission-menu/permission-menu-form'
-import JyPermissionMenuDetail from '@/views/jy-system/permission-menu/permission-menu-detail'
+import JyPermissionMenuForm from '@/views/system/permission-menu/permission-menu-form'
+import JyPermissionMenuDetail from '@/views/system/permission-menu/permission-menu-detail'
 import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
   name: 'JyPermissionMenu',
@@ -236,7 +236,9 @@ export default {
       this.getMenuActions()
     },
     getTree() {
+      this.selectData.loading = true
       actionApi.tree().then(response => {
+        this.selectData.loading = false
         this.actionTreeData = response.data
       })
     },

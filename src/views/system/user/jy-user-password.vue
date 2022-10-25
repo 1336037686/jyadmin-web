@@ -8,7 +8,7 @@
     width="30%"
   >
     <div>
-      <el-form ref="form" :rules="rules" size="mini" :model="form" label-width="120px">
+      <el-form ref="form" :rules="rules" :model="form" label-width="120px">
         <el-row>
           <el-col :span="24">
             <el-form-item label="用户名称：" prop="name">

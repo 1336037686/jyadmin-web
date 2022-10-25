@@ -11,33 +11,69 @@
       <el-descriptions :column="2" border>
         <el-descriptions-item>
           <template slot="label">
-            组别名称
+            菜单名称
           </template>
           {{ form.name }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            组别编码
+            菜单标识
           </template>
           {{ form.code }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            状态
+            菜单图标
           </template>
-          {{ form.status === 1 ? '启用' : '禁用' }}
+          <e-icon :icon-name="form.icon"/>
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            所属权限组
+            菜单类别
           </template>
-          {{ groupName }}
+          {{ form.type === 0 ? '目录' : (form.type === 1 ? '菜单' : '按钮')}}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            排序
+            路由地址
           </template>
-          {{ form.sort }}
+          {{ form.url }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            组件路径
+          </template>
+          {{ form.path }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            是否外链
+          </template>
+          {{ form.link === 0 ? '否' : '是' }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            是否缓存
+          </template>
+          {{ form.cache === 0 ? '否' : '是' }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            是否可见
+          </template>
+          {{ form.visiable === 0 ? '否' : '是' }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            是否启用
+          </template>
+          {{ form.status === 0 ? '否' : '是' }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            创建时间
+          </template>
+          {{ form.createTime }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
@@ -54,19 +90,15 @@
 </template>
 
 <script>
-import api from '@/api/jy-permission-action'
+import api from '@/api/jy-permission-menu'
 export default {
-  name: 'JyPermissionActionDetailVue',
+  name: 'JyPermissionMenuDetail',
   props: {
     title: {
       type: String,
       default: 'Demo'
     },
     id: {
-      type: String,
-      default: null
-    },
-    groupName: {
       type: String,
       default: null
     },
@@ -82,7 +114,6 @@ export default {
         id: '',
         name: '',
         code: '',
-        sort: '',
         description: ''
       }
     }

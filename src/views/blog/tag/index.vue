@@ -58,8 +58,8 @@
 
 <script>
 import jyTagApi from '@/api/jy-tag'
-import JyTagForm from '@/views/jy-blog/tag/tag-form'
-import JyTagDetail from '@/views/jy-blog/tag/tag-detail'
+import JyTagForm from '@/views/blog/tag/tag-form'
+import JyTagDetail from '@/views/blog/tag/tag-detail'
 export default {
   name: 'JyTag',
   components: { JyTagDetail, JyTagForm },

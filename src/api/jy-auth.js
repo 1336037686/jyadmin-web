@@ -15,7 +15,7 @@ export function getInfo() {
   })
 }
 
-export function  getMenus() {
+export function getMenus() {
   return request({
     url: '/api/auth/menus',
     method: 'get'

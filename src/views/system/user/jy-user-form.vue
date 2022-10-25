@@ -8,12 +8,12 @@
     width="30%"
   >
     <div>
-      <el-form ref="form" :rules="rules" size="mini" :model="form" label-width="120px">
+      <el-form ref="form" :rules="rules" :model="form" label-width="120px">
         <el-form-item label="用户名：" prop="username">
           <el-input v-model="form.username" />
         </el-form-item>
         <el-form-item label="密码：" prop="password" v-if="type === 'insert'">
-          <el-input v-model="form.password" />
+          <el-input type="password" v-model="form.password" />
         </el-form-item>
         <el-form-item label="昵称：" prop="nickname">
           <el-input v-model="form.nickname" />
@@ -74,9 +74,23 @@ export default {
         status: 1
       },
       rules: {
-        name: [
-          { required: true, message: '请输入标签名称', trigger: 'blur' },
-          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+        username: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        nickname: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '不能为空', trigger: 'blur' }
         ],
         code: [
           { required: true, message: '请输入标签编码', trigger: 'blur' },
