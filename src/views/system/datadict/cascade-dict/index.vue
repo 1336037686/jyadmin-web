@@ -56,9 +56,9 @@
 
 <script>
 import dictApi from '@/api/jy-dict'
-import JyDictForm from '@/views/system/dict/jy-dict-form'
-import JyDictDetail from '@/views/system/dict/jy-dict-detail'
-import permission from '@/directive/permission/index.js' // 权限判断指令
+import JyDictForm from '@/views/system/datadict/cascade-dict/jy-dict-form'
+import JyDictDetail from '@/views/system/datadict/cascade-dict/jy-dict-detail'
+import permission from '@/directive/permission' // 权限判断指令
 export default {
   directives: { permission },
   name: 'JyDict',

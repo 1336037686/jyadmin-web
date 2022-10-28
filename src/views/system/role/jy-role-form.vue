@@ -22,7 +22,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="角色排序：" prop="sort">
-          <el-input v-model="form.sort" />
+          <el-input v-model.number="form.sort" />
         </el-form-item>
         <el-form-item label="角色描述：" prop="description">
           <el-input v-model="form.description" type="textarea" />
