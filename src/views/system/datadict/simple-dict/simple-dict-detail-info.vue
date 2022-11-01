@@ -11,27 +11,21 @@
       <el-descriptions :column="2" border>
         <el-descriptions-item>
           <template slot="label">
-            字典名称
+            字段名称
           </template>
           {{ form.name }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            字典编码
+            字段编码
           </template>
           {{ form.code }}
         </el-descriptions-item>
-        <el-descriptions-item>
+        <el-descriptions-item span="2">
           <template slot="label">
-            字典类型
+            字段描述
           </template>
-          {{ form.dictType }}
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            字典排序
-          </template>
-          {{ form.sort }}
+          {{ form.remark }}
         </el-descriptions-item>
       </el-descriptions>
     </div>
@@ -42,15 +36,18 @@
 </template>
 
 <script>
-import dictApi from '@/api/jy-dict'
+import api from '@/api/jy-simple-data-dict-detail'
 export default {
-  name: 'JyDictDetail',
   props: {
     title: {
       type: String,
       default: 'Demo'
     },
     id: {
+      type: String,
+      default: null
+    },
+    groupName: {
       type: String,
       default: null
     },
@@ -66,9 +63,7 @@ export default {
         id: '',
         name: '',
         code: '',
-        status: '',
-        sort: '',
-        description: ''
+        remark: ''
       }
     }
   },
@@ -86,7 +81,7 @@ export default {
   },
   methods: {
     getById(id) {
-      dictApi.getById(id).then(response => {
+      api.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '获取数据失败' })

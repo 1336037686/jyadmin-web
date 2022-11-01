@@ -35,17 +35,17 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column type="index" width="55" label="序号" align="center" />
-        <el-table-column prop="username" label="操作用户" align="center" width="180"/>
-        <el-table-column prop="handleName" label="操作名称" align="center" />
-        <el-table-column prop="handleDesc" label="操作描述" align="center" />
-        <el-table-column prop="ipAddress" label="IP地址" align="center" width="150" />
-        <el-table-column prop="ipArea" label="所属地区" align="center"  width="150" />
+        <el-table-column prop="username" label="操作用户" align="center" width="180" show-overflow-tooltip />
+        <el-table-column prop="handleName" label="操作名称" align="center" show-overflow-tooltip />
+        <el-table-column prop="handleDesc" label="操作描述" align="center" show-overflow-tooltip />
+        <el-table-column prop="ipAddress" label="IP地址" align="center" width="150" show-overflow-tooltip />
+        <el-table-column prop="ipArea" label="所属地区" align="center"  width="150" show-overflow-tooltip />
 <!--        <el-table-column prop="browser" label="浏览器" align="center"  width="150" />-->
 <!--        <el-table-column prop="application" label="设备" />-->
-        <el-table-column prop="requestPath" label="请求路径" align="center" />
-        <el-table-column prop="requestMethod" label="请求类型" align="center" width="100" />
+        <el-table-column prop="requestPath" label="请求路径" align="center" show-overflow-tooltip />
+        <el-table-column prop="requestMethod" label="请求类型" align="center" width="100" show-overflow-tooltip />
 <!--        <el-table-column prop="requestParam" label="请求参数" />-->
-        <el-table-column prop="requestTime" label="请求时间" align="center" />
+        <el-table-column prop="requestTime" label="请求时间" align="center" show-overflow-tooltip />
 <!--        <el-table-column prop="method" label="请求类方法" />-->
         <el-table-column prop="executeStatus" label="执行状态" align="center" width="100"/>
         <el-table-column prop="executeTime" label="耗时(s)" align="center" width="100"/>

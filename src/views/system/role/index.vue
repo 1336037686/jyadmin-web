@@ -41,8 +41,8 @@
             @row-click="handleTableRowClick"
           >
             <el-table-column type="selection" width="55" align="center" />
-            <el-table-column prop="name" align="center" label="角色名称" />
-            <el-table-column prop="code" align="center" label="角色编码" />
+            <el-table-column prop="name" align="center" label="角色名称" show-overflow-tooltip />
+            <el-table-column prop="code" align="center" label="角色编码" show-overflow-tooltip />
             <el-table-column prop="sort" align="center" label="排序" />
             <el-table-column prop="status" align="center" label="状态">
               <template slot-scope="scope">

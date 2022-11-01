@@ -44,8 +44,8 @@
         @row-click="handleTableRowClick"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column prop="username" label="用户名" />
-        <el-table-column prop="nickname" label="昵称" />
+        <el-table-column prop="username" label="用户名" show-overflow-tooltip />
+        <el-table-column prop="nickname" label="昵称" show-overflow-tooltip />
         <el-table-column prop="phone" label="电话" />
         <el-table-column prop="type" label="用户类型">
           <template slot-scope="scope">

@@ -2,18 +2,26 @@
   <div style="margin: 10px">
 
     <el-row style="margin-top: 10px">
-      <el-col :span="6" style="padding-right: 15px">
+      <el-col :span="8" style="padding-right: 15px">
         <el-card class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 接口分组</span>
+            <span><i class="el-icon-caret-right"/> 通用字典</span>
           </div>
           <div>
             <el-form :inline="true" label-width="100px" size="mini">
+              <el-form-item label="字典名称：">
+                <el-input v-model="groupQueryForm.name" placeholder="字典名称" />
+              </el-form-item>
               <el-form-item>
-                <el-button v-permission="['action:api-show']" type="primary" size="mini"  icon="el-icon-view" @click="groupHandleShow"></el-button>
-                <el-button v-permission="['action:api-add']" type="success" size="mini"  icon="el-icon-plus" @click="groupHandleCreate"></el-button>
-                <el-button v-permission="['action:api-update']" type="warning" size="mini"  icon="el-icon-edit-outline" @click="groupHandleUpdate"></el-button>
-                <el-button v-permission="['action:api-delete']" type="danger"  size="mini" icon="el-icon-delete" @click="groupHandleRemove"></el-button>
+                <el-button type="primary" icon="el-icon-search" @click="getGroupList">查 询</el-button>
+                <el-button type="info" icon="el-icon-circle-close" @click="groupHandleReset">重 置</el-button>
+              </el-form-item>
+              <br>
+              <el-form-item>
+                <el-button type="primary" size="mini"  icon="el-icon-view" @click="groupHandleShow"></el-button>
+                <el-button type="success" size="mini"  icon="el-icon-plus" @click="groupHandleCreate"></el-button>
+                <el-button type="warning" size="mini"  icon="el-icon-edit-outline" @click="groupHandleUpdate"></el-button>
+                <el-button type="danger"  size="mini" icon="el-icon-delete" @click="groupHandleRemove"></el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -30,15 +38,15 @@
             @row-click="groupHandleTableRowClick"
           >
             <el-table-column type="index" label="序号" align="center" width="80"/>
-            <el-table-column prop="name" label="分组名称" show-overflow-tooltip  />
-            <el-table-column prop="code" label="标识" align="center" width="100" show-overflow-tooltip />
+            <el-table-column prop="name" label="字典名称" align="center" show-overflow-tooltip  />
+            <el-table-column prop="code" label="字典编码" align="center" show-overflow-tooltip />
           </el-table>
         </el-card>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="16">
         <el-card v-if="!groupSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 接口列表</span>
+            <span><i class="el-icon-caret-right"/> 字典明细</span>
           </div>
           <div>
             <el-alert title="请先指定某个分组" type="info" :closable="false" />
@@ -46,15 +54,15 @@
         </el-card>
         <el-card v-if="groupSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 接口列表</span>
+            <span><i class="el-icon-caret-right"/> 字典明细</span>
           </div>
           <div>
             <el-form :inline="true" :model="actionQueryForm" label-width="90px" size="mini">
-              <el-form-item label="接口名称：">
-                <el-input v-model="actionQueryForm.name" placeholder="接口名称" />
+              <el-form-item label="字段名称：">
+                <el-input v-model="actionQueryForm.name" placeholder="字段名称" />
               </el-form-item>
-              <el-form-item label="权限标识：">
-                <el-input v-model="actionQueryForm.code" placeholder="权限标识" />
+              <el-form-item label="字段编码：">
+                <el-input v-model="actionQueryForm.code" placeholder="字段编码" />
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="getActionList">查 询</el-button>
@@ -62,10 +70,10 @@
               </el-form-item>
               <br>
               <el-form-item>
-                <el-button v-permission="['action:group-show']" type="primary" size="mini" icon="el-icon-view" @click="actionHandleShow">查 看</el-button>
-                <el-button v-permission="['action:group-add']" type="success" size="mini" icon="el-icon-plus" @click="actionHandleCreate">新 增</el-button>
-                <el-button v-permission="['action:group-update']" type="warning" size="mini" icon="el-icon-edit-outline" @click="actionHandleUpdate">修 改</el-button>
-                <el-button v-permission="['action:group-delete']" type="danger"  size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
+                <el-button type="primary" size="mini" icon="el-icon-view" @click="actionHandleShow">查 看</el-button>
+                <el-button type="success" size="mini" icon="el-icon-plus" @click="actionHandleCreate">新 增</el-button>
+                <el-button type="warning" size="mini" icon="el-icon-edit-outline" @click="actionHandleUpdate">修 改</el-button>
+                <el-button type="danger"  size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -83,40 +91,25 @@
             @row-click="actionHandleTableRowClick"
           >
             <el-table-column type="selection" width="60" align="center" />
-            <el-table-column prop="name" label="接口名称" width="200" align="center" show-overflow-tooltip />
-            <el-table-column prop="code" label="权限标识" width="200" align="center" show-overflow-tooltip />
-            <el-table-column prop="sort" label="排序" align="center" width="80"  />
-            <el-table-column prop="status" label="状态" width="150" align="center">
-              <template slot-scope="scope">
-                <el-switch
-                  v-model="scope.row.status"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949"
-                  active-text="启用"
-                  inactive-text="禁用"
-                  :active-value="1"
-                  :inactive-value="0"
-                  @change="actionStatusChange(scope.row)"
-                />
-              </template>
-            </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" width="220" align="center"/>
-            <el-table-column prop="description" label="描述" :show-overflow-tooltip="true" />
+            <el-table-column prop="name" label="字段名称" align="center" show-overflow-tooltip />
+            <el-table-column prop="code" label="字段编码" align="center" show-overflow-tooltip />
+            <el-table-column prop="createTime" label="创建时间" align="center" show-overflow-tooltip />
+            <el-table-column prop="remark" label="备注" width="200" align="center" show-overflow-tooltip />
           </el-table>
         </el-card>
       </el-col>
     </el-row>
 
-    <jy-permission-group-form :id="groupEditData.id" :title="groupEditData.title" :visible.sync="groupEditData.visiable" />
-    <jy-permission-group-detail :id="groupShowData.id" :title="groupShowData.title" :visible.sync="groupShowData.visiable" />
+    <jy-simple-dict-form :id="groupEditData.id" :title="groupEditData.title" :visible.sync="groupEditData.visiable" />
+    <jy-simple-dict-detail :id="groupShowData.id" :title="groupShowData.title" :visible.sync="groupShowData.visiable" />
 
-    <jy-permission-action-form
+    <jy-simple-dict-detail-form
       :id="actionEditData.id"
       :title="actionEditData.title"
       :visible.sync="actionEditData.visiable"
-      :group-id="actionEditData.groupId"
+      :data-dict-id="actionEditData.dataDictId"
     />
-    <jy-permission-action-detail
+    <jy-simple-dict-detail-info
       :id="actionShowData.id"
       :title="actionShowData.title"
       :visible.sync="actionShowData.visiable"
@@ -126,20 +119,22 @@
 </template>
 
 <script>
-import groupApi from '@/api/jy-permission-group'
-import actionApi from '@/api/jy-permission-action'
-import JyPermissionGroupForm from '@/views/system/permission-action/permission-group-form'
-import JyPermissionGroupDetail from '@/views/system/permission-action/permission-group-detail'
-import JyPermissionActionForm from '@/views/system/permission-action/permission-action-form'
-import JyPermissionActionDetail from '@/views/system/permission-action/permission-action-detail'
+import groupApi from '@/api/jy-simple-data-dict'
+import actionApi from '@/api/jy-simple-data-dict-detail'
+import JySimpleDictForm from '@/views/system/datadict/simple-dict/simple-dict-form'
+import JySimpleDictDetail from '@/views/system/datadict/simple-dict/simple-dict-detail'
+import JySimpleDictDetailForm from '@/views/system/datadict/simple-dict/simple-dict-detail-form'
+import JySimpleDictDetailInfo from '@/views/system/datadict/simple-dict/simple-dict-detail-info'
 import permission from '@/directive/permission/index.js' // 权限判断指令
 
 export default {
-  name: 'JyPermissionGroup',
   directives: { permission },
-  components: { JyPermissionActionDetail, JyPermissionActionForm, JyPermissionGroupDetail, JyPermissionGroupForm },
+  components: { JySimpleDictDetailForm, JySimpleDictDetailInfo, JySimpleDictDetail, JySimpleDictForm },
   data() {
     return {
+      groupQueryForm: {
+        name: ''
+      },
       groupTableData: {
         loading: false,
         records: []
@@ -155,11 +150,11 @@ export default {
         id: null
       },
       groupSelectData: {
-        current: null,
+        current: null
       },
       // action
       actionQueryForm: {
-        groupId: '',
+        dataDictId: null,
         name: '',
         code: ''
       },
@@ -169,7 +164,7 @@ export default {
       },
       actionEditData: {
         visiable: false,
-        groupId: '',
+        dataDictId: '',
         title: '',
         id: null
       },
@@ -192,7 +187,7 @@ export default {
     // group
     getGroupList() {
       this.groupTableData.loading = true
-      groupApi.getList().then(response => {
+      groupApi.getList(this.groupQueryForm).then(response => {
         this.groupTableData.records = response.data
         if (!this.groupTableData.records && this.groupTableData.records.length === 0) {
           this.groupSelectData.current = null
@@ -206,17 +201,21 @@ export default {
         this.getActionList()
       })
     },
+    groupHandleReset() {
+      this.groupQueryForm.name = ''
+      this.getGroupList()
+    },
     groupHandleShow() {
       if (!this.groupSelectData.current) {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.groupShowData.title = '查看组别'
+      this.groupShowData.title = '查看'
       this.groupShowData.id = this.groupSelectData.current.id
       this.groupShowData.visiable = true
     },
     groupHandleCreate() {
-      this.groupEditData.title = '新增组别'
+      this.groupEditData.title = '新增'
       this.groupEditData.id = null
       this.groupEditData.visiable = true
     },
@@ -225,7 +224,7 @@ export default {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.groupEditData.title = '修改组别'
+      this.groupEditData.title = '修改'
       this.groupEditData.id = this.groupSelectData.current.id
       this.groupEditData.visiable = true
     },
@@ -258,8 +257,8 @@ export default {
     // action
     getActionList() {
       this.actionTableData.loading = true
-      this.actionQueryForm.groupId = this.groupSelectData.current.id
-      actionApi.list(this.actionQueryForm).then(response => {
+      this.actionQueryForm.dataDictId = this.groupSelectData.current.id
+      actionApi.getList(this.actionQueryForm).then(response => {
         this.actionTableData.records = response.data
         this.actionTableData.loading = false
       })
@@ -276,13 +275,13 @@ export default {
         return
       }
       this.actionShowData.groupName = this.groupSelectData.current.name
-      this.actionShowData.title = '查看接口'
+      this.actionShowData.title = '查看'
       this.actionShowData.id = this.actionSelectData.current.id
       this.actionShowData.visiable = true
     },
     actionHandleCreate() {
-      this.actionEditData.groupId = this.groupSelectData.current.id
-      this.actionEditData.title = '【' + this.groupSelectData.current.name + '】新增接口'
+      this.actionEditData.dataDictId = this.groupSelectData.current.id
+      this.actionEditData.title = '【' + this.groupSelectData.current.name + '】新增'
       this.actionEditData.id = null
       this.actionEditData.visiable = true
     },
@@ -291,8 +290,8 @@ export default {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.actionEditData.groupId = this.groupSelectData.current.id
-      this.actionEditData.title = '【' + this.groupSelectData.current.name + '】修改接口'
+      this.actionEditData.dataDictId = this.groupSelectData.current.id
+      this.actionEditData.title = '【' + this.groupSelectData.current.name + '】修改'
       this.actionEditData.id = this.actionSelectData.current.id
       this.actionEditData.visiable = true
     },
@@ -320,15 +319,6 @@ export default {
     actionHandleTableRowClick(row, column, event) {
       this.actionSelectData.current = row
       this.$refs.actionTable.toggleRowSelection(row)
-    },
-    actionStatusChange(data) {
-      actionApi.update(data).then(response => {
-        this.$notify.success({ title: '成功', message: '状态修改成功' })
-        this.getActionList()
-        this.tmpVisible = false
-      }).catch(e => {
-        this.$notify.error({ title: '失败', message: '状态修改失败' })
-      })
     }
   }
 }

@@ -5,24 +5,18 @@
     :close-on-press-escape="false"
     :close-on-click-modal="false"
     :show-close="false"
-    width="30%"
+    width="28%"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="120px">
+      <el-form ref="form" :rules="rules" :model="form" label-width="100px">
         <el-form-item label="字典名称：" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
         <el-form-item label="字典编码：" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="字典类型：" prop="dictType">
-          <el-input v-model="form.dictType" />
-        </el-form-item>
-        <el-form-item label="父字典值：" v-if="type === 'insert'">
-          <el-input v-model="form.parentName" disabled />
-        </el-form-item>
-        <el-form-item label="字典排序：">
-          <el-input v-model="form.sort" />
+        <el-form-item label="字典描述：" prop="remark">
+          <el-input v-model="form.remark" type="textarea" />
         </el-form-item>
       </el-form>
     </div>
@@ -34,9 +28,8 @@
 </template>
 
 <script>
-import dictApi from '@/api/jy-dict'
+import api from '@/api/jy-simple-data-dict'
 export default {
-  name: 'JyRoleForm',
   props: {
     title: {
       type: String,
@@ -49,15 +42,7 @@ export default {
     visible: {
       type: Boolean,
       default: false
-    },
-    parentName: {
-      type: String,
-      default: null
-    },
-    parentId: {
-      type: String,
-      default: null
-    },
+    }
   },
   data() {
     return {
@@ -66,22 +51,16 @@ export default {
       form: {
         id: '',
         name: '',
-        dictType: '',
-        parentName: '',
         code: '',
-        sort: 0
+        remark: ''
       },
       rules: {
         name: [
-          { required: true, message: '请输入字典名称', trigger: 'blur' },
+          { required: true, message: '不能为空', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ],
         code: [
-          { required: true, message: '请输入字典编码', trigger: 'blur' },
-          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
-        ],
-        dictType: [
-          { required: true, message: '请输入字典类型', trigger: 'blur' },
+          { required: true, message: '不能为空', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ]
       }
@@ -98,8 +77,6 @@ export default {
         } else {
         // 否则为新增操作
           this.type = 'insert'
-          this.form.parentName = this.parentName
-          this.form.parentId = this.parentId
         }
       }
     },
@@ -118,33 +95,21 @@ export default {
       })
     },
     handleCreate() {
-      if(this.form.parentId){
-        dictApi.addNode(this.form).then(response => {
-          this.$notify.success({ title: '成功', message: '添加成功' })
-          this.$parent.getList()
-          this.tmpVisible = false
-          this.resetForm('form')
-          this.form.id = null
-        }).catch(e => {
-          this.$notify.error({ title: '失败', message: '添加失败' })
-        })
-      }else{
-        dictApi.addRoot(this.form).then(response => {
-          this.$notify.success({ title: '成功', message: '添加成功' })
-          this.$parent.getList()
-          this.tmpVisible = false
-          this.resetForm('form')
-          this.form.id = null
-        }).catch(e => {
-          this.$notify.error({ title: '失败', message: '添加失败' })
-        })
-      }
+      api.add(this.form).then(response => {
+        this.$notify.success({ title: '成功', message: '添加成功' })
+        this.$parent.getGroupList()
+        this.tmpVisible = false
 
+        this.resetForm('form')
+        this.form.id = null
+      }).catch(e => {
+        this.$notify.error({ title: '失败', message: '添加失败' })
+      })
     },
     handleUpdate() {
-      dictApi.update(this.form).then(response => {
+      api.update(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '修改成功' })
-        this.$parent.getList()
+        this.$parent.getGroupList()
         this.tmpVisible = false
 
         this.resetForm('form')
@@ -154,7 +119,7 @@ export default {
       })
     },
     getById(id) {
-      dictApi.getById(id).then(response => {
+      api.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '获取数据失败' })
