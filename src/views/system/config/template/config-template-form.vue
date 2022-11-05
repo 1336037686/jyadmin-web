@@ -9,17 +9,11 @@
   >
     <div>
       <el-form ref="form" :rules="rules" :model="form" label-width="100px">
-        <el-form-item label="组别名称：" prop="name">
+        <el-form-item label="模板名称：" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="组别编码：" prop="code">
+        <el-form-item label="模板编码：" prop="code">
           <el-input v-model="form.code" />
-        </el-form-item>
-        <el-form-item label="排序：" prop="sort">
-          <el-input v-model.number="form.sort" />
-        </el-form-item>
-        <el-form-item label="组别描述：" prop="description">
-          <el-input v-model="form.description" type="textarea" />
         </el-form-item>
       </el-form>
     </div>
@@ -31,9 +25,8 @@
 </template>
 
 <script>
-import api from '@/api/jy-permission-group'
+import api from '@/api/system/config/jy-config-template'
 export default {
-  name: 'JyPermissionGroupForm',
   props: {
     title: {
       type: String,
@@ -55,9 +48,8 @@ export default {
       form: {
         id: '',
         name: '',
-        parentId: '0',
         code: '',
-        description: ''
+        template: ''
       },
       rules: {
         name: [
@@ -67,10 +59,6 @@ export default {
         code: [
           { required: true, message: '不能为空', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
-        ],
-        sort: [
-          { required: true, message: '不能为空', trigger: 'blur' },
-          { type: 'number', message: '必须为数字值' }
         ]
       }
     }
@@ -104,9 +92,10 @@ export default {
       })
     },
     handleCreate() {
+      this.form.template = JSON.stringify([])
       api.add(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '添加成功' })
-        this.$parent.getGroupList()
+        this.$parent.getConfigTemplateList()
         this.tmpVisible = false
 
         this.resetForm('form')
@@ -118,7 +107,7 @@ export default {
     handleUpdate() {
       api.update(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '修改成功' })
-        this.$parent.getGroupList()
+        this.$parent.getConfigTemplateList()
         this.tmpVisible = false
 
         this.resetForm('form')

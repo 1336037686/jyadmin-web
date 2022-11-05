@@ -30,8 +30,8 @@
       </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="resetForm('form')">取 消</el-button>
       <el-button type="primary" @click="handleSubmit('form')">确 定</el-button>
+      <el-button @click="resetForm('form')">取 消</el-button>
     </span>
   </el-dialog>
 </template>
