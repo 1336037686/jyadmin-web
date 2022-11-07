@@ -1,0 +1,90 @@
+<template>
+  <el-dialog
+    :title="title"
+    :visible.sync="tmpVisible"
+    :close-on-press-escape="false"
+    :close-on-click-modal="false"
+    :show-close="false"
+    width="55%"
+  >
+    <div>
+      <el-table
+        border
+        ref="configDetailInfoTable"
+        :data="form.jsonObjs"
+        highlight-current-row
+        style="width: 100%"
+        empty-text="暂无数据"
+      >
+        <el-table-column prop="name" label="字段名称" width="180" align="center" show-overflow-tooltip />
+        <el-table-column prop="code" label="字段编码" width="180" align="center" show-overflow-tooltip />
+        <el-table-column prop="type" label="字段类型" width="180" align="center" show-overflow-tooltip />
+        <el-table-column prop="defaultValue" label="缺省值" width="180" align="center" show-overflow-tooltip />
+        <el-table-column prop="value" label="具体值" width="180" align="center" show-overflow-tooltip />
+        <el-table-column prop="comment" label="注释" align="center" show-overflow-tooltip />
+      </el-table>
+    </div>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="tmpVisible = false">关 闭</el-button>
+    </span>
+  </el-dialog>
+</template>
+
+<script>
+import api from '@/api/system/config/jy-config-detail.js'
+export default {
+  props: {
+    title: {
+      type: String,
+      default: 'Demo'
+    },
+    id: {
+      type: String,
+      default: null
+    },
+    visible: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      tmpVisible: this.visible,
+      form: {
+        id: null,
+        name: null,
+        templateId: null,
+        code: null,
+        status: 1,
+        data: null,
+        jsonObjs: []
+      }
+    }
+  },
+  watch: {
+    visible(newVal) {
+      this.tmpVisible = newVal
+      if (newVal) {
+        this.getById(this.id)
+      }
+    },
+    tmpVisible(newVal) {
+      this.$emit('update:visible', newVal)
+    },
+    deep: true
+  },
+  methods: {
+    getById(id) {
+      api.getById(id).then(response => {
+        this.form = response.data
+      }).catch(e => {
+        this.$notify.error({ title: '失败', message: '获取数据失败' })
+      })
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

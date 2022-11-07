@@ -41,7 +41,8 @@
             <span><i class="el-icon-caret-right"/> 接口列表</span>
           </div>
           <div>
-            <el-alert title="请先指定某个分组" type="info" :closable="false" />
+            <el-empty description="请先指定某个分组"></el-empty>
+<!--            <el-alert title="请先指定某个分组" type="info" :closable="false" />-->
           </div>
         </el-card>
         <el-card v-if="groupSelectData.current" class="box-card" shadow="always">
@@ -325,7 +326,6 @@ export default {
       actionApi.update(data).then(response => {
         this.$notify.success({ title: '成功', message: '状态修改成功' })
         this.getActionList()
-        this.tmpVisible = false
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '状态修改失败' })
       })

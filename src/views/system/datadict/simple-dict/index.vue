@@ -49,7 +49,8 @@
             <span><i class="el-icon-caret-right"/> 字典明细</span>
           </div>
           <div>
-            <el-alert title="请先指定某个分组" type="info" :closable="false" />
+            <el-empty description="请先指定某个分组"></el-empty>
+<!--            <el-alert title="请先指定某个分组" type="info" :closable="false" />-->
           </div>
         </el-card>
         <el-card v-if="groupSelectData.current" class="box-card" shadow="always">
