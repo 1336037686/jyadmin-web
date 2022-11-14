@@ -120,8 +120,8 @@
 </template>
 
 <script>
-import groupApi from '@/api/jy-simple-data-dict'
-import actionApi from '@/api/jy-simple-data-dict-detail'
+import groupApi from '@/api/system/datadict/jy-simple-data-dict'
+import actionApi from '@/api/system/datadict/jy-simple-data-dict-detail'
 import JySimpleDictForm from '@/views/system/datadict/simple-dict/simple-dict-form'
 import JySimpleDictDetail from '@/views/system/datadict/simple-dict/simple-dict-detail'
 import JySimpleDictDetailForm from '@/views/system/datadict/simple-dict/simple-dict-detail-form'

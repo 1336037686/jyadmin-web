@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import api from '@/api/jy-simple-data-dict'
+import api from '@/api/system/datadict/jy-simple-data-dict'
 export default {
   props: {
     title: {

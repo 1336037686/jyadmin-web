@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import userApi from '@/api/jy-user'
+import userApi from '@/api/system/user/jy-user'
 export default {
   name: 'JyUserDetail',
   props: {

@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import roleApi from '@/api/jy-role'
+import roleApi from '@/api/system/role/jy-role'
 export default {
   name: 'JyUserRole',
   props: {

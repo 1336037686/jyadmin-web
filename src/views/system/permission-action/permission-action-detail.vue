@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import api from '@/api/jy-permission-action'
+import api from '@/api/system/permission/jy-permission-action'
 export default {
   name: 'JyPermissionActionDetailVue',
   props: {

@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import dictApi from '@/api/jy-dict'
+import dictApi from '@/api/system/datadict/jy-dict'
 export default {
   name: 'JyDictDetail',
   props: {

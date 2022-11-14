@@ -1,6 +1,6 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 import Layout from '@/layout'
-import { getMenus } from '@/api/jy-auth'
+import { getMenus } from '@/api/system/auth/jy-auth'
 
 const state = {
   routes: [],

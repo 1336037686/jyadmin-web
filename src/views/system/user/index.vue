@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import userApi from '@/api/jy-user'
+import userApi from '@/api/system/user/jy-user'
 import JyUserDetail from '@/views/system/user/jy-user-detail'
 import JyUserForm from '@/views/system/user/jy-user-form'
 import JyUserRole from '@/views/system/user/jy-user-role'

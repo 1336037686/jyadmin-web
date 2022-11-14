@@ -126,8 +126,8 @@
 </template>
 
 <script>
-import menuApi from '@/api/jy-permission-menu'
-import actionApi from '@/api/jy-permission-action'
+import menuApi from '@/api/system/permission/jy-permission-menu'
+import actionApi from '@/api/system/permission/jy-permission-action'
 import JyPermissionMenuForm from '@/views/system/permission-menu/permission-menu-form'
 import JyPermissionMenuDetail from '@/views/system/permission-menu/permission-menu-detail'
 import permission from '@/directive/permission/index.js' // 权限判断指令

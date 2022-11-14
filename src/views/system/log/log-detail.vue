@@ -124,7 +124,7 @@
 </template>
 
 <script>
-import logApi from '@/api/jy-log'
+import logApi from '@/api/system/log/jy-log'
 export default {
   name: 'JyLogDetail',
   props: {

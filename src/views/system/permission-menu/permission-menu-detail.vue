@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import api from '@/api/jy-permission-menu'
+import api from '@/api/system/permission/jy-permission-menu'
 export default {
   name: 'JyPermissionMenuDetail',
   props: {

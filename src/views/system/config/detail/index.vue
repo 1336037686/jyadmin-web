@@ -9,7 +9,7 @@
           <div>
             <el-form :inline="true" label-width="100px" size="mini">
               <el-form-item label="模板名称：">
-                <el-input v-model="configTemplateQueryForm.name" placeholder="字典名称" />
+                <el-input v-model="configTemplateQueryForm.name" placeholder="模板名称" />
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="getConfigTemplateList">查 询</el-button>

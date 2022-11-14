@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import api from '@/api/jy-permission-group'
+import api from '@/api/system/permission/jy-permission-group'
 export default {
   name: 'JyPermissionGroupDetailVue',
   props: {

@@ -127,8 +127,8 @@
 </template>
 
 <script>
-import groupApi from '@/api/jy-permission-group'
-import actionApi from '@/api/jy-permission-action'
+import groupApi from '@/api/system/permission/jy-permission-group'
+import actionApi from '@/api/system/permission/jy-permission-action'
 import JyPermissionGroupForm from '@/views/system/permission-action/permission-group-form'
 import JyPermissionGroupDetail from '@/views/system/permission-action/permission-group-detail'
 import JyPermissionActionForm from '@/views/system/permission-action/permission-action-form'

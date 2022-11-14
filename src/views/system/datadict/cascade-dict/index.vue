@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import dictApi from '@/api/jy-dict'
+import dictApi from '@/api/system/datadict/jy-dict'
 import JyDictForm from '@/views/system/datadict/cascade-dict/jy-dict-form'
 import JyDictDetail from '@/views/system/datadict/cascade-dict/jy-dict-detail'
 import permission from '@/directive/permission' // 权限判断指令

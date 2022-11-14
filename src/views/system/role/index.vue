@@ -108,8 +108,8 @@
 </template>
 
 <script>
-import roleApi from '@/api/jy-role'
-import menuApi from '@/api/jy-permission-menu'
+import roleApi from '@/api/system/role/jy-role'
+import menuApi from '@/api/system/permission/jy-permission-menu'
 import JyRoleDetail from "@/views/system/role/jy-role-detail"
 import JyRoleForm from "@/views/system/role/jy-role-form"
 import permission from '@/directive/permission/index.js' // 权限判断指令

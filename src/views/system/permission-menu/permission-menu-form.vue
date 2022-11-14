@@ -261,7 +261,7 @@
 </template>
 
 <script>
-import menuApi from '@/api/jy-permission-menu'
+import menuApi from '@/api/system/permission/jy-permission-menu'
 // import the component
 import Treeselect from '@riophae/vue-treeselect'
 // import the styles
