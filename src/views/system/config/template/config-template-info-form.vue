@@ -33,10 +33,17 @@
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="type" label="字段类型" width="160" align="center">
+          <el-table-column prop="type" label="字段类型" width="200" align="center">
             <template slot-scope="scope">
               <el-form-item :prop="'jsonObjs.' + scope.$index + '.type'" :rules="rules.type" label-width="0" >
-                <el-input v-model="scope.row.type" />
+                <el-select v-model="scope.row.type" placeholder="请选择">
+                  <el-option
+                    v-for="item in typeDict"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.code">
+                  </el-option>
+                </el-select>
               </el-form-item>
             </template>
           </el-table-column>
@@ -100,6 +107,7 @@ export default {
     return {
       tmpVisible: this.visible,
       type: 'insert',
+      typeDict: [],
       form: {
         id: '',
         name: '',
@@ -117,8 +125,7 @@ export default {
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ],
         type: [
-          { required: true, message: '不能为空', trigger: 'blur' },
-          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+          { required: true, message: '不能为空', trigger: 'blur' }
         ],
         sort: [
           { required: true, message: '不能为空', trigger: 'blur' },
@@ -145,6 +152,11 @@ export default {
       this.$emit('update:visible', newVal)
     },
     deep: true
+  },
+  created() {
+    this.getDictByCode('sys_configTemplate_fieldType').then(res => {
+      this.typeDict = res.data
+    })
   },
   methods: {
     addField() {

@@ -38,5 +38,12 @@ export default {
       method: 'delete',
       data
     })
+  },
+
+  getByCode(code) {
+    return request({
+      url: '/api/simple-data-dict-detail/queryByCode/' + code,
+      method: 'get'
+    })
   }
 }

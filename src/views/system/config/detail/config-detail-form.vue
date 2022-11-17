@@ -22,7 +22,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="所属模板：">
-              {{template.name}} ( {{template.code}} )
+              {{ template ? template.name : '' }} ( {{ template ? template.code : ''}} )
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -118,7 +118,9 @@ export default {
   props: {
     template: {
       type: Object,
-      default: null
+      default: () => {
+        return { name: '', code: '' }
+      }
     },
     title: {
       type: String,
@@ -185,6 +187,14 @@ export default {
           this.type = 'insert'
           this.form.templateId = this.template.id
           this.form.jsonObjs = JSON.parse(JSON.stringify(this.template.jsonObjs))
+          // 对value赋值
+          if (this.form.jsonObjs) {
+            for (let i = 0; i < this.form.jsonObjs.length; i++) {
+              if (this.form.jsonObjs[i].defaultValue) {
+                this.form.jsonObjs[i].value = this.form.jsonObjs[i].defaultValue
+              }
+            }
+          }
         }
       }
     },

@@ -55,6 +55,10 @@ Vue.use(Element, {
   locale: enLang // 如果使用中文，无需设置，请删除
 })
 
+// 添加字典工具类
+import dict from '@/utils/dict'
+Vue.use(dict)
+
 // register global utility filters
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

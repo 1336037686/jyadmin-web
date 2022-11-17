@@ -75,7 +75,11 @@
             <el-table-column type="index" label="序号"  width="80" align="center"/>
             <el-table-column prop="name" label="字段名称" width="200" align="center" show-overflow-tooltip />
             <el-table-column prop="code" label="字段编码" width="200" align="center" show-overflow-tooltip />
-            <el-table-column prop="type" label="字段类型" width="200" align="center" show-overflow-tooltip />
+            <el-table-column prop="type" label="字段类型" width="200" align="center" show-overflow-tooltip >
+              <template slot-scope="scope">
+                {{getNameByCode(typeDict, scope.row.type)}}
+              </template>
+            </el-table-column>
             <el-table-column prop="defaultValue" label="缺省值" width="200" align="center" show-overflow-tooltip />
             <el-table-column prop="sort" label="排序" width="100"  align="center" show-overflow-tooltip />
             <el-table-column prop="comment" label="注释" align="center" show-overflow-tooltip />
@@ -103,6 +107,7 @@ export default {
   components: { JyConfigTemplateForm, JyConfigTemplateDetail, JyConfigTemplateInfoForm },
   data() {
     return {
+      typeDict: [],
       configTemplateQueryForm: {
         name: ''
       },
@@ -131,9 +136,15 @@ export default {
     }
   },
   created() {
+    this.init()
     this.getConfigTemplateList()
   },
   methods: {
+    init() {
+      this.getDictByCode('sys_configTemplate_fieldType').then(res => {
+        this.typeDict = res.data
+      })
+    },
     // configTemplate
     getConfigTemplateList() {
       this.configTemplateTableData.loading = true
