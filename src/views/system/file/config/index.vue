@@ -1,6 +1,6 @@
 <template>
   <el-row style="margin-top: 10px">
-    <el-col span="6" offset="1">
+    <el-col :span="6" :offset="1">
       <el-card>
         <div slot="header" class="clearfix">
           <span><i class="el-icon-caret-right"/>  附件配置</span>
@@ -24,7 +24,7 @@
       </el-card>
     </el-col>
 
-    <el-col span="15" offset="1">
+    <el-col :span="15" :offset="1">
       <el-card>
         <div slot="header" class="clearfix">
           <span><i class="el-icon-caret-right"/>  所选配置详情</span>
