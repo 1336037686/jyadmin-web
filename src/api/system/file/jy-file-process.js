@@ -1,9 +1,9 @@
 import request from '@/utils/request-api'
 
 export default {
-  upload(data) {
+  upload(relevance, data) {
     return request({
-      url: '/api/file-process/upload',
+      url: '/api/file-process/upload/' + relevance,
       method: 'post',
       data
     })

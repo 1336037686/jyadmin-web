@@ -108,7 +108,6 @@
             node-key="id"
             empty-text="暂无数据"
             highlight-current
-            default-expand-all
             :props="{children: 'children', label: 'name' }"
           >
             <span slot-scope="{ node, data }" class="custom-tree-node">
