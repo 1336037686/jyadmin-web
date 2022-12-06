@@ -7,7 +7,7 @@
             <span><i class="el-icon-caret-right"/> 配置模板</span>
           </div>
           <div>
-            <el-form :inline="true" label-width="100px" size="mini">
+            <el-form :inline="true" label-width="85px" size="mini">
               <el-form-item label="模板名称：">
                 <el-input v-model="configTemplateQueryForm.name" placeholder="模板名称" />
               </el-form-item>

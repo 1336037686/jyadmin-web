@@ -29,7 +29,7 @@ export function convert(routes) {
     const tmp = { ...route }
     // 如果是按钮
     if (tmp.type === 2) return
-    let tmpObj = {}
+    const tmpObj = {}
     // 当设置 true 的时候该路由不会在侧边栏出现 如401，login等页面，或者如一些编辑页面/edit/1
     tmpObj.hidden = tmp.visiable === 0
     // 路由路径
@@ -39,7 +39,7 @@ export function convert(routes) {
     // 如果不是外链
     if (tmp.link === 0) {
       // 组件
-      if (tmp.path === "Layout") tmpObj.component = Layout
+      if (tmp.path === 'Layout') tmpObj.component = Layout
       else tmpObj.component = loadView(tmp.path)
     }
     tmpObj.meta = {}
@@ -68,9 +68,9 @@ const actions = {
   generateRoutes({ commit }) {
     return new Promise(resolve => {
       getMenus().then(response => {
-        let { data } = response
+        const { data } = response
         // 动态路由
-        let accessedRoutes = convert(data)
+        const accessedRoutes = convert(data)
         console.log(accessedRoutes)
         // 其他异步路由
         // accessedRoutes = accessedRoutes.concat(asyncRoutes)
