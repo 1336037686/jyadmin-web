@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import jyCategoryApi from '@/api/jy-category'
+import jyCategoryApi from '@/api/module/jy-category'
 export default {
   name: 'JyCategoryDetail',
   props: {

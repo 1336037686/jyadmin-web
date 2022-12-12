@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import logApi from '@/api/system/log/jy-log'
+import logApi from '@/api/monitor/log/jy-log'
 import JyLogDetail from "@/views/system/log/log-detail";
 
 import {codemirror} from 'vue-codemirror'

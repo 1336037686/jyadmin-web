@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import jyTagApi from '@/api/jy-tag'
+import jyTagApi from '@/api/module/jy-tag'
 export default {
   name: 'JyTagForm',
   props: {

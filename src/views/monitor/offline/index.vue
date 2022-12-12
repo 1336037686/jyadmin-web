@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import jyOfflineApi from '@/api/system/offline/jy-offline'
+import jyOfflineApi from '@/api/monitor/offline/jy-offline'
 export default {
   name: 'JyOffline',
   data() {

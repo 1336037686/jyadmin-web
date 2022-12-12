@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import jyTagApi from '@/api/jy-tag'
+import jyTagApi from '@/api/module/jy-tag'
 import JyTagForm from '@/views/blog/tag/tag-form'
 import JyTagDetail from '@/views/blog/tag/tag-detail'
 export default {
