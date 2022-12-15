@@ -1,4 +1,4 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import { constantRoutes } from '@/router'
 import Layout from '@/layout'
 import { getMenus } from '@/api/system/auth/jy-auth'
 
@@ -71,9 +71,8 @@ const actions = {
         const { data } = response
         // 动态路由
         const accessedRoutes = convert(data)
-        console.log(accessedRoutes)
-        // 其他异步路由
-        // accessedRoutes = accessedRoutes.concat(asyncRoutes)
+        // 404 page must be placed at the end !!!
+        accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
       }).catch(error => {

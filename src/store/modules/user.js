@@ -30,6 +30,15 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
+  SET_NICKNAME: (state, nickname) => {
+    state.nickname = nickname
+  },
+  SET_PHONE: (state, phone) => {
+    state.phone = phone
+  },
+  SET_TYPE: (state, type) => {
+    state.type = type
+  },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
@@ -66,22 +75,23 @@ const actions = {
         if (!data) {
           reject('Verification failed, please Login again.')
         }
+        console.log('getInfo', data)
 
-        let { roles, permissions, name, avatar, introduction } = data
+        let { roles, permissions, username, nickname, avatar, type, introduction } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
 
-        name = 'zhangsan'
-        avatar = 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
         introduction = '测试'
 
         commit('SET_ROLES', roles)
         commit('SET_PERMISSIONS', permissions)
-        commit('SET_NAME', name)
+        commit('SET_NAME', username)
+        commit('SET_NICKNAME', nickname)
         commit('SET_AVATAR', avatar)
+        commit('SET_TYPE', type)
         commit('SET_INTRODUCTION', introduction)
         resolve(data)
       }).catch(error => {
