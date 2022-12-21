@@ -30,17 +30,23 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
+  SET_ID: (state, id) => {
+    state.id = id
+  },
+  SET_USERNAME: (state, username) => {
+    state.username = username
+  },
   SET_NICKNAME: (state, nickname) => {
     state.nickname = nickname
+  },
+  SET_AVATAR: (state, avatar) => {
+    state.avatar = avatar
   },
   SET_PHONE: (state, phone) => {
     state.phone = phone
   },
   SET_TYPE: (state, type) => {
     state.type = type
-  },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
@@ -77,22 +83,21 @@ const actions = {
         }
         console.log('getInfo', data)
 
-        let { roles, permissions, username, nickname, avatar, type, introduction } = data
+        const { roles, permissions, id, username, nickname, avatar, phone, type } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
 
-        introduction = '测试'
-
         commit('SET_ROLES', roles)
         commit('SET_PERMISSIONS', permissions)
-        commit('SET_NAME', username)
+        commit('SET_ID', id)
+        commit('SET_USERNAME', username)
         commit('SET_NICKNAME', nickname)
         commit('SET_AVATAR', avatar)
+        commit('SET_PHONE', phone)
         commit('SET_TYPE', type)
-        commit('SET_INTRODUCTION', introduction)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -108,11 +113,9 @@ const actions = {
         commit('SET_ROLES', [])
         removeToken()
         resetRouter()
-
         // reset visited views and cached views
         // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
         dispatch('tagsView/delAllViews', null, { root: true })
-
         resolve()
       }).catch(error => {
         reject(error)
