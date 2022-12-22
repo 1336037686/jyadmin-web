@@ -8,6 +8,13 @@ export default {
       params: query
     })
   },
+  getUserLoginList(userId, query) {
+    return request({
+      url: '/api/log/query-user-login/' + userId,
+      method: 'get',
+      params: query
+    })
+  },
 
   getById(id) {
     return request({

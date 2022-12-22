@@ -67,7 +67,6 @@ export function convert(routes, fullPath) {
     }
     res.push(tmpObj)
   })
-  console.log('router', res)
   return res
 }
 

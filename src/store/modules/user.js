@@ -81,7 +81,6 @@ const actions = {
         if (!data) {
           reject('Verification failed, please Login again.')
         }
-        console.log('getInfo', data)
 
         const { roles, permissions, id, username, nickname, avatar, phone, type } = data
 

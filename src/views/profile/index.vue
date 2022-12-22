@@ -38,12 +38,12 @@ export default {
   data() {
     return {
       user: {
-        createTime: null,
+        createTime: '',
         id: null,
-        username: null,
-        nickname: null,
-        avatar: null,
-        phone: null,
+        username: '',
+        nickname: '',
+        avatar: '',
+        phone: '',
         type: null
       },
       activeTab: 'timeline'
