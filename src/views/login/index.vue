@@ -1,84 +1,117 @@
 <template>
   <div class="login-container">
-      <el-row style="height: auto;margin-top: 300px">
-        <el-col :span="5" :offset="18">
-          <el-card>
-            <el-form ref="loginForm" :model="loginForm" :rules="loginRules"  autocomplete="on" label-position="left">
-              <div class="title-container">
-                <h3 class="title">JianYi Admin</h3>
-              </div>
-              <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
+    <el-row style="height: auto;margin-top: 300px">
+      <el-col :span="5" :offset="18">
+        <el-card>
+          <el-form ref="loginForm" :model="loginForm" :rules="loginRules" autocomplete="on" label-position="left">
+            <div class="title-container">
+              <h3 class="title">JianYi Admin</h3>
+            </div>
+            <el-form-item prop="username">
+              <span class="svg-container">
+                <svg-icon icon-class="user"/>
+              </span>
+              <el-input
+                ref="username"
+                v-model="loginForm.username"
+                placeholder="用户名"
+                name="username"
+                type="text"
+                tabindex="1"
+                autocomplete="on"
+              />
+            </el-form-item>
+            <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+              <el-form-item prop="password">
+                <span class="svg-container">
+                  <svg-icon icon-class="password"/>
+                </span>
                 <el-input
-                  ref="username"
-                  v-model="loginForm.username"
-                  placeholder="Username"
-                  name="username"
-                  type="text"
-                  tabindex="1"
+                  :key="passwordType"
+                  ref="password"
+                  v-model="loginForm.password"
+                  :type="passwordType"
+                  placeholder="密码"
+                  name="password"
+                  tabindex="2"
                   autocomplete="on"
+                  @keyup.native="checkCapslock"
+                  @blur="capsTooltip = false"
+                  @keyup.enter.native="handleLogin"
                 />
+                <span class="show-pwd" @click="showPwd">
+                  <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
+                </span>
               </el-form-item>
-              <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-                <el-form-item prop="password">
-          <span class="svg-container">
-            <svg-icon icon-class="password" />
-          </span>
+            </el-tooltip>
+            <el-row>
+              <el-col :span="15">
+                <el-form-item prop="captcha">
+                  <span class="svg-container">
+                    <svg-icon icon-class="chart"/>
+                  </span>
                   <el-input
-                    :key="passwordType"
-                    ref="password"
-                    v-model="loginForm.password"
-                    :type="passwordType"
-                    placeholder="Password"
-                    name="password"
-                    tabindex="2"
+                    ref="username"
+                    v-model="loginForm.captcha"
+                    placeholder="验证码"
+                    name="captcha"
+                    type="text"
+                    tabindex="1"
                     autocomplete="on"
-                    @keyup.native="checkCapslock"
-                    @blur="capsTooltip = false"
-                    @keyup.enter.native="handleLogin"
                   />
-                  <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
                 </el-form-item>
-              </el-tooltip>
-              <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-            </el-form>
-          </el-card>
-        </el-col>
-      </el-row>
+              </el-col>
+              <el-col :span="9" style="padding-left: 10px">
+                <img width="100%" height="50px" :src="captchaImg" @click="reloadCaptcha" />
+              </el-col>
+            </el-row>
+            <el-button
+              :loading="loading"
+              type="primary"
+              style="width:100%;margin-bottom:30px;"
+              @click.native.prevent="handleLogin"
+            >Login
+            </el-button>
+          </el-form>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
+import { guid } from '@/utils'
 
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入正确的用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码不能小于6位数字'))
       } else {
         callback()
       }
     }
     return {
+      captchaImg: null,
+      captchaUniqueId: null,
       loginForm: {
         username: 'admin',
-        password: 'admin123'
+        password: 'admin123',
+        captcha: null,
+        uniqueId: null
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        captcha: [{ required: true, trigger: 'blur', message: '请输入正确的验证码' }]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -102,6 +135,7 @@ export default {
   },
   created() {
     // window.addEventListener('storage', this.afterQRScan)
+    this.reloadCaptcha()
   },
   mounted() {
     if (this.loginForm.username === '') {
@@ -114,6 +148,10 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    reloadCaptcha() {
+      this.captchaUniqueId = guid().replaceAll('-', '')
+      this.captchaImg = '/api/auth/captcha/' + this.captchaUniqueId
+    },
     checkCapslock(e) {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
@@ -129,6 +167,7 @@ export default {
       })
     },
     handleLogin() {
+      this.loginForm.uniqueId = this.captchaUniqueId
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -181,8 +220,8 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#fff;
-$light_gray:#000;
+$bg: #fff;
+$light_gray: #000;
 $cursor: #000;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -225,9 +264,9 @@ $cursor: #000;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#000;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #000;
 
 .login-container {
   min-height: 100%;

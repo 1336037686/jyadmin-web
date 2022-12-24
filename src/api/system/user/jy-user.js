@@ -40,6 +40,14 @@ export default {
     })
   },
 
+  updateUserPassword(data) {
+    return request({
+      url: '/api/user/update/user-password',
+      method: 'put',
+      data
+    })
+  },
+
   remove(data) {
     return request({
       url: '/api/user/remove',

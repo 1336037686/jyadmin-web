@@ -1,5 +1,5 @@
 <template>
-  <el-card shadow="never" style="width: 40%;">
+  <el-card shadow="never" >
     <el-form ref="form" :label-position="'left'" :rules="rules" :model="currUserInfo">
       <el-form-item label="">
         <el-avatar shape="square" :size="100" :fit="'fill'" :src="currUserInfo.avatar" />
@@ -11,8 +11,8 @@
       <el-form-item label="电话" prop="phone">
         <el-input v-model.trim="currUserInfo.phone" />
       </el-form-item>
-      <el-form-item>
-        <el-button type="default" @click="reset" size="small" style="margin-top: 10px" icon="el-icon-edit">重置信息</el-button>
+      <el-form-item style="float: right">
+        <el-button type="default" @click="reset" size="small" style="margin-top: 10px" icon="el-icon-refresh">重置信息</el-button>
         <el-button type="primary" @click="submit" size="small" style="margin-top: 10px;margin-left: 10px" icon="el-icon-edit">确认修改</el-button>
       </el-form-item>
     </el-form>
@@ -190,9 +190,9 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           userApi.update(this.currUserInfo).then(res => {
-            this.$message.success('修改成功!')
+            this.$notify.success({ title: '成功', message: '修改成功!' })
           }).catch(e => {
-            this.$message.error('修改失败!')
+            this.$notify.success({ title: '失败', message: '修改失败!' })
           })
         }
       })

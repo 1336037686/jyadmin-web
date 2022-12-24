@@ -53,7 +53,7 @@ export default {
         if (res.records && res.records.length > 0) {
           for (let i = 0; i < res.records.length; i++) {
             this.timeline.push({
-              timestamp: res.records[i].createTime,
+              timestamp: res.records[i].requestTime,
               title: res.records[i].handleName,
               content: 'IP地址：' + res.records[i].ipAddress + '，IP区域：' + res.records[i].ipArea + '，客户端：' + res.records[i].browser
             })
