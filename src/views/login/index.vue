@@ -1,11 +1,11 @@
 <template>
   <div class="login-container">
-    <el-row style="height: auto;margin-top: 300px">
+    <el-row style="height: auto;margin-top: 250px">
       <el-col :span="5" :offset="18">
         <el-card>
           <el-form ref="loginForm" :model="loginForm" :rules="loginRules" autocomplete="on" label-position="left">
             <div class="title-container">
-              <h3 class="title">JianYi Admin</h3>
+              <h3 class="title">🍀 JianYi Admin  </h3>
             </div>
             <el-form-item prop="username">
               <span class="svg-container">
@@ -70,7 +70,7 @@
               type="primary"
               style="width:100%;margin-bottom:30px;"
               @click.native.prevent="handleLogin"
-            >Login
+            >登 陆
             </el-button>
           </el-form>
         </el-card>
@@ -256,7 +256,7 @@ $cursor: #000;
 
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(230, 230, 230, 0.5);
+    background: rgba(230, 230, 230, 0.4);
     border-radius: 5px;
     color: #fff;
   }
