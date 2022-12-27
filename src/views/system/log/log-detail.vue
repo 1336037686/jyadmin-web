@@ -126,7 +126,6 @@
 <script>
 import logApi from '@/api/monitor/log/jy-log'
 export default {
-  name: 'JyLogDetail',
   props: {
     title: {
       type: String,

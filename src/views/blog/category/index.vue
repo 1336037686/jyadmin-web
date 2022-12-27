@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px">
     <el-card class="box-card" shadow="always">
-      <el-form :inline="true" :model="queryForm" label-width="100px">
+      <el-form :inline="true" v-show="queryFormVisiable" size="mini"  :model="queryForm" label-width="100px">
         <el-form-item label="类别名称：">
           <el-input v-model="queryForm.name" placeholder="类别名称" />
         </el-form-item>
@@ -14,16 +14,26 @@
         </el-form-item>
       </el-form>
       <div style="margin-top: 5px">
-        <el-button type="primary" icon="el-icon-view" @click="handleShow">查 看</el-button>
-        <el-button type="success" icon="el-icon-plus" @click="handleCreate">新 增</el-button>
-        <el-button type="warning" icon="el-icon-edit-outline" @click="handleUpdate">修 改</el-button>
-        <el-button type="danger" icon="el-icon-delete" @click="handleRemove">删 除</el-button>
+        <el-button type="primary" icon="el-icon-view" size="mini" @click="handleShow">查 看</el-button>
+        <el-button type="success" icon="el-icon-plus" size="mini" @click="handleCreate">新 增</el-button>
+        <el-button type="warning" icon="el-icon-edit-outline" size="mini" @click="handleUpdate">修 改</el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleRemove">删 除</el-button>
       </div>
     </el-card>
 
     <el-card class="box-card" shadow="always" style="margin-top: 5px">
+      <div slot="header" class="clearfix">
+        <span><i class="el-icon-caret-right" /> 博客类别记录</span>
+        <el-row style="float: right">
+          <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
+          <el-button icon="el-icon-refresh" circle size="mini" @click="handleQuery()" />
+        </el-row>
+      </div>
       <el-table
         ref="table"
+        v-loading="tableData.loading"
+        element-loading-text="加载中，请稍后..."
+        element-loading-spinner="el-icon-loading"
         :data="tableData.records"
         highlight-current-row
         style="width: 100%"
@@ -32,9 +42,11 @@
         @row-click="handleTableRowClick"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column prop="name" label="类别名称" />
-        <el-table-column prop="code" label="类别编码" />
-        <el-table-column prop="intro" label="类别简介" width="800" />
+        <el-table-column type="index" width="80" label="序号" align="center" />
+        <el-table-column prop="name" label="类别名称" align="center"  />
+        <el-table-column prop="code" label="类别编码" align="center"  />
+        <el-table-column prop="createTime" label="创建时间" align="center"  />
+        <el-table-column prop="intro" label="类别简介" width="600" align="center"  />
       </el-table>
     </el-card>
 
@@ -60,15 +72,16 @@ import jyCategoryApi from '@/api/module/jy-category'
 import JyCategoryForm from '@/views/blog/category/category-form'
 import JyCategoryDetail from '@/views/blog/category/category-detail'
 export default {
-  name: 'JyCategory',
   components: { JyCategoryDetail, JyCategoryForm },
   data() {
     return {
+      queryFormVisiable: true,
       queryForm: {
         name: '',
         code: ''
       },
       tableData: {
+        loading: false,
         pageNumber: 1,
         pageSize: 10,
         pages: 1,
@@ -98,8 +111,10 @@ export default {
   },
   methods: {
     getList() {
+      this.tableData.loading = true
       const queryForm = { ...this.queryForm, pageNumber: this.tableData.pageNumber, pageSize: this.tableData.pageSize }
       jyCategoryApi.getList(queryForm).then(response => {
+        this.tableData.loading = false
         this.tableData = response
       })
     },

@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px">
     <el-card class="box-card" shadow="always">
-      <el-form :inline="true" :model="queryForm" label-width="100px">
+      <el-form v-show="queryFormVisiable" :inline="true" :model="queryForm" label-width="100px">
         <el-form-item label="操作用户：">
           <el-input v-model="queryForm.username" placeholder="操作用户" />
         </el-form-item>
@@ -21,11 +21,18 @@
     </el-card>
 
     <el-card class="box-card" shadow="always" style="margin-top: 5px">
+      <div slot="header" class="clearfix">
+        <span><i class="el-icon-caret-right" /> 日志列表</span>
+        <el-row style="float: right">
+          <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
+          <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
+        </el-row>
+      </div>
       <el-table
-        v-loading="loading"
-        element-loading-text = "加载中，请稍后..."
-        element-loading-spinner = "el-icon-loading"
         ref="table"
+        v-loading="loading"
+        element-loading-text="加载中，请稍后..."
+        element-loading-spinner="el-icon-loading"
         :data="tableData.records"
         highlight-current-row
         style="width: 100%"
@@ -39,23 +46,23 @@
         <el-table-column prop="handleName" label="操作名称" align="center" show-overflow-tooltip />
         <el-table-column prop="handleDesc" label="操作描述" align="center" show-overflow-tooltip />
         <el-table-column prop="ipAddress" label="IP地址" align="center" width="150" show-overflow-tooltip />
-        <el-table-column prop="ipArea" label="所属地区" align="center"  width="150" show-overflow-tooltip />
-<!--        <el-table-column prop="browser" label="浏览器" align="center"  width="150" />-->
-<!--        <el-table-column prop="application" label="设备" />-->
+        <el-table-column prop="ipArea" label="所属地区" align="center" width="150" show-overflow-tooltip />
+        <!--        <el-table-column prop="browser" label="浏览器" align="center"  width="150" />-->
+        <!--        <el-table-column prop="application" label="设备" />-->
         <el-table-column prop="requestPath" label="请求路径" align="center" show-overflow-tooltip />
         <el-table-column prop="requestMethod" label="请求类型" align="center" width="100" show-overflow-tooltip />
-<!--        <el-table-column prop="requestParam" label="请求参数" />-->
+        <!--        <el-table-column prop="requestParam" label="请求参数" />-->
         <el-table-column prop="requestTime" label="请求时间" align="center" show-overflow-tooltip />
-<!--        <el-table-column prop="method" label="请求类方法" />-->
-        <el-table-column prop="executeStatus" label="执行状态" align="center" width="100"/>
-        <el-table-column prop="executeTime" label="耗时(s)" align="center" width="100"/>
-<!--        <el-table-column prop="responseData" label="返回数据" :show-overflow-tooltip="true" />-->
-<!--        <el-table-column prop="errorDesc" label="异常内容" />-->
+        <!--        <el-table-column prop="method" label="请求类方法" />-->
+        <el-table-column prop="executeStatus" label="执行状态" align="center" width="100" />
+        <el-table-column prop="executeTime" label="耗时(s)" align="center" width="100" />
+        <!--        <el-table-column prop="responseData" label="返回数据" :show-overflow-tooltip="true" />-->
+        <!--        <el-table-column prop="errorDesc" label="异常内容" />-->
         <el-table-column label="操作" align="center" width="120">
           <template slot-scope="scope">
             <el-dropdown>
               <el-button type="primary" size="mini">
-                更多详情<i class="el-icon-arrow-down el-icon--right"></i>
+                更多详情<i class="el-icon-arrow-down el-icon--right" />
               </el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="1" @click.native="handleShowParam(1, '请求参数', scope.row)">请求参数</el-dropdown-item>
@@ -72,7 +79,7 @@
       <el-pagination
         v-model="tableData.pageNumber"
         background
-        layout="prev, pager, next"
+        layout="total, prev, pager, next"
         :page-size="tableData.pageSize"
         :hide-on-single-page="true"
         :total="tableData.total"
@@ -84,12 +91,12 @@
 
     <el-drawer
       size="40%"
-      :wrapperClosable="false"
+      :wrapper-closable="false"
       :title="showParam.title"
       :visible.sync="showParam.visiable"
-      >
+    >
       <div class="json-editor" style="margin: 5px">
-        <codemirror class="code" v-model="showParam.code" :options="showParam.cmOptions"></codemirror>
+        <codemirror v-model="showParam.code" class="code" :options="showParam.cmOptions" />
       </div>
     </el-drawer>
   </div>
@@ -97,20 +104,20 @@
 
 <script>
 import logApi from '@/api/monitor/log/jy-log'
-import JyLogDetail from "@/views/system/log/log-detail";
+import JyLogDetail from '@/views/system/log/log-detail'
 
-import {codemirror} from 'vue-codemirror'
+import { codemirror } from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
-import 'codemirror/keymap/sublime' //sublime编辑器效果
-import "codemirror/theme/dracula.css"// 配置里面也需要theme设置为monokai
-import "codemirror/mode/vue/vue.js" // 配置里面也需要mode设置为vue
-import 'codemirror/addon/selection/active-line' //光标行背景高亮，配置里面也需要styleActiveLine设置为true
+import 'codemirror/keymap/sublime' // sublime编辑器效果
+import 'codemirror/theme/dracula.css'// 配置里面也需要theme设置为monokai
+import 'codemirror/mode/vue/vue.js' // 配置里面也需要mode设置为vue
+import 'codemirror/addon/selection/active-line' // 光标行背景高亮，配置里面也需要styleActiveLine设置为true
 
 export default {
-  name: 'JyLog',
   components: { JyLogDetail, codemirror },
   data() {
     return {
+      queryFormVisiable: true,
       queryForm: {
         username: '',
         handleName: ''
@@ -140,16 +147,16 @@ export default {
         // 代码
         code: 'hello world',
         cmOptions: {
-          tabSize: 4,// tab的空格个数
-          theme: 'monokai',//主题样式
-          lineNumbers: true,//是否显示行数
-          lineWrapping: false, //是否自动换行
-          styleActiveLine: true,//line选择是是否加亮
-          matchBrackets: true,//括号匹配
-          mode: "json", //实现javascript代码高亮
-          readOnly: true//只读
+          tabSize: 4, // tab的空格个数
+          theme: 'monokai', // 主题样式
+          lineNumbers: true, // 是否显示行数
+          lineWrapping: false, // 是否自动换行
+          styleActiveLine: true, // line选择是是否加亮
+          matchBrackets: true, // 括号匹配
+          mode: 'json', // 实现javascript代码高亮
+          readOnly: true// 只读
         }
-      },
+      }
     }
   },
   created() {
@@ -216,7 +223,7 @@ export default {
       console.log(command, title, row)
       this.showParam.title = title
       this.showParam.visiable = true
-      this.showParam.code = command === 1 ? row.requestParam : (command === 2 ? row.responseData : row.errorDesc )
+      this.showParam.code = command === 1 ? row.requestParam : (command === 2 ? row.responseData : row.errorDesc)
       this.showParam.code = this.showParam.code ? this.showParam.code : ''
     }
   }

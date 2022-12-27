@@ -42,7 +42,7 @@
       <el-pagination
         v-model="tableData.pageNumber"
         background
-        layout="prev, pager, next"
+        layout="total, prev, pager, next"
         :page-size="tableData.pageSize"
         :hide-on-single-page="true"
         :total="tableData.total"
@@ -55,7 +55,6 @@
 <script>
 import jyOfflineApi from '@/api/monitor/offline/jy-offline'
 export default {
-  name: 'JyOffline',
   data() {
     return {
       queryForm: {

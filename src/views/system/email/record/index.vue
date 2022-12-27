@@ -72,7 +72,7 @@
       <el-pagination
         v-model="tableData.pageNumber"
         background
-        layout="prev, pager, next"
+        layout="total, prev, pager, next"
         :page-size="tableData.pageSize"
         :hide-on-single-page="true"
         :total="tableData.total"
