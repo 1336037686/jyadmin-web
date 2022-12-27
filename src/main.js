@@ -6,7 +6,6 @@ import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
 import Element from 'element-ui'
 import './styles/element-variables.scss'
-import enLang from 'element-ui/lib/locale/lang/en'// 如果使用中文语言包请默认支持，无需额外引入，请删除该依赖
 
 import '@/styles/index.scss' // global css
 
@@ -51,9 +50,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 Vue.use(Element, {
-  size: Cookies.get('size') || 'medium', // set element-ui default size
-  locale: enLang // 如果使用中文，无需设置，请删除
+  size: Cookies.get('size') || 'medium' // set element-ui default size
 })
+
+import VForm from 'vform-builds' // 引入VForm库
+import 'vform-builds/dist/VFormDesigner.css' // 引入VForm样式
+Vue.use(VForm) // 全局注册VForm(同时注册了v-form-designer和v-form-render组件)
 
 // 添加字典工具类
 import dict from '@/utils/dict'

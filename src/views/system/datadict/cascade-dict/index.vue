@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px;">
     <el-card class="box-card" shadow="always">
-      <el-form :inline="true" :model="queryForm" label-width="100px" size="mini">
+      <el-form v-show="queryFormVisiable" :inline="true" :model="queryForm" label-width="100px" size="mini">
         <el-form-item label="字典名称：">
           <el-input v-model="queryForm.name" placeholder="字典名称" />
         </el-form-item>
@@ -27,6 +27,10 @@
         <el-card class="box-card" shadow="always" style="margin-top: 5px">
           <div slot="header" class="clearfix">
             <span>字典列表</span>
+            <el-row style="float: right">
+              <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
+              <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
+            </el-row>
           </div>
           <el-table
             ref="table"
@@ -68,6 +72,7 @@ export default {
   components: { JyDictDetail, JyDictForm },
   data() {
     return {
+      queryFormVisiable: true,
       queryForm: {
         name: '',
         code: ''

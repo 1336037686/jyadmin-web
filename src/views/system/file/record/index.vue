@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px">
     <el-card class="box-card" shadow="always">
-      <el-form :inline="true" :model="queryForm" size="mini" label-width="90px">
+      <el-form v-show="queryFormVisiable" :inline="true" :model="queryForm" size="mini" label-width="90px">
         <el-form-item label="原文件名：">
           <el-input v-model="queryForm.realName" placeholder="原文件名" />
         </el-form-item>
@@ -28,6 +28,10 @@
     <el-card class="box-card" shadow="always " style="margin-top: 5px">
       <div slot="header" class="clearfix">
         <span><i class="el-icon-caret-right" /> 附件列表</span>
+        <el-row style="float: right">
+          <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
+          <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
+        </el-row>
       </div>
       <el-table
         ref="table"
@@ -45,7 +49,11 @@
         <el-table-column prop="id" label="ID" align="center" show-overflow-tooltip />
         <el-table-column prop="name" label="文件名" align="center" width="200" show-overflow-tooltip />
         <el-table-column prop="realName" label="原文件名称" align="center" width="200" show-overflow-tooltip />
-        <el-table-column prop="source" label="文件存储平台" align="center" width="120" show-overflow-tooltip />
+        <el-table-column prop="source" label="文件存储平台" align="center" width="120" show-overflow-tooltip>
+          <template slot-scope="scope">
+            {{getNameByCode(storageTypeOptions, scope.row.source)}}
+          </template>
+        </el-table-column>
         <el-table-column prop="type" label="文件类型" align="center" width="100" show-overflow-tooltip />
         <el-table-column prop="suffix" label="文件后缀" align="center" width="100" show-overflow-tooltip />
         <el-table-column prop="relevance" label="业务标识" align="center" width="100" show-overflow-tooltip />
@@ -88,6 +96,8 @@ export default {
   directives: { permission },
   data() {
     return {
+      storageTypeOptions: [],
+      queryFormVisiable: true,
       queryForm: {
         name: null,
         type: null,
@@ -118,6 +128,9 @@ export default {
     }
   },
   created() {
+    this.getDictByCode('sys_file_storageType').then(res => {
+      this.storageTypeOptions = res.data
+    })
     this.getList()
   },
   methods: {

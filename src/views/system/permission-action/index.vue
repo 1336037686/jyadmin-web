@@ -48,9 +48,13 @@
         <el-card v-if="groupSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
             <span><i class="el-icon-caret-right"/> 接口列表</span>
+            <el-row style="float: right">
+              <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
+              <el-button icon="el-icon-refresh" circle size="mini" @click="getActionList()" />
+            </el-row>
           </div>
           <div>
-            <el-form :inline="true" :model="actionQueryForm" label-width="90px" size="mini">
+            <el-form v-show="queryFormVisiable" :inline="true" :model="actionQueryForm" label-width="90px" size="mini">
               <el-form-item label="接口名称：">
                 <el-input v-model="actionQueryForm.name" placeholder="接口名称" />
               </el-form-item>
@@ -61,14 +65,13 @@
                 <el-button type="primary" icon="el-icon-search" @click="getActionList">查 询</el-button>
                 <el-button type="info" icon="el-icon-circle-close" @click="actionHandleReset">重 置</el-button>
               </el-form-item>
-              <br>
-              <el-form-item>
-                <el-button v-permission="['action:group-show']" type="primary" size="mini" icon="el-icon-view" @click="actionHandleShow">查 看</el-button>
-                <el-button v-permission="['action:group-add']" type="success" size="mini" icon="el-icon-plus" @click="actionHandleCreate">新 增</el-button>
-                <el-button v-permission="['action:group-update']" type="warning" size="mini" icon="el-icon-edit-outline" @click="actionHandleUpdate">修 改</el-button>
-                <el-button v-permission="['action:group-delete']" type="danger"  size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
-              </el-form-item>
             </el-form>
+            <div>
+              <el-button v-permission="['action:group-show']" type="primary" size="mini" icon="el-icon-view" @click="actionHandleShow">查 看</el-button>
+              <el-button v-permission="['action:group-add']" type="success" size="mini" icon="el-icon-plus" @click="actionHandleCreate">新 增</el-button>
+              <el-button v-permission="['action:group-update']" type="warning" size="mini" icon="el-icon-edit-outline" @click="actionHandleUpdate">修 改</el-button>
+              <el-button v-permission="['action:group-delete']" type="danger"  size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
+            </div>
           </div>
 
           <el-table
@@ -78,7 +81,7 @@
             element-loading-spinner="el-icon-loading"
             :data="actionTableData.records"
             highlight-current-row
-            style="width: 100%"
+            style="width: 100%;margin-top: 10px"
             empty-text="暂无数据"
             :header-cell-style="{background:'#FAFAFA'}"
             @row-click="actionHandleTableRowClick"
@@ -159,6 +162,7 @@ export default {
         current: null,
       },
       // action
+      queryFormVisiable: true,
       actionQueryForm: {
         groupId: '',
         name: '',

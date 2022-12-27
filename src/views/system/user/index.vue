@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px">
     <el-card class="box-card" shadow="always">
-      <el-form :inline="true" :model="queryForm" size="mini" label-width="80px">
+      <el-form v-show="queryFormVisiable" :inline="true" :model="queryForm" size="mini" label-width="80px">
         <el-form-item label="用户名：">
           <el-input v-model="queryForm.username" placeholder="用户名" />
         </el-form-item>
@@ -30,6 +30,10 @@
     <el-card class="box-card" shadow="always " style="margin-top: 5px">
       <div slot="header" class="clearfix">
         <span><i class="el-icon-caret-right" /> 用户列表</span>
+        <el-row style="float: right">
+          <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
+          <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
+        </el-row>
       </div>
       <el-table
         ref="table"
@@ -96,6 +100,7 @@ export default {
   components: { JyUserPassword, JyUserRole, JyUserForm, JyUserDetail },
   data() {
     return {
+      queryFormVisiable: true,
       queryForm: {
         username: '',
         nickname: '',
@@ -156,8 +161,9 @@ export default {
       this.getList()
     },
     handleReset() {
-      this.queryForm.name = ''
-      this.queryForm.code = ''
+      this.queryForm.username = ''
+      this.queryForm.nickname = ''
+      this.queryForm.phone = ''
       this.tableData.pageNumber = 1
       this.getList()
     },

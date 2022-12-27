@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px">
     <el-card class="box-card" shadow="always">
-      <el-form :inline="true" size="mini" :model="queryForm" label-width="100px">
+      <el-form v-show="queryFormVisiable" :inline="true" size="mini" :model="queryForm" label-width="100px">
         <el-form-item label="角色名称：">
           <el-input v-model="queryForm.name" placeholder="角色名称" />
         </el-form-item>
@@ -15,10 +15,10 @@
       </el-form>
 
       <div style="margin-top: 5px">
-        <el-button v-permission="['role:show']" type="primary" size="mini"  icon="el-icon-view" @click="handleShow">查 看</el-button>
-        <el-button v-permission="['role:add']" type="success" size="mini"  icon="el-icon-plus" @click="handleCreate">新 增</el-button>
-        <el-button v-permission="['role:update']" type="warning" size="mini"  icon="el-icon-edit-outline" @click="handleUpdate">修 改</el-button>
-        <el-button v-permission="['role:delete']" type="danger"  size="mini" icon="el-icon-delete" @click="handleRemove">删 除</el-button>
+        <el-button v-permission="['role:show']" type="primary" size="mini" icon="el-icon-view" @click="handleShow">查 看</el-button>
+        <el-button v-permission="['role:add']" type="success" size="mini" icon="el-icon-plus" @click="handleCreate">新 增</el-button>
+        <el-button v-permission="['role:update']" type="warning" size="mini" icon="el-icon-edit-outline" @click="handleUpdate">修 改</el-button>
+        <el-button v-permission="['role:delete']" type="danger" size="mini" icon="el-icon-delete" @click="handleRemove">删 除</el-button>
       </div>
     </el-card>
 
@@ -26,7 +26,11 @@
       <el-col :span="18">
         <el-card class="box-card" shadow="always" style="margin-top: 5px">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 角色列表</span>
+            <span><i class="el-icon-caret-right" /> 角色列表</span>
+            <el-row style="float: right">
+              <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
+              <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
+            </el-row>
           </div>
           <el-table
             ref="table"
@@ -50,7 +54,7 @@
                 <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> 禁 用 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" width="220" align="center"/>
+            <el-table-column prop="createTime" label="创建时间" width="220" align="center" />
             <el-table-column prop="description" label="角色描述" width="380" />
           </el-table>
         </el-card>
@@ -68,30 +72,31 @@
       </el-col>
       <el-col :span="6" style="padding-left: 10px">
         <el-card
+          v-loading="selectData.loading"
           class="box-card"
           shadow="always"
           style="margin-top: 5px"
-          v-loading="selectData.loading"
           element-loading-text="加载中，请稍后..."
           element-loading-spinner="el-icon-loading"
         >
-        <div slot="header" class="clearfix">
-          <span><i class="el-icon-caret-right"/> 菜单分配</span>
-          <el-button v-permission="['role:menu']" style="float: right;" size="mini" type="primary" icon="el-icon-circle-check" @click="handleUpdateRoleMenus">保存</el-button>
-        </div>
+          <div slot="header" class="clearfix">
+            <span><i class="el-icon-caret-right" /> 菜单分配</span>
+            <el-button v-permission="['role:menu']" style="float: right;" size="mini" type="primary" icon="el-icon-circle-check" @click="handleUpdateRoleMenus">保存</el-button>
+          </div>
           <el-tree
+            ref="menuTree"
             :data="menuTreeData"
             show-checkbox
             node-key="id"
             empty-text="暂无数据"
-            ref="menuTree"
             highlight-current
             :check-strictly="true"
-            :props="{children: 'children', label: 'name' }">
-            <span class="custom-tree-node" slot-scope="{ node, data }">
+            :props="{children: 'children', label: 'name' }"
+          >
+            <span slot-scope="{ node, data }" class="custom-tree-node">
               <span style="font-size: 14px;">{{ node.label }}</span>
               <span>
-                <span style="margin-right: 10px">{{data.code}}</span>
+                <span style="margin-right: 10px">{{ data.code }}</span>
                 <el-tag v-if="data.type === 0" size="mini" effect="plain"> C 目 录</el-tag>
                 <el-tag v-if="data.type === 1" size="mini" effect="plain" type="success"> M 菜 单</el-tag>
                 <el-tag v-if="data.type === 2" size="mini" effect="plain" type="warning"> B 按 钮</el-tag>
@@ -110,15 +115,15 @@
 <script>
 import roleApi from '@/api/system/role/jy-role'
 import menuApi from '@/api/system/permission/jy-permission-menu'
-import JyRoleDetail from "@/views/system/role/jy-role-detail"
-import JyRoleForm from "@/views/system/role/jy-role-form"
+import JyRoleDetail from '@/views/system/role/jy-role-detail'
+import JyRoleForm from '@/views/system/role/jy-role-form'
 import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
-  name: 'JyRole',
   directives: { permission },
   components: { JyRoleForm, JyRoleDetail },
   data() {
     return {
+      queryFormVisiable: true,
       queryForm: {
         name: '',
         code: ''
@@ -253,8 +258,8 @@ export default {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      let checkedNodes = this.$refs.menuTree.getCheckedNodes()
-      let menuIds = []
+      const checkedNodes = this.$refs.menuTree.getCheckedNodes()
+      const menuIds = []
       if (checkedNodes && checkedNodes.length > 0) {
         for (let i = 0; i < checkedNodes.length; i++) {
           menuIds.push(checkedNodes[i].id)

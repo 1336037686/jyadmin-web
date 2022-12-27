@@ -5,9 +5,13 @@
         <el-card class="box-card" shadow="always">
           <div slot="header" class="clearfix">
             <span><i class="el-icon-caret-right"/> 配置模板列表</span>
+            <el-row style="float: right">
+              <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
+              <el-button icon="el-icon-refresh" circle size="mini" @click="getConfigTemplateList()" />
+            </el-row>
           </div>
           <div>
-            <el-form :inline="true" label-width="85px" size="mini">
+            <el-form v-show="queryFormVisiable" :inline="true" label-width="85px" size="mini">
               <el-form-item label="模板名称：">
                 <el-input v-model="configTemplateQueryForm.name" placeholder="模板名称" />
               </el-form-item>
@@ -24,7 +28,7 @@
             element-loading-spinner="el-icon-loading"
             :data="configTemplateTableData.records"
             highlight-current-row
-            style="width: 100%"
+            style="width: 100%;margin-top: 10px"
             empty-text="暂无数据"
             :header-cell-style="{background:'#FAFAFA'}"
             @row-click="configTemplateRowClick"
@@ -115,6 +119,7 @@ export default {
   components: { JyConfigDetailForm, JyConfigDetailDetail },
   data() {
     return {
+      queryFormVisiable: true,
       configTemplateQueryForm: {
         name: ''
       },

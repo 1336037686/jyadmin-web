@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px">
     <el-card class="box-card" shadow="always">
-      <el-form :inline="true" :model="queryForm" size="mini" label-width="90px">
+      <el-form v-show="queryFormVisiable" :inline="true" :model="queryForm" size="mini" label-width="90px">
         <el-form-item label="发送人：">
           <el-input v-model="queryForm.sender" placeholder="原文件名" />
         </el-form-item>
@@ -31,6 +31,10 @@
     <el-card class="box-card" shadow="always " style="margin-top: 5px">
       <div slot="header" class="clearfix">
         <span><i class="el-icon-caret-right" /> 邮件发送记录</span>
+        <el-row style="float: right">
+          <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
+          <el-button icon="el-icon-refresh" circle size="mini" @click="handleQuery()" />
+        </el-row>
       </div>
       <el-table
         ref="table"
@@ -48,7 +52,11 @@
         <el-table-column prop="id" label="ID" align="center" show-overflow-tooltip />
         <el-table-column prop="sender" label="发送人" align="center" show-overflow-tooltip />
         <el-table-column prop="receiver" label="接收人" align="center" show-overflow-tooltip />
-        <el-table-column prop="source" label="发送平台" align="center" show-overflow-tooltip />
+        <el-table-column prop="source" label="发送平台" align="center" show-overflow-tooltip>
+          <template slot-scope="scope">
+            {{ getNameByCode(storageTypeOptions, scope.row.source)}}
+          </template>
+        </el-table-column>
         <el-table-column prop="relevance" label="业务标识" align="center" show-overflow-tooltip />
         <el-table-column prop="subject" label="邮件主题" align="center" width="250" show-overflow-tooltip />
         <el-table-column prop="createTime" label="创建时间" width="180" align="center" />
@@ -88,6 +96,8 @@ export default {
   directives: { permission },
   data() {
     return {
+      storageTypeOptions: [],
+      queryFormVisiable: true,
       queryForm: {
         sender: null,
         receiver: null,
@@ -119,6 +129,9 @@ export default {
     }
   },
   created() {
+    this.getDictByCode('sys_email_platform').then(res => {
+      this.storageTypeOptions = res.data
+    })
     this.getList()
   },
   methods: {

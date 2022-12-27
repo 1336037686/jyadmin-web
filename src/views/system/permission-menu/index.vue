@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px;">
     <el-card class="box-card" shadow="always">
-      <el-form :inline="true" :model="queryForm" label-width="100px" size="mini">
+      <el-form v-show="queryFormVisiable" :inline="true" :model="queryForm" label-width="100px" size="mini">
         <el-form-item label="菜单名称：">
           <el-input v-model="queryForm.name" placeholder="菜单名称" />
         </el-form-item>
@@ -27,6 +27,10 @@
         <el-card class="box-card" shadow="always" style="margin-top: 5px">
           <div slot="header" class="clearfix">
             <span><i class="el-icon-caret-right"/> 菜单列表</span>
+            <el-row style="float: right">
+              <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
+              <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
+            </el-row>
           </div>
           <el-table
             ref="table"
@@ -131,11 +135,11 @@ import JyPermissionMenuForm from '@/views/system/permission-menu/permission-menu
 import JyPermissionMenuDetail from '@/views/system/permission-menu/permission-menu-detail'
 import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
-  name: 'JyPermissionMenu',
   directives: { permission },
   components: { JyPermissionMenuDetail, JyPermissionMenuForm },
   data() {
     return {
+      queryFormVisiable: true,
       queryForm: {
         name: '',
         code: ''

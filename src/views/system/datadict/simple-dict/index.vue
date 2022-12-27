@@ -6,9 +6,13 @@
         <el-card class="box-card" shadow="always">
           <div slot="header" class="clearfix">
             <span><i class="el-icon-caret-right"/> 通用字典</span>
+            <el-row style="float: right">
+              <el-button icon="el-icon-search" circle size="mini" @click="() => this.groupQueryFormVisiable = !this.groupQueryFormVisiable" />
+              <el-button icon="el-icon-refresh" circle size="mini" @click="getGroupList()" />
+            </el-row>
           </div>
           <div>
-            <el-form :inline="true" label-width="100px" size="mini">
+            <el-form v-show="groupQueryFormVisiable" :inline="true" label-width="100px" size="mini">
               <el-form-item label="字典名称：">
                 <el-input v-model="groupQueryForm.name" placeholder="字典名称" />
               </el-form-item>
@@ -16,14 +20,13 @@
                 <el-button type="primary" icon="el-icon-search" @click="getGroupList">查 询</el-button>
                 <el-button type="info" icon="el-icon-circle-close" @click="groupHandleReset">重 置</el-button>
               </el-form-item>
-              <br>
-              <el-form-item>
-                <el-button type="primary" size="mini"  icon="el-icon-view" @click="groupHandleShow"></el-button>
-                <el-button type="success" size="mini"  icon="el-icon-plus" @click="groupHandleCreate"></el-button>
-                <el-button type="warning" size="mini"  icon="el-icon-edit-outline" @click="groupHandleUpdate"></el-button>
-                <el-button type="danger"  size="mini" icon="el-icon-delete" @click="groupHandleRemove"></el-button>
-              </el-form-item>
             </el-form>
+            <div>
+              <el-button type="primary" size="mini"  icon="el-icon-view" @click="groupHandleShow"></el-button>
+              <el-button type="success" size="mini"  icon="el-icon-plus" @click="groupHandleCreate"></el-button>
+              <el-button type="warning" size="mini"  icon="el-icon-edit-outline" @click="groupHandleUpdate"></el-button>
+              <el-button type="danger"  size="mini" icon="el-icon-delete" @click="groupHandleRemove"></el-button>
+            </div>
           </div>
           <el-table
             ref="table"
@@ -32,7 +35,7 @@
             element-loading-spinner="el-icon-loading"
             :data="groupTableData.records"
             highlight-current-row
-            style="width: 100%"
+            style="width: 100%;margin-top: 10px"
             empty-text="暂无数据"
             :header-cell-style="{background:'#FAFAFA'}"
             @row-click="groupHandleTableRowClick"
@@ -56,9 +59,13 @@
         <el-card v-if="groupSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
             <span><i class="el-icon-caret-right"/> 字典明细</span>
+            <el-row style="float: right">
+              <el-button icon="el-icon-search" circle size="mini" @click="() => this.actionQueryFormVisiable = !this.actionQueryFormVisiable" />
+              <el-button icon="el-icon-refresh" circle size="mini" @click="getActionList()" />
+            </el-row>
           </div>
           <div>
-            <el-form :inline="true" :model="actionQueryForm" label-width="90px" size="mini">
+            <el-form v-show="actionQueryFormVisiable" :inline="true" :model="actionQueryForm" label-width="90px" size="mini">
               <el-form-item label="字段名称：">
                 <el-input v-model="actionQueryForm.name" placeholder="字段名称" />
               </el-form-item>
@@ -69,14 +76,13 @@
                 <el-button type="primary" icon="el-icon-search" @click="getActionList">查 询</el-button>
                 <el-button type="info" icon="el-icon-circle-close" @click="actionHandleReset">重 置</el-button>
               </el-form-item>
-              <br>
-              <el-form-item>
-                <el-button type="primary" size="mini" icon="el-icon-view" @click="actionHandleShow">查 看</el-button>
-                <el-button type="success" size="mini" icon="el-icon-plus" @click="actionHandleCreate">新 增</el-button>
-                <el-button type="warning" size="mini" icon="el-icon-edit-outline" @click="actionHandleUpdate">修 改</el-button>
-                <el-button type="danger"  size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
-              </el-form-item>
             </el-form>
+            <div>
+              <el-button type="primary" size="mini" icon="el-icon-view" @click="actionHandleShow">查 看</el-button>
+              <el-button type="success" size="mini" icon="el-icon-plus" @click="actionHandleCreate">新 增</el-button>
+              <el-button type="warning" size="mini" icon="el-icon-edit-outline" @click="actionHandleUpdate">修 改</el-button>
+              <el-button type="danger"  size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
+            </div>
           </div>
 
           <el-table
@@ -86,12 +92,13 @@
             element-loading-spinner="el-icon-loading"
             :data="actionTableData.records"
             highlight-current-row
-            style="width: 100%"
+            style="width: 100%;margin-top: 10px"
             empty-text="暂无数据"
             :header-cell-style="{background:'#FAFAFA'}"
             @row-click="actionHandleTableRowClick"
           >
             <el-table-column type="selection" width="60" align="center" />
+            <el-table-column type="index" label="序号" align="center" width="50"/>
             <el-table-column prop="name" label="字段名称" align="center" show-overflow-tooltip />
             <el-table-column prop="code" label="字段编码" align="center" show-overflow-tooltip />
             <el-table-column prop="createTime" label="创建时间" align="center" show-overflow-tooltip />
@@ -133,6 +140,7 @@ export default {
   components: { JySimpleDictDetailForm, JySimpleDictDetailInfo, JySimpleDictDetail, JySimpleDictForm },
   data() {
     return {
+      groupQueryFormVisiable: true,
       groupQueryForm: {
         name: ''
       },
@@ -154,6 +162,7 @@ export default {
         current: null
       },
       // action
+      actionQueryFormVisiable: true,
       actionQueryForm: {
         dataDictId: null,
         name: '',

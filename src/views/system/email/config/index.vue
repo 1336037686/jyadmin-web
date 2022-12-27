@@ -3,7 +3,12 @@
     <el-tab-pane label="邮件配置" name="config">
       <el-row style="margin-top: 10px">
         <el-col :span="6">
-          <el-card shadow="never">
+          <el-card
+            shadow="never"
+            v-loading="loading"
+            element-loading-text="加载中，请稍后..."
+            element-loading-spinner="el-icon-loading"
+          >
             <div slot="header" class="clearfix">
               <span><i class="el-icon-caret-right" />  邮件配置</span>
             </div>
@@ -42,7 +47,11 @@
             >
               <el-table-column prop="name" label="字段名称" width="150" align="center" show-overflow-tooltip />
               <el-table-column prop="code" label="字段编码" width="150" align="center" show-overflow-tooltip />
-              <el-table-column prop="type" label="字段类型" width="150" align="center" show-overflow-tooltip />
+              <el-table-column prop="type" label="字段类型" width="150" align="center" show-overflow-tooltip>
+                <template slot-scope="scope">
+                  {{getNameByCode(fieldTypeOptions, scope.row.type)}}
+                </template>
+              </el-table-column>
               <el-table-column prop="defaultValue" label="缺省值" width="150" align="center" show-overflow-tooltip />
               <el-table-column prop="value" label="具体值" width="150" align="center" show-overflow-tooltip />
               <el-table-column prop="comment" label="注释" align="center" show-overflow-tooltip />
@@ -84,7 +93,9 @@ export default {
   data() {
     return {
       tab: 'config',
+      loading: false,
       fileList: [],
+      fieldTypeOptions: [],
       storageTypeOptions: [],
       configOptions: [],
       form: {
@@ -124,13 +135,18 @@ export default {
     this.getDictByCode('sys_email_platform').then(res => {
       this.storageTypeOptions = res.data
     })
+    this.getDictByCode('sys_configTemplate_fieldType').then(res => {
+      this.fieldTypeOptions = res.data
+    })
   },
   mounted() {
     this.init()
   },
   methods: {
     init() {
+      this.loading = true
       emailConfigApi.getConfig().then(res => {
+        this.loading = false
         this.form = res.data
         if (this.form.storageType) {
           emailConfigApi.getConfigDetails(this.form.storageType).then(res2 => {

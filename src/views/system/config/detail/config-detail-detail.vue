@@ -18,7 +18,11 @@
       >
         <el-table-column prop="name" label="字段名称" width="180" align="center" show-overflow-tooltip />
         <el-table-column prop="code" label="字段编码" width="180" align="center" show-overflow-tooltip />
-        <el-table-column prop="type" label="字段类型" width="180" align="center" show-overflow-tooltip />
+        <el-table-column prop="type" label="字段类型" width="180" align="center" show-overflow-tooltip>
+          <template slot-scope="scope">
+            {{getNameByCode(fieldTypeOptions, scope.row.type)}}
+          </template>
+        </el-table-column>
         <el-table-column prop="defaultValue" label="缺省值" width="180" align="center" show-overflow-tooltip />
         <el-table-column prop="value" label="具体值" width="180" align="center" show-overflow-tooltip />
         <el-table-column prop="comment" label="注释" align="center" show-overflow-tooltip />
@@ -50,6 +54,7 @@ export default {
   data() {
     return {
       tmpVisible: this.visible,
+      fieldTypeOptions: [],
       form: {
         id: null,
         name: null,
@@ -72,6 +77,11 @@ export default {
       this.$emit('update:visible', newVal)
     },
     deep: true
+  },
+  created() {
+    this.getDictByCode('sys_configTemplate_fieldType').then(res => {
+      this.fieldTypeOptions = res.data
+    })
   },
   methods: {
     getById(id) {

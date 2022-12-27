@@ -5,9 +5,13 @@
         <el-card class="box-card" shadow="always">
           <div slot="header" class="clearfix">
             <span><i class="el-icon-caret-right"/> 配置模板</span>
+            <el-row style="float: right">
+              <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
+              <el-button icon="el-icon-refresh" circle size="mini" @click="getConfigTemplateList()" />
+            </el-row>
           </div>
           <div>
-            <el-form :inline="true" label-width="85px" size="mini">
+            <el-form v-show="queryFormVisiable" :inline="true" label-width="85px" size="mini">
               <el-form-item label="模板名称：">
                 <el-input v-model="configTemplateQueryForm.name" placeholder="模板名称" />
               </el-form-item>
@@ -15,14 +19,13 @@
                 <el-button type="primary" icon="el-icon-search" @click="getConfigTemplateList">查 询</el-button>
                 <el-button type="info" icon="el-icon-circle-close" @click="configTemplateHandleReset">重 置</el-button>
               </el-form-item>
-              <br>
-              <el-form-item>
-                <el-button type="primary" size="mini"  icon="el-icon-view" @click="configTemplateHandleShow"></el-button>
-                <el-button type="success" size="mini"  icon="el-icon-plus" @click="configTemplateHandleCreate"></el-button>
-                <el-button type="warning" size="mini"  icon="el-icon-edit-outline" @click="configTemplateHandleUpdate"></el-button>
-                <el-button type="danger"  size="mini" icon="el-icon-delete" @click="configTemplateHandleRemove"></el-button>
-              </el-form-item>
             </el-form>
+            <div>
+              <el-button type="primary" size="mini"  icon="el-icon-view" @click="configTemplateHandleShow"></el-button>
+              <el-button type="success" size="mini"  icon="el-icon-plus" @click="configTemplateHandleCreate"></el-button>
+              <el-button type="warning" size="mini"  icon="el-icon-edit-outline" @click="configTemplateHandleUpdate"></el-button>
+              <el-button type="danger"  size="mini" icon="el-icon-delete" @click="configTemplateHandleRemove"></el-button>
+            </div>
           </div>
           <el-table
             ref="table"
@@ -31,7 +34,7 @@
             element-loading-spinner="el-icon-loading"
             :data="configTemplateTableData.records"
             highlight-current-row
-            style="width: 100%"
+            style="width: 100%;margin-top: 10px"
             empty-text="暂无数据"
             :header-cell-style="{background:'#FAFAFA'}"
             @row-click="configTemplateHandleTableRowClick"
@@ -108,6 +111,7 @@ export default {
   data() {
     return {
       typeDict: [],
+      queryFormVisiable: true,
       configTemplateQueryForm: {
         name: ''
       },

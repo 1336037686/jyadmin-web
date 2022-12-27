@@ -30,7 +30,7 @@ module.exports = {
   lintOnSave: false, // process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
-    hot:true, //自动保存
+    hot: true, // 自动保存
     port: port,
     open: true,
     overlay: {
