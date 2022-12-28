@@ -50,7 +50,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="目录图标：" prop="icon">
-                <e-icon-picker v-model="form.icon" :width="iconSelect.width"/>
+                <e-icon-picker v-model="form.icon" :width="iconSelect.width" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -137,7 +137,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="菜单图标：" prop="icon">
-                <e-icon-picker v-model="form.icon" :width="iconSelect.width"/>
+                <e-icon-picker v-model="form.icon" :width="iconSelect.width" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -266,7 +266,7 @@ import menuApi from '@/api/system/permission/jy-permission-menu'
 import Treeselect from '@riophae/vue-treeselect'
 // import the styles
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-import {EIconPicker} from 'e-icon-picker'
+import { EIconPicker } from 'e-icon-picker'
 
 export default {
   name: 'JyPermissionMenuForm',
@@ -295,6 +295,23 @@ export default {
       form: {
         id: '',
         type: 0,
+        name: '',
+        code: '',
+        parentId: null,
+        icon: '',
+        cache: 0,
+        visiable: 1,
+        link: 0,
+        status: 1,
+        url: '',
+        sort: null,
+        component: '',
+        path: '',
+        method: '',
+        style: '',
+        description: ''
+      },
+      baseForm: {
         name: '',
         code: '',
         parentId: null,
@@ -375,6 +392,9 @@ export default {
   },
   methods: {
     menuTypeChange() {
+      for (const baseFormKey in this.baseForm) {
+        this.form[baseFormKey] = this.baseForm[baseFormKey]
+      }
       this.clearFormValidate('form')
     },
     handleSubmit(formName) {
