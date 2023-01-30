@@ -1,10 +1,218 @@
 <template>
-  <div>短信配置</div>
+  <el-tabs v-model="tab" style="margin: 20px">
+    <el-tab-pane label="短信配置" name="config">
+      <el-row style="margin-top: 10px">
+        <el-col :span="6">
+          <el-card
+            shadow="never"
+            v-loading="loading"
+            element-loading-text="加载中，请稍后..."
+            element-loading-spinner="el-icon-loading"
+          >
+            <div slot="header" class="clearfix">
+              <span><i class="el-icon-caret-right" />  短信配置</span>
+            </div>
+            <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+              <el-form-item label="发送平台：" prop="storageType">
+                <el-select v-model="form.storageType" placeholder="请选择短信平台" style="width: 100%" @change="storageTypeChange">
+                  <el-option v-for="(item, index) in storageTypeOptions" :key="'storageType_' + index" :label="item.name" :value="item.code" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="配置前缀：" prop="config">
+                <el-input v-model="form.config" readonly />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" style="float: right; margin-left: 10px" @click="onSubmit">保存配置</el-button>
+                <el-button style="float: right" @click="onReset">重置配置</el-button>
+              </el-form-item>
+            </el-form>
+          </el-card>
+        </el-col>
+
+        <el-col :span="17" style="margin-left: 20px">
+          <el-card>
+            <div slot="header" class="clearfix">
+              <span><i class="el-icon-caret-right" />  配置列表</span>
+            </div>
+            <el-empty v-if="!configOptions || configOptions.length === 0" description="暂无配置"></el-empty>
+            <el-collapse accordion v-else>
+              <el-collapse-item v-for="(item, index) in configOptions" :key="'configOptions_' + index" :title="'（' + (index + 1) + '）' + item.name + ' ' + item.code" :name="index">
+                <div>
+                  <el-table
+                    border
+                    :data="item.jsonObjs"
+                    :key="'configDetailInfoTable_' + index"
+                    highlight-current-row
+                    style="width: 100%"
+                    empty-text="暂无数据"
+                  >
+                    <el-table-column prop="name" label="字段名称" width="150" align="center" show-overflow-tooltip />
+                    <el-table-column prop="code" label="字段编码" width="150" align="center" show-overflow-tooltip />
+                    <el-table-column prop="type" label="字段类型" width="150" align="center" show-overflow-tooltip>
+                      <template slot-scope="scope">
+                        {{getNameByCode(fieldTypeOptions, scope.row.type)}}
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="defaultValue" label="缺省值" width="150" align="center" show-overflow-tooltip />
+                    <el-table-column prop="value" label="具体值" width="150" align="center" show-overflow-tooltip />
+                    <el-table-column prop="comment" label="注释" align="center" show-overflow-tooltip />
+                  </el-table>
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </el-card>
+        </el-col>
+      </el-row>
+    </el-tab-pane>
+    <el-tab-pane label="发送测试" name="test">
+      <el-card shadow="never" style="width: 900px">
+        <el-form :model="smsForm" :rules="smsFormRules" ref="smsForm" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="接收人" prop="receiver">
+            <el-input type="phone" v-model="smsForm.receiver" style="width: 700px" placeholder="请填写手机号码"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="onResetSms('smsForm')">重置表单</el-button>
+            <el-button type="primary" @click="onSendSms('smsForm')">发送短信</el-button>
+          </el-form-item>
+        </el-form>
+        <div>{{ result ? '发送结果：' + JSON.stringify(result) : '' }}</div>
+      </el-card>
+    </el-tab-pane>
+  </el-tabs>
 </template>
 
 <script>
-export default {
+import smsConfigApi from '@/api/system/sms/jy-sms-config'
+import smsProcessApi from '@/api/system/sms/jy-sms-process'
+import { guid } from '@/utils'
 
+export default {
+  data() {
+    const validatePhone = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入电话号码'))
+      }
+      if (value.length !== 11) {
+        callback(new Error('请输入正确电话号码'))
+      }
+      if (value.length !== 11) {
+        callback(new Error('请输入正确电话号码'))
+      }
+      // 验证电话号码手机号码，包含至今所有号段? ?
+      var ab = /^[1][3,4,5,7,8][0-9]{9}$/
+      if (ab.test(value) === false) {
+        callback(new Error('请输入正确电话号码'))
+      }
+      callback()
+    }
+    return {
+      tab: 'config',
+      loading: false,
+      fileList: [],
+      fieldTypeOptions: [],
+      storageTypeOptions: [],
+      configOptions: [],
+      form: {
+        storageType: '',
+        config: '',
+        jsonObjs: []
+      },
+      rules: {
+        storageType: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        config: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ]
+      },
+      smsForm: {
+        body: [guid()],
+        relevance: 'test',
+        receiver: null
+      },
+      smsFormRules: {
+        receiver: [
+          { required: true, validator: validatePhone, trigger: 'blur' }
+        ],
+        subject: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        body: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ]
+      },
+      result: null
+    }
+  },
+  created() {
+    this.getDictByCode('sys_sms_platform').then(res => {
+      this.storageTypeOptions = res.data
+    })
+    this.getDictByCode('sys_configTemplate_fieldType').then(res => {
+      this.fieldTypeOptions = res.data
+    })
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.loading = true
+      smsConfigApi.getConfig().then(res => {
+        this.loading = false
+        this.form = res.data
+        if (this.form.storageType) {
+          smsConfigApi.getConfigDetails(this.form.storageType).then(res2 => {
+            this.configOptions = res2.data
+          })
+        }
+      })
+    },
+    storageTypeChange(val) {
+      smsConfigApi.getConfigDetails(val).then(res2 => {
+        this.configOptions = res2.data
+      }).then(() => {
+        if (!this.configOptions || this.configOptions.length === 0) {
+          this.form.config = null
+          return
+        }
+        const code = this.configOptions[0].code
+        this.form.config = code.substring(0, code.indexOf('CONFIG') + 7)
+      })
+    },
+    onSubmit() {
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          smsConfigApi.update(this.form).then(res => {
+            this.$notify.success({ title: '成功', message: '保存成功' })
+          }).catch(e => {
+            this.$notify.error({ title: '失败', message: '保存失败' })
+          })
+        }
+      })
+    },
+    onReset() {
+      this.init()
+    },
+    onSendSms(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          smsProcessApi.sendVerificationCode(this.smsForm).then(res => {
+            this.result = res.data
+            this.$notify.success({ title: '成功', message: '发送成功' })
+          }).catch(e => {
+            this.$notify.error({ title: '失败', message: '发送失败' })
+          })
+        }
+      })
+    },
+    onResetSms() {
+      this.smsForm.receiver = null
+      this.smsForm.relevance = 'test'
+      this.smsForm.body = [guid()]
+      this.result = null
+    }
+  }
 }
 </script>
 

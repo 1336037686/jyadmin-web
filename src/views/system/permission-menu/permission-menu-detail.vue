@@ -25,7 +25,7 @@
           <template slot="label">
             菜单图标
           </template>
-          <e-icon :icon-name="form.icon"/>
+          <e-icon :icon-name="form.icon ? form.icon : ''"/>
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
