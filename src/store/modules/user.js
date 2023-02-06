@@ -1,12 +1,16 @@
-import { login, logout, getInfo } from '@/api/system/auth/jy-auth'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { login, refreshToken, logout, getInfo } from '@/api/system/auth/jy-auth'
+import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken, removeRefreshToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
+
+// 使用refreshToken对登录状态进行续期，refreshToken获取token
+let timeExpire = null // 定时器 accessToken 1h 过期， refreshToken 12h 过期
+const refreshTokenExpire = 40 * 60 * 1000 // 间隔时间 (ms) 每隔40分钟刷新一次token
 
 const state = {
   token: getToken(),
+  refreshToken: getRefreshToken(),
   name: '',
   introduction: '',
-
   id: '',
   username: '',
   nickname: '',
@@ -23,6 +27,9 @@ const state = {
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
+  },
+  SET_REFRESH_TOKEN: (state, refreshToken) => {
+    state.refreshToken = refreshToken
   },
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -64,7 +71,20 @@ const actions = {
       login({ username: username.trim(), password: password, uniqueId, captcha }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.accessToken)
+        commit('SET_REFRESH_TOKEN', data.refreshToken)
         setToken(data.accessToken)
+        setRefreshToken(data.refreshToken)
+
+        // 设置定时器，定时根据refreshToken刷新token
+        if (timeExpire) clearInterval(timeExpire)
+        timeExpire = setInterval(() => {
+          const rsToken = getRefreshToken()
+          refreshToken(rsToken).then(res => {
+            commit('SET_TOKEN', res.data)
+            setToken(res.data)
+          })
+        }, refreshTokenExpire)
+
         resolve()
       }).catch(error => {
         reject(error)
@@ -109,7 +129,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
+        commit('SET_REFRESH_TOKEN', '')
         commit('SET_ROLES', [])
+        commit('SET_PERMISSIONS', [])
         removeToken()
         resetRouter()
         // reset visited views and cached views
@@ -126,8 +148,12 @@ const actions = {
   resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
+      commit('SET_REFRESH_TOKEN', '')
       commit('SET_ROLES', [])
+      commit('SET_PERMISSIONS', [])
       removeToken()
+      if (timeExpire) clearInterval(timeExpire)
+      removeRefreshToken()
       resolve()
     })
   },

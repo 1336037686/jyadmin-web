@@ -8,6 +8,14 @@ export function login(data) {
   })
 }
 
+export function refreshToken(data) {
+  return request({
+    url: '/api/auth/refreshToken',
+    method: 'post',
+    data
+  })
+}
+
 export function getInfo() {
   return request({
     url: '/api/auth/info',
