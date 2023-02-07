@@ -57,10 +57,8 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // to re-login
+      if (res.code === 10002 || res.code === 10008 || res.code === 10009) {
+        // 重新登陆
         MessageBox.confirm('当前账号登陆失效，您可以重新登录', '退出确认', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
