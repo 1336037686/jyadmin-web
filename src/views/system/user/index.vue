@@ -48,16 +48,21 @@
         @row-click="handleTableRowClick"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column prop="username" label="用户名" show-overflow-tooltip />
-        <el-table-column prop="nickname" label="昵称" show-overflow-tooltip />
-        <el-table-column prop="phone" label="电话" />
-        <el-table-column prop="type" label="用户类型">
+        <el-table-column prop="username" label="用户名" align="center" show-overflow-tooltip />
+        <el-table-column prop="nickname" label="昵称" align="center" show-overflow-tooltip />
+        <el-table-column prop="phone" label="电话" align="center" />
+        <el-table-column prop="roles" label="当前角色" align="center">
+          <template slot-scope="scope">
+            {{scope.row.roleNames.join('、')}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="type" label="用户类型" width="150" align="center">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.type === 1" size="mini" effect="plain"> 管理员 </el-tag>
             <el-tag v-if="scope.row.type === 0" size="mini" effect="plain" type="success"> 普通用户 </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="用户状态">
+        <el-table-column prop="status" label="用户状态" width="150" align="center">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> 启 用 </el-tag>
             <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> 禁 用 </el-tag>
