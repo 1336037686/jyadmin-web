@@ -23,6 +23,12 @@
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
+            角色接口权限
+          </template>
+          {{ getNameByCode(apiPermissionOptions, form.apiPermission)}}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
             角色状态
           </template>
           {{ form.status === 0 ? '禁用' : '启用' }}
@@ -68,12 +74,14 @@ export default {
   data() {
     return {
       tmpVisible: this.visible,
+      apiPermissionOptions: [],
       form: {
         id: '',
         name: '',
         code: '',
         status: '',
         sort: '',
+        apiPermission: '',
         description: ''
       }
     }
@@ -82,6 +90,7 @@ export default {
     visible(newVal) {
       this.tmpVisible = newVal
       if (newVal) {
+        this.getApiPermissionOptions()
         this.getById(this.id)
       }
     },
@@ -91,6 +100,11 @@ export default {
     deep: true
   },
   methods: {
+    getApiPermissionOptions() {
+      this.getDictByCode('sys_role_api_permission').then(res => {
+        this.apiPermissionOptions = res.data
+      })
+    },
     getById(id) {
       roleApi.getById(id).then(response => {
         this.form = response.data

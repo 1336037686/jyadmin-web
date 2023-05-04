@@ -15,6 +15,11 @@
         <el-form-item label="角色编码：" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
+        <el-form-item label="角色接口权限：" prop="apiPermission">
+          <el-select v-model="form.apiPermission" placeholder="" style="width: 100%">
+            <el-option v-for="item in apiPermissionOptions" :key="item.code" :label="item.name" :value="item.code" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="角色状态：" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio-button :label="0">禁用</el-radio-button>
@@ -58,12 +63,14 @@ export default {
     return {
       tmpVisible: this.visible,
       type: 'insert',
+      apiPermissionOptions: [],
       form: {
         id: '',
         name: '',
         code: '',
         status: 1,
         sort: null,
+        apiPermission: 'api_permission_portion',
         description: ''
       },
       rules: {
@@ -74,6 +81,9 @@ export default {
         code: [
           { required: true, message: '不能为空', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+        ],
+        apiPermission: [
+          { required: true, message: '不能为空', trigger: 'blur' }
         ],
         status: [
           { required: true, message: '不能为空', trigger: 'blur' }
@@ -89,6 +99,8 @@ export default {
     visible(newVal) {
       this.tmpVisible = newVal
       if (newVal) {
+        // 获取字典
+        this.getApiPermissionOptions()
         // 如果有ID则为修改操作
         if (this.id) {
           this.type = 'update'
@@ -105,6 +117,11 @@ export default {
     deep: true
   },
   methods: {
+    getApiPermissionOptions() {
+      this.getDictByCode('sys_role_api_permission').then(res => {
+        this.apiPermissionOptions = res.data
+      })
+    },
     handleSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
