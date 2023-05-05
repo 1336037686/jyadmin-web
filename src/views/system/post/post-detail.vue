@@ -11,21 +11,33 @@
       <el-descriptions :column="2" border>
         <el-descriptions-item>
           <template slot="label">
-            标签名称
+            岗位名称
           </template>
           {{ form.name }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            标签编码
+            岗位编码
           </template>
           {{ form.code }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            简介
+            岗位状态
           </template>
-          {{ form.intro }}
+          {{ form.status === 0 ? '禁用' : '启用' }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            创建时间
+          </template>
+          {{ form.createTime }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            岗位简介
+          </template>
+          {{ form.description }}
         </el-descriptions-item>
       </el-descriptions>
     </div>
@@ -36,9 +48,8 @@
 </template>
 
 <script>
-import jyTagApi from '@/api/module/jy-tag'
+import postApi from '@/api/system/post/jy-post'
 export default {
-  name: 'JyTagDetail',
   props: {
     title: {
       type: String,
@@ -57,10 +68,11 @@ export default {
     return {
       tmpVisible: this.visible,
       form: {
-        id: '',
         name: '',
         code: '',
-        intro: ''
+        status: 1,
+        description: '',
+        createTime: ''
       }
     }
   },
@@ -78,7 +90,7 @@ export default {
   },
   methods: {
     getById(id) {
-      jyTagApi.getById(id).then(response => {
+      postApi.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '获取数据失败' })

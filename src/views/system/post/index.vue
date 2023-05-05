@@ -2,11 +2,11 @@
   <div style="margin: 10px">
     <el-card class="box-card" shadow="always">
       <el-form :inline="true" v-show="queryFormVisiable" :model="queryForm" size="mini" label-width="100px">
-        <el-form-item label="标签名称：">
-          <el-input v-model="queryForm.name" placeholder="标签名称" />
+        <el-form-item label="岗位名称：">
+          <el-input v-model="queryForm.name" placeholder="岗位名称" />
         </el-form-item>
-        <el-form-item label="标签编码：">
-          <el-input v-model="queryForm.code" placeholder="标签编码" />
+        <el-form-item label="岗位编码：">
+          <el-input v-model="queryForm.code" placeholder="岗位编码" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">查 询</el-button>
@@ -24,7 +24,7 @@
 
     <el-card class="box-card" shadow="always" style="margin-top: 5px">
       <div slot="header" class="clearfix">
-        <span><i class="el-icon-caret-right" /> 博客标签记录</span>
+        <span><i class="el-icon-caret-right" /> 岗位记录</span>
         <el-row style="float: right">
           <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
           <el-button icon="el-icon-refresh" circle size="mini" @click="handleQuery()" />
@@ -44,10 +44,10 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column type="index" width="80" label="序号" align="center" />
-        <el-table-column prop="name" label="标签名称"  align="center" />
-        <el-table-column prop="code" label="标签编码"  align="center" />
+        <el-table-column prop="name" label="岗位名称"  align="center" />
+        <el-table-column prop="code" label="岗位编码"  align="center" />
         <el-table-column prop="createTime" label="创建时间" align="center"  />
-        <el-table-column prop="intro" label="标签简介" align="center" width="600" />
+        <el-table-column prop="description" label="岗位简介" align="center" width="600" />
       </el-table>
     </el-card>
 
@@ -63,17 +63,17 @@
       />
     </div>
 
-    <jy-tag-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
-    <jy-tag-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <post-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
+    <post-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
   </div>
 </template>
 
 <script>
-import jyTagApi from '@/api/module/jy-tag'
-import JyTagForm from '@/views/module/blog/tag/tag-form'
-import JyTagDetail from '@/views/module/blog/tag/tag-detail'
+import postApi from '@/api/system/post/jy-post'
+import PostForm from '@/views/system/post/post-form'
+import PostDetail from '@/views/system/post/post-detail'
 export default {
-  components: { JyTagDetail, JyTagForm },
+  components: { PostDetail, PostForm },
   data() {
     return {
       queryFormVisiable: true,
@@ -114,7 +114,7 @@ export default {
     getList() {
       this.tableData.loading = true
       const queryForm = { ...this.queryForm, pageNumber: this.tableData.pageNumber, pageSize: this.tableData.pageSize }
-      jyTagApi.getList(queryForm).then(response => {
+      postApi.getList(queryForm).then(response => {
         this.tableData.loading = false
         this.tableData = response
       })
@@ -134,12 +134,12 @@ export default {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.showData.title = '查看标签'
+      this.showData.title = '查看岗位'
       this.showData.id = this.selectData.current.id
       this.showData.visiable = true
     },
     handleCreate() {
-      this.editData.title = '新增标签'
+      this.editData.title = '新增岗位'
       this.editData.id = null
       this.editData.visiable = true
     },
@@ -148,7 +148,7 @@ export default {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.editData.title = '修改标签'
+      this.editData.title = '修改岗位'
       this.editData.id = this.selectData.current.id
       this.editData.visiable = true
     },
@@ -165,7 +165,7 @@ export default {
       }).then(() => {
         const ids = []
         for (let i = 0; i < this.$refs.table.selection.length; i++) ids.push(this.$refs.table.selection[i].id)
-        jyTagApi.remove(ids).then(response => {
+        postApi.remove(ids).then(response => {
           this.getList()
           this.$notify.success({ title: '成功', message: '删除成功' })
         }).catch(e => {

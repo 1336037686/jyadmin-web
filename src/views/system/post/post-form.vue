@@ -9,14 +9,20 @@
   >
     <div>
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-        <el-form-item label="标签名称" prop="name">
+        <el-form-item label="岗位名称" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="标签编码" prop="code">
+        <el-form-item label="岗位编码" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="标签简介" prop="intro">
-          <el-input v-model="form.intro" type="textarea" />
+        <el-form-item label="状态：" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio-button :label="0">禁用</el-radio-button>
+            <el-radio-button :label="1">启用</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="岗位简介" prop="description">
+          <el-input v-model="form.description" type="textarea" />
         </el-form-item>
       </el-form>
     </div>
@@ -28,9 +34,8 @@
 </template>
 
 <script>
-import jyTagApi from '@/api/module/jy-tag'
+import postApi from '@/api/system/post/jy-post'
 export default {
-  name: 'JyTagForm',
   props: {
     title: {
       type: String,
@@ -53,16 +58,20 @@ export default {
         id: '',
         name: '',
         code: '',
-        intro: ''
+        status: 1,
+        description: ''
       },
       rules: {
         name: [
-          { required: true, message: '请输入标签名称', trigger: 'blur' },
+          { required: true, message: '请输入岗位名称', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ],
         code: [
-          { required: true, message: '请输入标签编码', trigger: 'blur' },
+          { required: true, message: '请输入岗位编码', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -96,7 +105,7 @@ export default {
       })
     },
     handleCreate() {
-      jyTagApi.add(this.form).then(response => {
+      postApi.add(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '添加成功' })
         this.$parent.getList()
         this.tmpVisible = false
@@ -108,7 +117,7 @@ export default {
       })
     },
     handleUpdate() {
-      jyTagApi.update(this.form).then(response => {
+      postApi.update(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '修改成功' })
         this.$parent.getList()
         this.tmpVisible = false
@@ -120,7 +129,7 @@ export default {
       })
     },
     getById(id) {
-      jyTagApi.getById(id).then(response => {
+      postApi.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '获取数据失败' })
