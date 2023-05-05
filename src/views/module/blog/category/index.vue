@@ -69,8 +69,8 @@
 
 <script>
 import jyCategoryApi from '@/api/module/jy-category'
-import JyCategoryForm from '@/views/blog/category/category-form'
-import JyCategoryDetail from '@/views/blog/category/category-detail'
+import JyCategoryForm from '@/views/module/blog/category/category-form'
+import JyCategoryDetail from '@/views/module/blog/category/category-detail'
 export default {
   components: { JyCategoryDetail, JyCategoryForm },
   data() {

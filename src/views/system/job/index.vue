@@ -91,22 +91,21 @@
       />
     </div>
 
-    <jy-job-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
-    <jy-job-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
-    <jy-job-log :id="showLogData.id" :title="showLogData.title" :visible.sync="showLogData.visiable" />
+    <job-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
+    <job-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <job-log :id="showLogData.id" :title="showLogData.title" :visible.sync="showLogData.visiable" />
   </div>
 </template>
 
 <script>
 import quartzJobApi from '@/api/system/job/jy-quartz-job'
 import permission from '@/directive/permission/index.js'
-import JyJobDetail from '@/views/system/job/jy-job-detail'
-import JyJobForm from '@/views/system/job/jy-job-form'
-import JyJobLog from '@/views/system/job/jy-job-log' // 权限判断指令
+import JobDetail from '@/views/system/job/job-detail'
+import JobForm from '@/views/system/job/job-form'
+import JobLog from '@/views/system/job/job-log' // 权限判断指令
 export default {
-  name: 'JyTag',
   directives: { permission },
-  components: { JyJobLog, JyJobForm, JyJobDetail },
+  components: { JobLog, JobForm, JobDetail },
   data() {
     return {
       queryFormVisiable: true,

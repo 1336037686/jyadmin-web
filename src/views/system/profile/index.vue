@@ -34,7 +34,7 @@ import UserCard from './components/UserCard'
 import Timeline from './components/Timeline'
 import Account from './components/Account'
 import userApi from '@/api/system/user/jy-user'
-import Password from '@/views/profile/components/Password'
+import Password from '@/views/system/profile/components/Password'
 
 export default {
   name: 'Profile',

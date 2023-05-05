@@ -70,8 +70,8 @@
 
 <script>
 import jyTagApi from '@/api/module/jy-tag'
-import JyTagForm from '@/views/blog/tag/tag-form'
-import JyTagDetail from '@/views/blog/tag/tag-detail'
+import JyTagForm from '@/views/module/blog/tag/tag-form'
+import JyTagDetail from '@/views/module/blog/tag/tag-detail'
 export default {
   components: { JyTagDetail, JyTagForm },
   data() {

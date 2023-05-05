@@ -44,7 +44,7 @@
 <script>
 import dictApi from '@/api/system/datadict/jy-dict'
 export default {
-  name: 'JyDictDetail',
+  name: 'DictDetail',
   props: {
     title: {
       type: String,
