@@ -24,7 +24,7 @@
 
     <el-card class="box-card" shadow="always" style="margin-top: 5px">
       <div slot="header" class="clearfix">
-        <span><i class="el-icon-caret-right" /> 岗位记录</span>
+        <span><i class="el-icon-caret-right" /> 岗位列表</span>
         <el-row style="float: right">
           <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
           <el-button icon="el-icon-refresh" circle size="mini" @click="handleQuery()" />

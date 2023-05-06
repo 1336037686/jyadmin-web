@@ -132,6 +132,9 @@ const actions = {
         commit('SET_REFRESH_TOKEN', '')
         commit('SET_ROLES', [])
         commit('SET_PERMISSIONS', [])
+        // 清楚续期定时器
+        if (timeExpire) clearInterval(timeExpire)
+        // 清除Token
         removeToken()
         resetRouter()
         // reset visited views and cached views
