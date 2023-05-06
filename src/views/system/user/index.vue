@@ -56,6 +56,8 @@
             {{scope.row.roleNames.join('、')}}
           </template>
         </el-table-column>
+        <el-table-column prop="departmentName" label="所属部门" align="center" show-overflow-tooltip />
+        <el-table-column prop="postName" label="所属岗位" align="center" show-overflow-tooltip />
         <el-table-column prop="type" label="用户类型" width="150" align="center">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.type === 1" size="mini" effect="plain"> 管理员 </el-tag>

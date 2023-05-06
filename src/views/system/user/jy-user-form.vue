@@ -21,6 +21,24 @@
         <el-form-item label="电话：" prop="phone">
           <el-input v-model="form.phone" />
         </el-form-item>
+        <el-form-item label="所属部门：" prop="department">
+          <treeselect
+            v-model="form.department"
+            :options="deptOptions"
+            :clearable="true"
+            placeholder=""
+            :normalizer="normalizer"
+            class="treeselect-main"
+          />
+        </el-form-item>
+        <el-form-item label="所属岗位：" prop="post">
+          <el-select v-model="form.post" filterable placeholder="" style="width: 100%">
+            <el-option v-for="item in postOptions" :key="item.id" :label="item.name" :value="item.id">
+              <span style="float: left">{{ item.name }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.code }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="用户类型：" prop="type">
           <el-radio-group v-model="form.type">
             <el-radio-button :label="0">普通用户</el-radio-button>
@@ -43,9 +61,15 @@
 </template>
 
 <script>
+// import the component
+import Treeselect from '@riophae/vue-treeselect'
+// import the styles
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import userApi from '@/api/system/user/jy-user'
+import deptApi from '@/api/system/department/jy-department'
+import postApi from '@/api/system/post/jy-post'
 export default {
-  name: 'JyUserForm',
+  components: { Treeselect },
   props: {
     title: {
       type: String,
@@ -70,6 +94,8 @@ export default {
         password: '',
         nickname: '',
         phone: '',
+        department: null,
+        post: null,
         type: 0,
         status: 1
       },
@@ -96,11 +122,15 @@ export default {
           { required: true, message: '请输入标签编码', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ]
-      }
+      },
+      deptOptions: [],
+      postOptions: []
     }
   },
   watch: {
     visible(newVal) {
+      this.getDeptTree()
+      this.getPostOptions()
       this.tmpVisible = newVal
       if (newVal) {
         // 如果有ID则为修改操作
@@ -162,6 +192,23 @@ export default {
       this.form.id = null
       this.$refs[formName].resetFields()
       this.tmpVisible = false
+    },
+    getDeptTree() {
+      deptApi.layer({ status: 1 }).then(response => {
+        this.deptOptions = (!response.data || response.data.length === 0) ? [] : response.data
+      })
+    },
+    getPostOptions() {
+      postApi.getOptionList({ status: 1 }).then(response => {
+        this.postOptions = (!response.data || response.data.length === 0) ? [] : response.data
+      })
+    },
+    normalizer(node) {
+      return {
+        id: node.id,
+        label: node.name,
+        children: node.children
+      }
     }
   }
 }

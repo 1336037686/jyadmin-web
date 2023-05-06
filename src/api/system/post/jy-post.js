@@ -9,6 +9,14 @@ export default {
     })
   },
 
+  getOptionList(query) {
+    return request({
+      url: '/api/post/list',
+      method: 'get',
+      params: query
+    })
+  },
+
   getById(id) {
     return request({
       url: '/api/post/query/' + id,
