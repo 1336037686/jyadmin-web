@@ -50,7 +50,6 @@
 <script>
 import userApi from '@/api/system/user/jy-user'
 export default {
-  name: 'JyUserDetail',
   props: {
     title: {
       type: String,

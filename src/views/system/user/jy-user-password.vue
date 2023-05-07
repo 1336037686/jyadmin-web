@@ -42,7 +42,6 @@
 <script>
 import userApi from '@/api/system/user/jy-user'
 export default {
-  name: 'JyUserPassword',
   props: {
     title: {
       type: String,

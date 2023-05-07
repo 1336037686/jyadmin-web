@@ -45,7 +45,6 @@
 <script>
 import roleApi from '@/api/system/role/jy-role'
 export default {
-  name: 'JyUserRole',
   props: {
     title: {
       type: String,
