@@ -76,6 +76,9 @@
         </el-card>
       </el-col>
     </el-row>
+    <div class="div_foot" style="color: white">
+      Copyright &copy; 2021-2023 jyadmin LGX_TvT
+    </div>
   </div>
 </template>
 
@@ -340,4 +343,15 @@ $light_gray: #000;
     }
   }
 }
+
+.div_foot {
+  position:fixed;
+  bottom:0px;
+  left:0px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  width: 100%;
+}
+
 </style>
