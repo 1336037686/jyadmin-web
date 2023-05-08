@@ -1,7 +1,10 @@
 <template>
   <div class="login-container">
     <el-row style="height: auto;margin-top: 250px">
-      <el-col :span="5" :offset="18">
+      <el-col :span="16" :offset="1">
+        <span style="color: white">自定义HTML元素</span>
+      </el-col>
+      <el-col :span="5" :offset="1">
         <el-card>
           <el-form ref="loginForm" :model="loginForm" :rules="loginRules" autocomplete="on" label-position="left">
             <div class="title-container">
@@ -84,7 +87,7 @@
 
 <script>
 import { guid } from '@/utils'
-
+import { MessageBox } from 'element-ui';
 export default {
   name: 'Login',
   data() {
@@ -137,6 +140,7 @@ export default {
     }
   },
   created() {
+    this.welcome()
     // window.addEventListener('storage', this.afterQRScan)
     this.reloadCaptcha()
   },
@@ -151,6 +155,15 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    welcome() {
+      // 在页面加载完成后自动弹出欢迎提示框
+      this.$notify({
+        title: '通知',
+        message: '这是一条不会自动关闭的消息',
+        type: 'success',
+        duration: 0
+      })
+    },
     reloadCaptcha() {
       this.captchaUniqueId = guid().replaceAll('-', '')
       this.captchaImg = '/api/auth/captcha/' + this.captchaUniqueId

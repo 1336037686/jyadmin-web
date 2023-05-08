@@ -8,6 +8,20 @@ export default {
       params: query
     })
   },
+  getLoginList(query) {
+    return request({
+      url: '/api/log/query-login',
+      method: 'get',
+      params: query
+    })
+  },
+  getActiveList(query) {
+    return request({
+      url: '/api/log/query-active',
+      method: 'get',
+      params: query
+    })
+  },
   getUserLoginList(userId, query) {
     return request({
       url: '/api/log/query-user-login/' + userId,
@@ -15,7 +29,6 @@ export default {
       params: query
     })
   },
-
   getById(id) {
     return request({
       url: '/api/log/query/' + id,

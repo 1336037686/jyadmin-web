@@ -95,7 +95,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="组件地址：" prop="path">
-                <el-input v-model="form.path" />
+                <el-input v-model="form.path" placeholder="顶级根路径可用Layout" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -197,7 +197,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="组件地址：" prop="path">
-                <el-input v-model="form.path" />
+                <el-input v-model="form.path" placeholder="二级根路径可用sub-layout/index" />
               </el-form-item>
             </el-col>
           </el-row>
