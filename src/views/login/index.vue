@@ -1,18 +1,16 @@
 <template>
   <div class="login-container">
     <el-row style="height: auto;margin-top: 250px">
-      <el-col :span="16" :offset="1">
-        <span style="color: white">自定义HTML元素</span>
-      </el-col>
-      <el-col :span="5" :offset="1">
+      <el-col :span="16" :offset="1" v-if="basicSettings['sys_login_open_html_enable'] === '1'" v-html="basicSettings['sys_login_open_html']"></el-col>
+      <el-col :span="5" :offset="basicSettings['sys_login_open_html_enable'] === '1' ? 1 : 18">
         <el-card>
           <el-form ref="loginForm" :model="loginForm" :rules="loginRules" autocomplete="on" label-position="left">
             <div class="title-container">
-              <h3 class="title">🍀 JianYi Admin  </h3>
+              <h3 class="title"> {{basicSettings['sys_site_name']}} </h3>
             </div>
             <el-form-item prop="username">
               <span class="svg-container">
-                <svg-icon icon-class="user"/>
+                <svg-icon icon-class="user" />
               </span>
               <el-input
                 ref="username"
@@ -27,7 +25,7 @@
             <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
               <el-form-item prop="password">
                 <span class="svg-container">
-                  <svg-icon icon-class="password"/>
+                  <svg-icon icon-class="password" />
                 </span>
                 <el-input
                   :key="passwordType"
@@ -43,7 +41,7 @@
                   @keyup.enter.native="handleLogin"
                 />
                 <span class="show-pwd" @click="showPwd">
-                  <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
+                  <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
                 </span>
               </el-form-item>
             </el-tooltip>
@@ -51,7 +49,7 @@
               <el-col :span="15">
                 <el-form-item prop="captcha">
                   <span class="svg-container">
-                    <svg-icon icon-class="chart"/>
+                    <svg-icon icon-class="chart" />
                   </span>
                   <el-input
                     ref="username"
@@ -65,7 +63,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="9" style="padding-left: 10px">
-                <img width="100%" height="50px" :src="captchaImg" @click="reloadCaptcha" />
+                <img width="100%" height="50px" :src="captchaImg" @click="reloadCaptcha">
               </el-col>
             </el-row>
             <el-button
@@ -79,15 +77,13 @@
         </el-card>
       </el-col>
     </el-row>
-    <div class="div_foot" style="color: white">
-      Copyright &copy; 2021-2023 jyadmin LGX_TvT
-    </div>
+    <div class="div_foot" style="color: white" v-html="basicSettings['sys_copyright']"></div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { guid } from '@/utils'
-import { MessageBox } from 'element-ui';
 export default {
   name: 'Login',
   data() {
@@ -127,6 +123,9 @@ export default {
       otherQuery: {}
     }
   },
+  computed: {
+    ...mapGetters(['basicSettings'])
+  },
   watch: {
     $route: {
       handler: function(route) {
@@ -140,7 +139,8 @@ export default {
     }
   },
   created() {
-    this.welcome()
+    // 加载初始化数据
+    this.loadBasicSettings()
     // window.addEventListener('storage', this.afterQRScan)
     this.reloadCaptcha()
   },
@@ -155,13 +155,20 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    welcome() {
-      // 在页面加载完成后自动弹出欢迎提示框
-      this.$notify({
-        title: '通知',
-        message: '这是一条不会自动关闭的消息',
-        type: 'success',
-        duration: 0
+    loadBasicSettings() {
+      this.$store.dispatch('basicSetting/getBasicSettings').then(() => {
+        console.log(this.basicSettings)
+
+        if (this.basicSettings['sys_msg_enable'] === '1') {
+          // 在页面加载完成后自动弹出欢迎提示框
+          this.$notify({
+            title: '通知',
+            message: this.basicSettings['sys_msg_content'],
+            type: 'success',
+            duration: 0
+          })
+        }
+
       })
     },
     reloadCaptcha() {
