@@ -1,7 +1,7 @@
 import request from '@/utils/request-api'
 
 export default {
-  layer(query){
+  layer(query) {
     return request({
       url: '/api/data-dict/layer',
       method: 'get',

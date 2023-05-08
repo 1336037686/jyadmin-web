@@ -18,8 +18,15 @@
         <el-form-item label="字典类型：" prop="dictType">
           <el-input v-model="form.dictType" />
         </el-form-item>
-        <el-form-item label="父字典值：" v-if="type === 'insert'">
-          <el-input v-model="form.parentName" disabled />
+        <el-form-item label="上级字典：" prop="parentId">
+          <treeselect
+            v-model="form.parentId"
+            :options="dicts"
+            :clearable="true"
+            placeholder=""
+            :normalizer="normalizer"
+            class="treeselect-main"
+          />
         </el-form-item>
         <el-form-item label="字典排序：" prop="sort">
           <el-input v-model="form.sort" />
@@ -34,9 +41,13 @@
 </template>
 
 <script>
+// import the component
+import Treeselect from '@riophae/vue-treeselect'
+// import the styles
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import dictApi from '@/api/system/datadict/jy-dict'
 export default {
-  name: 'RoleForm',
+  components: { Treeselect },
   props: {
     title: {
       type: String,
@@ -49,15 +60,7 @@ export default {
     visible: {
       type: Boolean,
       default: false
-    },
-    parentName: {
-      type: String,
-      default: null
-    },
-    parentId: {
-      type: String,
-      default: null
-    },
+    }
   },
   data() {
     return {
@@ -69,6 +72,7 @@ export default {
         dictType: '',
         parentName: '',
         code: '',
+        parentId: null,
         sort: 0
       },
       rules: {
@@ -84,16 +88,21 @@ export default {
           { required: true, message: '请输入字典类型', trigger: 'blur' },
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ],
+        parentId: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
         sort: [
           { required: true, message: '不能为空', trigger: 'blur' },
           { type: 'number', message: '必须为数字值' }
         ]
-      }
+      },
+      dicts: []
     }
   },
   watch: {
     visible(newVal) {
       this.tmpVisible = newVal
+      this.getDictTree()
       if (newVal) {
         // 如果有ID则为修改操作
         if (this.id) {
@@ -122,7 +131,7 @@ export default {
       })
     },
     handleCreate() {
-      if(this.form.parentId){
+      if (this.form.parentId && this.form.parentId !== '0') {
         dictApi.addNode(this.form).then(response => {
           this.$notify.success({ title: '成功', message: '添加成功' })
           this.$parent.getList()
@@ -132,7 +141,7 @@ export default {
         }).catch(e => {
           this.$notify.error({ title: '失败', message: '添加失败' })
         })
-      }else{
+      } else {
         dictApi.addRoot(this.form).then(response => {
           this.$notify.success({ title: '成功', message: '添加成功' })
           this.$parent.getList()
@@ -143,7 +152,6 @@ export default {
           this.$notify.error({ title: '失败', message: '添加失败' })
         })
       }
-
     },
     handleUpdate() {
       dictApi.update(this.form).then(response => {
@@ -168,6 +176,18 @@ export default {
       this.form.id = null
       this.$refs[formName].resetFields()
       this.tmpVisible = false
+    },
+    getDictTree() {
+      dictApi.layer().then(response => {
+        this.dicts = [{ id: '0', name: '顶级字典', children: response.data }]
+      })
+    },
+    normalizer(node) {
+      return {
+        id: node.id,
+        label: node.name,
+        children: node.children
+      }
     }
   }
 }

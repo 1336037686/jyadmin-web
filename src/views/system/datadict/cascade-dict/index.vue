@@ -56,7 +56,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <dict-form :id="editData.id" :title="editData.title" :parent-name="editData.parentName" :parent-id="editData.parentId" :visible.sync="editData.visiable" />
+    <dict-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
     <dict-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
   </div>
 </template>
