@@ -87,6 +87,7 @@
             @row-click="actionHandleTableRowClick"
           >
             <el-table-column type="selection" width="60" align="center" />
+            <el-table-column type="index" width="55" label="序号" align="center" />
             <el-table-column prop="name" label="接口名称" width="200" align="center" show-overflow-tooltip />
             <el-table-column prop="code" label="权限标识" width="200" align="center" show-overflow-tooltip />
             <el-table-column prop="sort" label="排序" align="center" width="80"  />

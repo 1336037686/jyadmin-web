@@ -43,16 +43,16 @@
         @row-click="handleTableRowClick"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column prop="id" label="ID" width="250" align="center" show-overflow-tooltip />
-        <el-table-column prop="phone" label="接收人" width="180" align="center" show-overflow-tooltip />
-        <el-table-column prop="source" label="发送平台" width="180" align="center" show-overflow-tooltip>
+        <el-table-column type="index" width="55" label="序号" align="center" />
+        <el-table-column prop="phone" label="接收人" align="center" show-overflow-tooltip />
+        <el-table-column prop="source" label="发送平台" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
             {{ getNameByCode(storageTypeOptions, scope.row.source)}}
           </template>
         </el-table-column>
-        <el-table-column prop="relevance" label="业务标识" width="150" align="center" show-overflow-tooltip />
-        <el-table-column prop="content" label="短信内容" align="center" show-overflow-tooltip />
-        <el-table-column prop="createTime" label="创建时间" width="200" align="center" />
+        <el-table-column prop="relevance" label="业务标识" align="center" show-overflow-tooltip />
+        <el-table-column prop="content" label="短信内容"  width="500" align="center" show-overflow-tooltip />
+        <el-table-column prop="createTime" label="创建时间" align="center" />
 <!--        <el-table-column label="操作" width="120" align="center">-->
 <!--          <template slot-scope="scope">-->
 <!--            <el-button type="text" @click="preview(scope.row)">查看</el-button>-->

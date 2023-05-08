@@ -45,6 +45,7 @@
             @row-click="handleTableRowClick"
           >
             <el-table-column type="selection" width="55" align="center" />
+            <el-table-column type="index" width="55" label="序号" align="center" />
             <el-table-column prop="name" align="center" label="角色名称" show-overflow-tooltip />
             <el-table-column prop="code" align="center" label="角色编码" show-overflow-tooltip />
             <el-table-column prop="apiPermission" label="角色接口权限" align="center" width="220"  show-overflow-tooltip>

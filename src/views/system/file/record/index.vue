@@ -46,10 +46,10 @@
         @row-click="handleTableRowClick"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column prop="id" label="ID" align="center" show-overflow-tooltip />
-        <el-table-column prop="name" label="文件名" align="center" width="200" show-overflow-tooltip />
-        <el-table-column prop="realName" label="原文件名称" align="center" width="200" show-overflow-tooltip />
-        <el-table-column prop="source" label="文件存储平台" align="center" width="120" show-overflow-tooltip>
+        <el-table-column type="index" width="55" label="序号" align="center" />
+        <el-table-column prop="name" label="文件名" align="center" show-overflow-tooltip />
+        <el-table-column prop="realName" label="原文件名称" align="center" show-overflow-tooltip />
+        <el-table-column prop="source" label="文件存储平台" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
             {{getNameByCode(storageTypeOptions, scope.row.source)}}
           </template>

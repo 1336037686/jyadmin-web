@@ -80,6 +80,7 @@
             @row-click="handleTableRowClick"
           >
             <el-table-column type="selection" width="55" align="center" />
+            <el-table-column type="index" width="55" label="序号" align="center" />
             <el-table-column prop="username" label="用户名" align="center" show-overflow-tooltip />
             <el-table-column prop="nickname" label="昵称" align="center" show-overflow-tooltip />
             <el-table-column prop="phone" label="电话" align="center" />

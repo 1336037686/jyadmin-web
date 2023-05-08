@@ -43,6 +43,7 @@
         @row-click="handleTableRowClick"
       >
         <el-table-column type="selection" width="55" align="center" />
+        <el-table-column type="index" width="55" label="序号" align="center" />
         <el-table-column prop="code" label="任务编号" align="center" show-overflow-tooltip />
         <el-table-column prop="name" label="任务名称" align="center" show-overflow-tooltip />
         <el-table-column prop="cronExpression" align="center" label="cron表达式" show-overflow-tooltip />
