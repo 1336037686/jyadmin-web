@@ -15,7 +15,7 @@
           <el-row>
             <el-col v-for="(item, index) in form.tableData" :span="12">
               <el-form-item :key="'form_' + index" :label="item.name + '：'">
-                <el-input v-model="item.value" style="width: 80%" :placeholder="'code为 ' + item.code">
+                <el-input v-model="item.value" :placeholder="'code为 ' + item.code">
                   <el-tooltip slot="append" class="item" effect="dark" :content="item.description" placement="top-start">
                     <el-button type="info" icon="el-icon-question" plain />
                   </el-tooltip>
