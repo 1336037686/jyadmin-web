@@ -169,7 +169,7 @@ export default {
             title: '通知',
             message: this.loginBasicSettings.sysMsgContent,
             type: 'success',
-            duration: 30
+            duration: 30000
           })
         }
       })
