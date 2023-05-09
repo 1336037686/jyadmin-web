@@ -6,16 +6,15 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'vue Element Admin' // page title
+const name = defaultSettings.title || 'jyadmin' // page title
 
-// If your port is set to 80,
-// use administrator privileges to execute the command line.
-// For example, Mac: sudo npm run
-// You can change the port by the following method:
+// 如果端口设置为80，使用管理员权限执行命令行。
+// 例如, Mac: sudo npm run
+// 修改端口的方法如下:
 // port = 9527 npm run dev OR npm run dev --port = 9527
 const port = process.env.port || process.env.npm_config_port || 9527 // dev port
 
-// All configuration item explanations can be find in https://cli.vuejs.org/config/
+// 所有配置项说明请参见 https://cli.vuejs.org/config/
 module.exports = {
   /**
    * You will need to set publicPath if you plan to deploy your site under a sub path,
@@ -46,13 +45,10 @@ module.exports = {
           '^/api': '' // 替换target中的请求地址，也就是说以后你在请求 http://localhost:8080/api/customer/list这个地址的时候直接写成/api即可
         }
       }
-
-    },
-    before: require('./mock/mock-server.js')
+    }
   },
   configureWebpack: {
-    // provide the app's title in webpack's name field, so that
-    // it can be accessed in index.html to inject the correct title.
+    // 在webpack的name字段中提供应用的标题，这样可以在index.html中访问它以注入正确的标题。
     name: name,
     resolve: {
       alias: {
@@ -61,8 +57,7 @@ module.exports = {
     }
   },
   chainWebpack(config) {
-    // it can improve the speed of the first screen, it is recommended to turn on preload
-    // it can improve the speed of the first screen, it is recommended to turn on preload
+    // 它可以提高首屏速度，建议开启预加载
     config.plugin('preload').tap(() => [
       {
         rel: 'preload',
@@ -73,10 +68,10 @@ module.exports = {
       }
     ])
 
-    // when there are many pages, it will cause too many meaningless requests
+    // 当页面很多的时候，会产生太多无意义的请求
     config.plugins.delete('prefetch')
 
-    // set svg-sprite-loader
+    // 设置svg-sprite-loader
     config.module
       .rule('svg')
       .exclude.add(resolve('src/icons'))

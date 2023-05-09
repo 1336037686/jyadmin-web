@@ -1,5 +1,6 @@
 import { constantRoutes } from '@/router'
 import Layout from '@/layout'
+import SubLayout from '@/layout/sub-layout'
 import { getMenus } from '@/api/system/auth/jy-auth'
 
 const state = {
@@ -41,7 +42,8 @@ export function convert(routes, fullPath) {
     // 如果不是外链
     if (tmp.link === 0) {
       // 组件
-      if (tmp.path === 'Layout') tmpObj.component = Layout
+      if (tmp.path === 'Layout') tmpObj.component = Layout // 根节点
+      else if (tmp.path === 'SubLayout') tmpObj.component = SubLayout // 二级页面根节点
       else tmpObj.component = loadView(tmp.path)
     }
     tmpObj.meta = {}

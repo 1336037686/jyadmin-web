@@ -11,7 +11,6 @@
 
 <script>
 import DndList from '@/components/DndList'
-import { fetchList } from '@/api/article'
 
 export default {
   name: 'DndListDemo',
@@ -28,10 +27,19 @@ export default {
   methods: {
     getData() {
       this.listLoading = true
-      fetchList().then(response => {
-        this.list1 = response.data.items.splice(0, 5)
-        this.list2 = response.data.items
-      })
+      const items = [
+        { id: '1', author: '1', title: '1' },
+        { id: '2', author: '2', title: '2' },
+        { id: '3', author: '3', title: '3' },
+        { id: '4', author: '4', title: '4' },
+        { id: '5', author: '5', title: '5' },
+        { id: '6', author: '6', title: '6' },
+        { id: '7', author: '7', title: '7' },
+        { id: '8', author: '8', title: '8' },
+        { id: '9', author: '9', title: '9' },
+      ]
+      this.list1 = items.splice(0, 5)
+      this.list2 = items
     }
   }
 }

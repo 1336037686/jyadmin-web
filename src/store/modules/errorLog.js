@@ -5,6 +5,7 @@ const state = {
 const mutations = {
   ADD_ERROR_LOG: (state, log) => {
     state.logs.push(log)
+    console.log('ADD_ERROR_LOG', state.logs)
   },
   CLEAR_ERROR_LOG: (state) => {
     state.logs.splice(0)

@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'SidebarLogo',
   props: {
@@ -22,11 +23,20 @@ export default {
       required: true
     }
   },
+  computed: {
+    ...mapGetters([
+      'basicSettings'
+    ])
+  },
   data() {
     return {
-      title: '🍀 JianYi Admin ',
+      title: null,
       logo: null
     }
+  },
+  created() {
+    this.title = this.basicSettings['sys_site_name']
+    this.logo = this.basicSettings['sys_logo']
   }
 }
 </script>

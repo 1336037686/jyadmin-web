@@ -1,7 +1,7 @@
-import basicSettingApi from '@/api/system/basic-setting/jy-basic-setting'
-
+import basicSettingApi from '@/api/system/basic-setting/jy-basic-settings'
+import { getBasicSettings, setBasicSettings } from '@/utils/basic-settings'
 const state = {
-  settings: {}
+  settings: getBasicSettings()
 }
 
 const mutations = {
@@ -20,6 +20,8 @@ const actions = {
           settings[data[i].code] = data[i].value
         }
         commit('SET_SETTINGS', settings)
+        // 保存到cookie中，防止vuex刷新状态消失
+        setBasicSettings(settings)
         resolve()
       }).catch(error => {
         reject(error)

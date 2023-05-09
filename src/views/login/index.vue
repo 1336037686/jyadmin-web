@@ -1,26 +1,18 @@
 <template>
-  <div class="login-container">
+  <div class="login-container" :style="{ backgroundImage: 'url(' + loginBasicSettings.sysLoginWallpaper + ')' }">
     <el-row style="height: auto;margin-top: 250px">
-      <el-col :span="16" :offset="1" v-if="basicSettings['sys_login_open_html_enable'] === '1'" v-html="basicSettings['sys_login_open_html']"></el-col>
-      <el-col :span="5" :offset="basicSettings['sys_login_open_html_enable'] === '1' ? 1 : 18">
+      <el-col :span="16" :offset="1" v-if="loginBasicSettings.sysLoginOpenHtmlEnable === '1'" v-html="loginBasicSettings.sysLoginOpenHtml"></el-col>
+      <el-col :span="5" :offset="loginBasicSettings.sysLoginOpenHtmlEnable === '1' ? 1 : 18">
         <el-card>
           <el-form ref="loginForm" :model="loginForm" :rules="loginRules" autocomplete="on" label-position="left">
             <div class="title-container">
-              <h3 class="title"> {{basicSettings['sys_site_name']}} </h3>
+              <h3 class="title"> {{loginBasicSettings.sysSiteName}} </h3>
             </div>
             <el-form-item prop="username">
               <span class="svg-container">
                 <svg-icon icon-class="user" />
               </span>
-              <el-input
-                ref="username"
-                v-model="loginForm.username"
-                placeholder="用户名"
-                name="username"
-                type="text"
-                tabindex="1"
-                autocomplete="on"
-              />
+              <el-input ref="username" v-model="loginForm.username" placeholder="用户名" name="username" type="text" tabindex="1" autocomplete="on" />
             </el-form-item>
             <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
               <el-form-item prop="password">
@@ -66,18 +58,12 @@
                 <img width="100%" height="50px" :src="captchaImg" @click="reloadCaptcha">
               </el-col>
             </el-row>
-            <el-button
-              :loading="loading"
-              type="primary"
-              style="width:100%;margin-bottom:30px;"
-              @click.native.prevent="handleLogin"
-            >登 陆
-            </el-button>
+            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 陆</el-button>
           </el-form>
         </el-card>
       </el-col>
     </el-row>
-    <div class="div_foot" style="color: white" v-html="basicSettings['sys_copyright']"></div>
+    <div class="div_foot" style="color: white" v-html="loginBasicSettings.sysCopyright"></div>
   </div>
 </template>
 
@@ -120,7 +106,17 @@ export default {
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      loginBasicSettings: {
+        sysSiteName: null,
+        sysLogo: null,
+        sysLoginWallpaper: null,
+        sysCopyright: null,
+        sysMsgEnable: false,
+        sysMsgContent: null,
+        sysLoginOpenHtmlEnable: false,
+        sysLoginOpenHtml: null
+      }
     }
   },
   computed: {
@@ -156,19 +152,26 @@ export default {
   },
   methods: {
     loadBasicSettings() {
-      this.$store.dispatch('basicSetting/getBasicSettings').then(() => {
-        console.log(this.basicSettings)
+      this.$store.dispatch('basicSettings/getBasicSettings').then(() => {
+        this.loginBasicSettings.sysSiteName = this.basicSettings['sys_site_name']
+        this.loginBasicSettings.sysLogo = this.basicSettings['sys_logo']
+        this.loginBasicSettings.sysLoginWallpaper = this.basicSettings['sys_login_wallpaper']
+        if (!this.loginBasicSettings.sysLoginWallpaper) this.loginBasicSettings.sysLoginWallpaper = '/bg.jpg' // 登录背景默认使用 /bg.jpg
+        this.loginBasicSettings.sysCopyright = this.basicSettings['sys_copyright']
+        this.loginBasicSettings.sysMsgEnable = this.basicSettings['sys_msg_enable']
+        this.loginBasicSettings.sysMsgContent = this.basicSettings['sys_msg_content']
+        this.loginBasicSettings.sysLoginOpenHtmlEnable = this.basicSettings['sys_login_open_html_enable']
+        this.loginBasicSettings.sysLoginOpenHtml = this.basicSettings['sys_login_open_html']
 
-        if (this.basicSettings['sys_msg_enable'] === '1') {
-          // 在页面加载完成后自动弹出欢迎提示框
+        // 在页面加载完成后根据配置信息判断是否弹出欢迎提示框
+        if (this.loginBasicSettings.sysMsgEnable === '1') {
           this.$notify({
             title: '通知',
-            message: this.basicSettings['sys_msg_content'],
+            message: this.loginBasicSettings.sysMsgContent,
             type: 'success',
-            duration: 0
+            duration: 30
           })
         }
-
       })
     },
     reloadCaptcha() {
@@ -295,7 +298,7 @@ $light_gray: #000;
   min-height: 100%;
   width: 100%;
   //background-color: $bg;
-  background-image: url("/bg.jpg");
+  //background-image: url("/bg.jpg");
   background-size: 100% 100%;
   background-position: center center;
   overflow: hidden;

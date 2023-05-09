@@ -18,8 +18,6 @@ const state = {
   phone: '',
   type: 1,
   createTime: '',
-  updateTime: '',
-  deleted: '',
   roles: [],
   permissions: []
 }
@@ -64,7 +62,7 @@ const mutations = {
 }
 
 const actions = {
-  // user login
+  // 用户登录
   login({ commit }, userInfo) {
     const { username, password, uniqueId, captcha } = userInfo
     return new Promise((resolve, reject) => {
@@ -92,7 +90,7 @@ const actions = {
     })
   },
 
-  // get user info
+  // 获取用户信息
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
@@ -104,10 +102,8 @@ const actions = {
 
         const { roles, permissions, id, username, nickname, avatar, phone, type } = data
 
-        // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
-        }
+        // roles必须为非空数组
+        if (!roles || roles.length <= 0) reject('getInfo: roles must be a non-null array!')
 
         commit('SET_ROLES', roles)
         commit('SET_PERMISSIONS', permissions)
@@ -124,7 +120,7 @@ const actions = {
     })
   },
 
-  // user logout
+  // 退出登录
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
@@ -137,8 +133,7 @@ const actions = {
         // 清除Token
         removeToken()
         resetRouter()
-        // reset visited views and cached views
-        // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
+        // 重置访问过的视图和缓存的视图 to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
         dispatch('tagsView/delAllViews', null, { root: true })
         resolve()
       }).catch(error => {
@@ -159,26 +154,6 @@ const actions = {
       removeRefreshToken()
       resolve()
     })
-  },
-
-  // dynamically modify permissions
-  async changeRoles({ commit, dispatch }, role) {
-    const token = role + '-token'
-
-    commit('SET_TOKEN', token)
-    setToken(token)
-
-    const { roles } = await dispatch('getInfo')
-
-    resetRouter()
-
-    // generate accessible routes map based on roles
-    const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
-    // dynamically add accessible routes
-    router.addRoutes(accessRoutes)
-
-    // reset visited views and cached views
-    dispatch('tagsView/delAllViews', null, { root: true })
   }
 }
 

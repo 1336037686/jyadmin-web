@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import basicSettingApi from '@/api/system/basic-setting/jy-basic-setting'
+import basicSettingApi from '@/api/system/basic-setting/jy-basic-settings'
 export default {
   data() {
     return {
