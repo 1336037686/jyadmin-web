@@ -61,5 +61,12 @@ export default {
       method: 'delete',
       data
     })
+  },
+  download(id) {
+    return request({
+      url: '/api/code-generator/generate/' + id,
+      method: 'get',
+      responseType: 'blob'
+    })
   }
 }

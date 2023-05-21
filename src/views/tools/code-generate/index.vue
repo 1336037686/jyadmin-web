@@ -80,7 +80,8 @@
       />
     </div>
 
-    <code-generate-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
+    <code-generate-form :title="importData.title" :visible.sync="importData.visiable" />
+    <code-generate-edit :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
     <code-generate-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
   </div>
 </template>
@@ -89,8 +90,9 @@
 import codeGenApi from '@/api/tools/code-generate/code-generate'
 import CodeGenerateForm from '@/views/tools/code-generate/code-generate-form.vue'
 import CodeGenerateDetail from '@/views/tools/code-generate/code-generate-detail'
+import CodeGenerateEdit from '@/views/tools/code-generate/code-generate-edit'
 export default {
-  components: { CodeGenerateDetail, CodeGenerateForm },
+  components: { CodeGenerateDetail, CodeGenerateForm, CodeGenerateEdit },
   data() {
     return {
       queryFormVisiable: true,
@@ -106,6 +108,10 @@ export default {
         records: [],
         hasPrevious: false,
         hasNext: false
+      },
+      importData: {
+        visiable: false,
+        title: ''
       },
       editData: {
         visiable: false,
@@ -154,9 +160,9 @@ export default {
       this.showData.visiable = true
     },
     handleCreate() {
-      this.editData.title = '导入'
-      this.editData.id = null
-      this.editData.visiable = true
+      this.importData.title = '导入'
+      this.importData.id = null
+      this.importData.visiable = true
     },
     handleRemove() {
       const selectRows = this.$refs.table.selection
@@ -194,6 +200,28 @@ export default {
         this.getList()
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '同步失败' })
+        this.getList()
+      })
+    },
+    handleEdit(index, data) {
+      this.editData.title = '编辑'
+      this.editData.id = data.id
+      this.editData.visiable = true
+    },
+    handlePreview(index, data) {
+
+    },
+    handleDownload(index, data) {
+      codeGenApi.download(data.id).then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', 'code-generate.zip') // 设置下载文件的文件名
+        document.body.appendChild(link)
+        link.click()
+        link.remove() // 下载完成后移除该元素
+      }).catch(e => {
+        this.$notify.error({ title: '失败', message: '下载失败' })
         this.getList()
       })
     }

@@ -51,7 +51,7 @@
         <el-table-column prop="realName" label="原文件名称" align="center" show-overflow-tooltip />
         <el-table-column prop="source" label="文件存储平台" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
-            {{getNameByCode(storageTypeOptions, scope.row.source)}}
+            {{ getNameByCode(storageTypeOptions, scope.row.source) }}
           </template>
         </el-table-column>
         <el-table-column prop="type" label="文件类型" align="center" width="100" show-overflow-tooltip />
@@ -179,6 +179,7 @@ export default {
     download(data) {
       processApi.download(data.id)
         .then(response => {
+          console.log(data)
           const filename = data.realName
           const url = window.URL.createObjectURL(new Blob([response.data], { type: data.type }))
           const obj = document.createElement('a')

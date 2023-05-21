@@ -73,10 +73,6 @@ export default {
       type: String,
       default: 'Demo'
     },
-    id: {
-      type: String,
-      default: null
-    },
     visible: {
       type: Boolean,
       default: false
@@ -85,7 +81,6 @@ export default {
   data() {
     return {
       tmpVisible: this.visible,
-      type: 'insert',
       queryForm: {
         tableName: ''
       },
