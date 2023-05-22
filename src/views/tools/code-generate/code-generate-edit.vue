@@ -1,18 +1,23 @@
 <template>
   <el-drawer
     :title="title"
-    :visible.sync="visible"
+    :visible.sync="tmpVisible"
     :direction="'rtl'"
     :wrapper-closable="false"
     size="90%"
   >
-    <div style="margin: 10px">
+    <div
+      v-loading="tmpLoading"
+      style="margin: 10px"
+      element-loading-text="加载中，请稍后..."
+      element-loading-spinner="el-icon-loading"
+    >
       <div style="margin-top: 10px; text-align: right;">
-        <el-button type="warning" @click="handleSubmit('form')"> 重 置  </el-button>
-        <el-button type="primary" @click="handleSubmit('form')"> 保 存  </el-button>
+        <el-button type="warning" @click="handleReset('tableConfigForm')"> 重 置  </el-button>
+        <el-button type="primary" @click="handleSubmit('tableConfigForm')"> 保 存  </el-button>
       </div>
 
-      <el-card class="box-card" shadow="hover" style="margin-top: 10px;">
+      <el-card class="box-card" shadow="always" style="margin-top: 10px;">
         <div slot="header" class="clearfix">
           <span>表信息</span>
         </div>
@@ -54,65 +59,72 @@
         </div>
       </el-card>
 
-      <el-card class="box-card" style="margin-top: 10px" shadow="hover">
+      <el-card class="box-card" style="margin-top: 10px" shadow="always">
         <div slot="header" class="clearfix">
           <span>表配置信息</span>
         </div>
         <div>
-          <el-form ref="tableForm" :rules="rules" :model="form" label-width="200px">
+          <el-form ref="tableConfigForm" :rules="rules" :model="form" label-width="200px">
             <el-row>
               <el-col :span="8">
-                <el-form-item label="表类型 ：" prop="tableType">
-                  <el-input v-model="form.table.tableConfig.tableType" />
+                <el-form-item label="数据表类型 ：" prop="table.tableConfig.tableType">
+                  <el-select v-model="form.table.tableConfig.tableType" placeholder="" style="width: 100%">
+                    <el-option
+                      v-for="item in tableTypeOptions"
+                      :key="'tableType_' + item.code"
+                      :label="item.name"
+                      :value="item.code"
+                    />
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="作者：" prop="author">
+                <el-form-item label="作者：" prop="table.tableConfig.author">
                   <el-input v-model="form.table.tableConfig.author" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="后端代码包路径：" prop="packageName">
+                <el-form-item label="后端代码包路径：" prop="table.tableConfig.packageName">
                   <el-input v-model="form.table.tableConfig.packageName" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="后端公共URL前缀：" prop="publicUrl">
+                <el-form-item label="后端公共URL前缀：" prop="table.tableConfig.publicUrl">
                   <el-input v-model="form.table.tableConfig.publicUrl" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="后端去除表前缀字符：" prop="removeTablePrefix">
+                <el-form-item label="后端去除表前缀字符：" prop="table.tableConfig.removeTablePrefix">
                   <el-input v-model="form.table.tableConfig.removeTablePrefix" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="后端去除表后缀字符：" prop="removeTableSuffix">
+                <el-form-item label="后端去除表后缀字符：" prop="table.tableConfig.removeTableSuffix">
                   <el-input v-model="form.table.tableConfig.removeTableSuffix" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="后端去除属性前缀字符：" prop="removeFieldPrefix">
+                <el-form-item label="后端去除属性前缀字符：" prop="table.tableConfig.removeFieldPrefix">
                   <el-input v-model="form.table.tableConfig.removeFieldPrefix" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="后端去除属性后缀字符：" prop="removeFieldSuffix">
+                <el-form-item label="后端去除属性后缀字符：" prop="table.tableConfig.removeFieldSuffix">
                   <el-input v-model="form.table.tableConfig.removeFieldSuffix" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="swaggerAPI @Api value：" prop="swaggerApiValue">
+                <el-form-item label="swaggerAPI @Api value：" prop="table.tableConfig.swaggerApiValue">
                   <el-input v-model="form.table.tableConfig.swaggerApiValue" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="swaggerAPI @Api tags：" prop="swaggerApiTag">
+                <el-form-item label="swaggerAPI @Api tags：" prop="table.tableConfig.swaggerApiTag">
                   <el-input v-model="form.table.tableConfig.swaggerApiTag" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="前端页面文件生成路径：" prop="pageViewPath">
+                <el-form-item label="前端页面文件生成路径：" prop="table.tableConfig.pageViewPath">
                   <el-input v-model="form.table.tableConfig.pageViewPath" />
                 </el-form-item>
               </el-col>
@@ -121,7 +133,7 @@
         </div>
       </el-card>
 
-      <el-card class="box-card" style="margin-top: 10px" shadow="hover">
+      <el-card class="box-card" style="margin-top: 10px" shadow="always">
         <div slot="header" class="clearfix">
           <span>属性信息</span>
         </div>
@@ -143,7 +155,18 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column prop="fieldConfig.javaType" label="java类型" align="center" />
+          <el-table-column prop="fieldConfig.javaType" label="java类型" align="center">
+            <template slot-scope="scope">
+              <el-select v-model="form.fields[scope.$index].fieldConfig.javaType" placeholder="请选择" @change="handleJavaTypeChange(form.fields[scope.$index].fieldConfig)">
+                <el-option
+                  v-for="item in fieldTypeOptions"
+                  :key="'javaType_' + item.javaType"
+                  :label="item.javaType"
+                  :value="item.javaType"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
           <el-table-column prop="fieldConfig.showPage" label="页面展示" show-overflow-tooltip width="100" align="center">
             <template slot-scope="scope">
               <el-select v-model="form.fields[scope.$index].fieldConfig.showPage" placeholder="请选择">
@@ -192,7 +215,18 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column prop="fieldConfig.formType" label="表单类型" align="center" />
+          <el-table-column prop="fieldConfig.formType" label="表单类型" align="center">
+            <template slot-scope="scope">
+              <el-select v-model="form.fields[scope.$index].fieldConfig.formType" placeholder="请选择">
+                <el-option
+                  v-for="item in formTypeOptions"
+                  :key="'formType_' + item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
           <el-table-column prop="fieldConfig.showQuery" label="查询展示" show-overflow-tooltip width="100" align="center">
             <template slot-scope="scope">
               <el-select v-model="form.fields[scope.$index].fieldConfig.showQuery" placeholder="请选择">
@@ -205,7 +239,18 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column prop="fieldConfig.formSelectMethod" label="查询方法" align="center" />
+          <el-table-column prop="fieldConfig.formSelectMethod" label="查询方法" align="center">
+            <template slot-scope="scope">
+              <el-select v-model="form.fields[scope.$index].fieldConfig.formSelectMethod" placeholder="请选择">
+                <el-option
+                  v-for="item in formSelectMethodOptions"
+                  :key="'formSelectMethod_' + item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
           <el-table-column prop="fieldConfig.fieldIgnore" label="忽略字段" width="100" align="center">
             <template slot-scope="scope">
               <el-select v-model="form.fields[scope.$index].fieldConfig.fieldIgnore" placeholder="请选择">
@@ -243,6 +288,7 @@ export default {
   },
   data() {
     return {
+      tmpLoading: false,
       tmpVisible: this.visible,
       okOptions: [
         { name: '否', code: '0' },
@@ -252,6 +298,10 @@ export default {
         { name: '否', code: 0 },
         { name: '是', code: 1 }
       ],
+      formTypeOptions: [],
+      formSelectMethodOptions: [],
+      tableTypeOptions: [],
+      fieldTypeOptions: [],
       form: {
         table: {
           table: {
@@ -284,14 +334,41 @@ export default {
           }
         },
         fields: []
+      },
+      rules: {
+        'table.tableConfig.tableType': [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        'table.tableConfig.author': [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        'table.tableConfig.packageName': [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        'table.tableConfig.publicUrl': [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        'table.tableConfig.swaggerApiValue': [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        'table.tableConfig.swaggerApiTag': [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        'table.tableConfig.pageViewPath': [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ]
       }
     }
   },
   watch: {
     visible(newVal) {
       this.tmpVisible = newVal
+      this.getTableTypeOptions()
+      this.getFieldType()
+      this.getFormSelectMethodOptions()
+      this.getFormTypeOptions()
       // 如果有ID则为修改操作
-      if (this.id) {
+      if (this.id && newVal) {
         this.getById(this.id)
       }
     },
@@ -301,10 +378,50 @@ export default {
     deep: true
   },
   methods: {
+    getTableTypeOptions() {
+      this.getDictByCode('sys_code_generate_table_type').then(res => {
+        this.tableTypeOptions = res.data
+      })
+    },
+    getFormSelectMethodOptions() {
+      this.getDictByCode('sys_code_generate_query_method').then(res => {
+        this.formSelectMethodOptions = res.data
+      })
+    },
+    getFormTypeOptions() {
+      this.getDictByCode('sys_code_generate_form_type').then(res => {
+        this.formTypeOptions = res.data
+      })
+    },
     getById(id) {
+      this.tmpLoading = true
       codeGenApi.getById(id).then(res => {
         this.form = res.data
+        this.tmpLoading = false
       })
+    },
+    getFieldType() {
+      codeGenApi.getFieldType().then(res => {
+        this.fieldTypeOptions = res.data
+      })
+    },
+    handleJavaTypeChange(fieldConfig) {
+      for (let i = 0; i < this.fieldTypeOptions.length; i++) {
+        if (this.fieldTypeOptions[i].javaType === fieldConfig.javaType) {
+          fieldConfig.className = this.fieldTypeOptions[i].className
+        }
+      }
+    },
+    handleSubmit(formName) {
+      this.$refs[formName].validate((valid) => {
+        // eslint-disable-next-line no-empty
+        if (valid) {
+
+        }
+      })
+    },
+    handleReset(formName) {
+      this.getById(this.id)
     }
   }
 }

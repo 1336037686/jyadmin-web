@@ -15,7 +15,12 @@ export default {
       method: 'get'
     })
   },
-
+  getFieldType() {
+    return request({
+      url: '/api/code-generator/query-field-type',
+      method: 'get'
+    })
+  },
   getSingleTableById(id) {
     return request({
       url: '/api/code-generator/query-sigle-table/' + id,
