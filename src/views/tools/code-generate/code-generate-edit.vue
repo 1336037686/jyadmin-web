@@ -8,10 +8,11 @@
   >
     <div style="margin: 10px">
       <div style="margin-top: 10px; text-align: right;">
-        <el-button type="primary" @click="handleSubmit('form')"> 保存配置  </el-button>
+        <el-button type="warning" @click="handleSubmit('form')"> 重 置  </el-button>
+        <el-button type="primary" @click="handleSubmit('form')"> 保 存  </el-button>
       </div>
 
-      <el-card class="box-card" shadow="never" style="margin-top: 10px;">
+      <el-card class="box-card" shadow="hover" style="margin-top: 10px;">
         <div slot="header" class="clearfix">
           <span>表信息</span>
         </div>
@@ -53,7 +54,7 @@
         </div>
       </el-card>
 
-      <el-card class="box-card" style="margin-top: 10px" shadow="never">
+      <el-card class="box-card" style="margin-top: 10px" shadow="hover">
         <div slot="header" class="clearfix">
           <span>表配置信息</span>
         </div>
@@ -120,26 +121,103 @@
         </div>
       </el-card>
 
-      <el-card class="box-card" style="margin-top: 10px" shadow="never">
+      <el-card class="box-card" style="margin-top: 10px" shadow="hover">
         <div slot="header" class="clearfix">
           <span>属性信息</span>
         </div>
 
         <el-table :data="form.fields" style="width: 100%">
           <el-table-column type="index" label="序号" align="center" width="80" />
-          <el-table-column prop="field.fieldName" label="字段名" />
-          <el-table-column prop="field.fieldType" label="字段类型" />
-          <el-table-column prop="field.fieldRemark" label="备注" />
-          <el-table-column prop="field.pk" label="主键" />
-          <el-table-column prop="fieldConfig.javaType" label="java类型" />
-          <el-table-column prop="fieldConfig.showPage" label="页面展示" />
-          <el-table-column prop="fieldConfig.showDetail" label="详情页展示" />
-          <el-table-column prop="fieldConfig.showForm" label="表单页展示" />
-          <el-table-column prop="fieldConfig.formRequire" label="是否必填" />
-          <el-table-column prop="fieldConfig.formType" label="表单类型" />
-          <el-table-column prop="fieldConfig.showQuery" label="查询展示" />
-          <el-table-column prop="fieldConfig.formSelectMethod" label="查询方法" />
-          <el-table-column prop="fieldConfig.fieldIgnore" label="忽略字段" />
+          <el-table-column prop="field.fieldName" label="字段名" show-overflow-tooltip width="150" align="center" />
+          <el-table-column prop="field.fieldType" label="字段类型" show-overflow-tooltip width="150" align="center" />
+          <el-table-column prop="field.fieldRemark" label="备注" show-overflow-tooltip width="120" align="center" />
+          <el-table-column prop="field.pk" label="主键" show-overflow-tooltip width="100" align="center">
+            <template slot-scope="scope">
+              <el-select v-model="form.fields[scope.$index].field.pk" placeholder="请选择">
+                <el-option
+                  v-for="item in okOptions"
+                  :key="'pk_' + item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="fieldConfig.javaType" label="java类型" align="center" />
+          <el-table-column prop="fieldConfig.showPage" label="页面展示" show-overflow-tooltip width="100" align="center">
+            <template slot-scope="scope">
+              <el-select v-model="form.fields[scope.$index].fieldConfig.showPage" placeholder="请选择">
+                <el-option
+                  v-for="item in okIntOptions"
+                  :key="'showPage_' + item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="fieldConfig.showDetail" label="详情页展示" show-overflow-tooltip width="100" align="center">
+            <template slot-scope="scope">
+              <el-select v-model="form.fields[scope.$index].fieldConfig.showDetail" placeholder="请选择">
+                <el-option
+                  v-for="item in okIntOptions"
+                  :key="'showDetail_' + item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="fieldConfig.showForm" label="表单页展示" show-overflow-tooltip width="100" align="center">
+            <template slot-scope="scope">
+              <el-select v-model="form.fields[scope.$index].fieldConfig.showForm" placeholder="请选择">
+                <el-option
+                  v-for="item in okIntOptions"
+                  :key="'showForm_' + item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="fieldConfig.formRequire" label="是否必填" show-overflow-tooltip width="100" align="center">
+            <template slot-scope="scope">
+              <el-select v-model="form.fields[scope.$index].fieldConfig.formRequire" placeholder="请选择">
+                <el-option
+                  v-for="item in okIntOptions"
+                  :key="'formRequire_' + item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="fieldConfig.formType" label="表单类型" align="center" />
+          <el-table-column prop="fieldConfig.showQuery" label="查询展示" show-overflow-tooltip width="100" align="center">
+            <template slot-scope="scope">
+              <el-select v-model="form.fields[scope.$index].fieldConfig.showQuery" placeholder="请选择">
+                <el-option
+                  v-for="item in okIntOptions"
+                  :key="'showQuery_' + item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="fieldConfig.formSelectMethod" label="查询方法" align="center" />
+          <el-table-column prop="fieldConfig.fieldIgnore" label="忽略字段" width="100" align="center">
+            <template slot-scope="scope">
+              <el-select v-model="form.fields[scope.$index].fieldConfig.fieldIgnore" placeholder="请选择">
+                <el-option
+                  v-for="item in okIntOptions"
+                  :key="'fieldIgnore_' + item.code"
+                  :label="item.name"
+                  :value="item.code"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
         </el-table>
       </el-card>
     </div>
@@ -166,6 +244,14 @@ export default {
   data() {
     return {
       tmpVisible: this.visible,
+      okOptions: [
+        { name: '否', code: '0' },
+        { name: '是', code: '1' }
+      ],
+      okIntOptions: [
+        { name: '否', code: 0 },
+        { name: '是', code: 1 }
+      ],
       form: {
         table: {
           table: {
