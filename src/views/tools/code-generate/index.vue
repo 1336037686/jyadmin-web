@@ -2,8 +2,8 @@
   <div style="margin: 10px">
     <el-card class="box-card" shadow="always">
       <el-form v-show="queryFormVisiable" :inline="true" size="mini" :model="queryForm" label-width="100px">
-        <el-form-item label="表名称：">
-          <el-input v-model="queryForm.tableName" placeholder="表名称" />
+        <el-form-item label="数据表名称：">
+          <el-input v-model="queryForm.tableName" placeholder="数据表名称" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">查 询</el-button>
@@ -82,6 +82,7 @@
 
     <code-generate-form :title="importData.title" :visible.sync="importData.visiable" />
     <code-generate-edit :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
+    <code-generate-preview :id="previewData.id" :title="previewData.title" :visible.sync="previewData.visiable" />
     <code-generate-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
   </div>
 </template>
@@ -91,8 +92,9 @@ import codeGenApi from '@/api/tools/code-generate/code-generate'
 import CodeGenerateForm from '@/views/tools/code-generate/code-generate-form.vue'
 import CodeGenerateDetail from '@/views/tools/code-generate/code-generate-detail'
 import CodeGenerateEdit from '@/views/tools/code-generate/code-generate-edit'
+import CodeGeneratePreview from '@/views/tools/code-generate/code-generate-preview'
 export default {
-  components: { CodeGenerateDetail, CodeGenerateForm, CodeGenerateEdit },
+  components: { CodeGeneratePreview, CodeGenerateDetail, CodeGenerateForm, CodeGenerateEdit },
   data() {
     return {
       queryFormVisiable: true,
@@ -114,6 +116,11 @@ export default {
         title: ''
       },
       editData: {
+        visiable: false,
+        title: '',
+        id: null
+      },
+      previewData: {
         visiable: false,
         title: '',
         id: null
@@ -209,7 +216,9 @@ export default {
       this.editData.visiable = true
     },
     handlePreview(index, data) {
-
+      this.previewData.title = '预览'
+      this.previewData.id = data.id
+      this.previewData.visiable = true
     },
     handleDownload(index, data) {
       codeGenApi.download(data.id).then(response => {

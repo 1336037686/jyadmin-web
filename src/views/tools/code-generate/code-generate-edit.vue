@@ -414,9 +414,22 @@ export default {
     },
     handleSubmit(formName) {
       this.$refs[formName].validate((valid) => {
-        // eslint-disable-next-line no-empty
         if (valid) {
-
+          const tableConfig = this.form.table.tableConfig
+          const fieldConfigs = []
+          for (let i = 0; i < this.form.fields.length; i++) {
+            fieldConfigs.push(this.form.fields[i].fieldConfig)
+          }
+          console.log('handleSubmit')
+          console.log(tableConfig)
+          console.log(fieldConfigs)
+          codeGenApi.updateConfig({ tableConfig: tableConfig, fieldConfigs: fieldConfigs }).then(response => {
+            this.$notify.success({ title: '成功', message: '修改成功' })
+            this.$parent.getList()
+            this.getById(this.id)
+          }).catch(e => {
+            this.$notify.error({ title: '失败', message: '修改失败' })
+          })
         }
       })
     },

@@ -8,10 +8,15 @@ export default {
       params: query
     })
   },
-
   getById(id) {
     return request({
       url: '/api/code-generator/query/' + id,
+      method: 'get'
+    })
+  },
+  preview(tableId) {
+    return request({
+      url: '/api/code-generator/generate-preview/' + tableId,
       method: 'get'
     })
   },
@@ -47,9 +52,9 @@ export default {
       method: 'post'
     })
   },
-  update(data) {
+  updateConfig(data) {
     return request({
-      url: '/api/code-generator/update',
+      url: '/api/code-generator/update/table-config',
       method: 'put',
       data
     })
