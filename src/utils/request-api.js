@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { MessageBox, Notification } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
@@ -44,39 +44,33 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-
     // 如果是文件下载
     if (response.headers.requesttype && response.headers.requesttype === 'file') {
       return response
     }
-
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 200) {
-      Message({
-        message: res.msg || '服务异常',
-        type: 'error',
-        duration: 5 * 1000
-      })
-      if (res.code === 10002 || res.code === 10008 || res.code === 10009) {
-        // 重新登陆
-        MessageBox.confirm('当前账号登陆失效，您可以重新登录', '退出确认', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
-      }
-      return Promise.reject(new Error(res.msg || '服务异常'))
-    } else {
-      return res
+    // 请求正常 res.code == 200
+    console.log(res)
+    if (res.code === 200) return res
+    // 请求异常 res.code != 200
+    Notification({
+      title: '失败',
+      message: res.msg || '服务异常',
+      type: 'error',
+      duration: 5 * 1000
+    })
+    // 登陆失效
+    if (res.code === 10002 || res.code === 10008 || res.code === 10009) {
+      // 重新登陆
+      toReLogin()
     }
+    // 返回错误
+    return Promise.reject(new Error(res.msg || '服务异常'))
   },
   error => {
-    console.log('err' + error) // for debug
-    Message({
+    console.log('request api error')
+    console.error('err' + error) // for debug
+    Notification({
+      title: '失败',
       message: error.msg || '服务异常',
       type: 'error',
       duration: 5 * 1000
@@ -84,5 +78,18 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+// 清除数据，提示用户，跳转登录界面
+function toReLogin() {
+  MessageBox.confirm('当前账号登陆失效，您可以重新登录', '退出确认', {
+    confirmButtonText: '重新登录',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    store.dispatch('user/resetToken').then(() => {
+      location.reload()
+    })
+  })
+}
 
 export default service
