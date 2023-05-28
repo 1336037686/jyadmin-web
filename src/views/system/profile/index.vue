@@ -42,13 +42,16 @@ export default {
   data() {
     return {
       user: {
-        createTime: '',
         id: null,
-        username: '',
-        nickname: '',
-        avatar: '',
-        phone: '',
-        type: null
+        username: null,
+        nickname: null,
+        avatar: null,
+        phone: null,
+        type: null,
+        departmentName: null,
+        postName: null,
+        createTime: null,
+        roleNames: []
       },
       activeTab: 'timeline'
     }

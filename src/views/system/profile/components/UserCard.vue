@@ -18,20 +18,33 @@
 
     <div class="user-bio">
       <div class="user-education user-bio-section">
-        <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>个人电话</span></div>
-        <div class="user-bio-section-body">
-          <div class="text-muted">
-            {{ user.phone }}
-          </div>
+        <div class="user-bio-section-header">
+          <svg-icon icon-class="wechat" /> <span>个人电话：</span>
+          <span style="font-weight: normal">{{ user.phone }}</span>
         </div>
       </div>
-
-      <div class="user-skills user-bio-section">
-        <div class="user-bio-section-header"><svg-icon icon-class="skill" /><span>创建时间</span></div>
-        <div class="user-bio-section-body">
-          <div class="text-muted">
-            {{ user.createTime }}
-          </div>
+      <div class="user-education user-bio-section">
+        <div class="user-bio-section-header">
+          <svg-icon icon-class="skill" /> <span>所在部门：</span>
+          <span style="font-weight: normal">{{ user.departmentName }}</span>
+        </div>
+      </div>
+      <div class="user-education user-bio-section">
+        <div class="user-bio-section-header">
+          <svg-icon icon-class="skill" /> <span>所在岗位：</span>
+          <span style="font-weight: normal">{{ user.postName }}</span>
+        </div>
+      </div>
+      <div class="user-education user-bio-section">
+        <div class="user-bio-section-header">
+          <svg-icon icon-class="skill" /> <span>账号角色：</span>
+          <span style="font-weight: normal">{{ user.roleNames.join('、') }}</span>
+        </div>
+      </div>
+      <div class="user-education user-bio-section">
+        <div class="user-bio-section-header">
+          <svg-icon icon-class="skill" /> <span>创建时间：</span>
+          <span style="font-weight: normal">{{ user.createTime }}</span>
         </div>
       </div>
     </div>
@@ -48,13 +61,16 @@ export default {
       type: Object,
       default: () => {
         return {
-          createTime: '',
           id: null,
-          username: '',
-          nickname: '',
-          avatar: '',
-          phone: '',
-          type: null
+          username: null,
+          nickname: null,
+          avatar: null,
+          phone: null,
+          type: null,
+          departmentName: null,
+          postName: null,
+          createTime: null,
+          roleNames: []
         }
       }
     }

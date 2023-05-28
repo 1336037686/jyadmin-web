@@ -1,10 +1,6 @@
 import { login, refreshToken, logout, getInfo } from '@/api/system/auth/jy-auth'
 import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken, removeRefreshToken } from '@/utils/auth'
-import router, { resetRouter } from '@/router'
-
-// 使用refreshToken对登录状态进行续期，refreshToken获取token
-let timeExpire = null // 定时器 accessToken 1h 过期， refreshToken 12h 过期
-const refreshTokenExpire = 40 * 60 * 1000 // 间隔时间 (ms) 每隔40分钟刷新一次token
+import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
@@ -72,39 +68,38 @@ const actions = {
         commit('SET_REFRESH_TOKEN', data.refreshToken)
         setToken(data.accessToken)
         setRefreshToken(data.refreshToken)
-
-        // 设置定时器，定时根据refreshToken刷新token
-        if (timeExpire) clearInterval(timeExpire)
-        timeExpire = setInterval(() => {
-          const rsToken = getRefreshToken()
-          refreshToken(rsToken).then(res => {
-            commit('SET_TOKEN', res.data)
-            setToken(res.data)
-          })
-        }, refreshTokenExpire)
-
         resolve()
       }).catch(error => {
         reject(error)
       })
     })
   },
-
+  // token续期
+  refreshToken({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      const rsToken = getRefreshToken()
+      if (!rsToken) return
+      refreshToken(rsToken).then(res => {
+        commit('SET_TOKEN', res.data)
+        setToken(res.data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   // 获取用户信息
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
-
         if (!data) {
           reject('Verification failed, please Login again.')
         }
-
         const { roles, permissions, id, username, nickname, avatar, phone, type } = data
 
         // roles必须为非空数组
         if (!roles || roles.length <= 0) reject('getInfo: roles must be a non-null array!')
-
         commit('SET_ROLES', roles)
         commit('SET_PERMISSIONS', permissions)
         commit('SET_ID', id)
@@ -119,7 +114,6 @@ const actions = {
       })
     })
   },
-
   // 退出登录
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
@@ -128,8 +122,6 @@ const actions = {
         commit('SET_REFRESH_TOKEN', '')
         commit('SET_ROLES', [])
         commit('SET_PERMISSIONS', [])
-        // 清楚续期定时器
-        if (timeExpire) clearInterval(timeExpire)
         // 清除Token
         removeToken()
         resetRouter()
@@ -150,7 +142,6 @@ const actions = {
       commit('SET_ROLES', [])
       commit('SET_PERMISSIONS', [])
       removeToken()
-      if (timeExpire) clearInterval(timeExpire)
       removeRefreshToken()
       resolve()
     })

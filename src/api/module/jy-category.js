@@ -38,5 +38,13 @@ export default {
       method: 'delete',
       data
     })
+  },
+  dataExport(query) {
+    return request({
+      url: '/api/category/data-export',
+      method: 'get',
+      responseType: 'blob',
+      params: query
+    })
   }
 }

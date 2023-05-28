@@ -1,28 +1,26 @@
-import Cookies from 'js-cookie'
-
 const TokenKey = 'Admin-Token'
 const RefreshTokenKey = 'Admin-Refresh-Token'
 
 export function getToken() {
-  return Cookies.get(TokenKey)
+  return localStorage.getItem(TokenKey)
 }
 
 export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+  return localStorage.setItem(TokenKey, token)
 }
 
 export function removeToken() {
-  return Cookies.remove(TokenKey)
+  return localStorage.removeItem(TokenKey)
 }
 
 export function getRefreshToken() {
-  return Cookies.get(RefreshTokenKey)
+  return localStorage.getItem(RefreshTokenKey)
 }
 
 export function setRefreshToken(refreshToken) {
-  return Cookies.set(RefreshTokenKey, refreshToken)
+  return localStorage.setItem(RefreshTokenKey, refreshToken)
 }
 
 export function removeRefreshToken() {
-  return Cookies.remove(RefreshTokenKey)
+  return localStorage.removeItem(RefreshTokenKey)
 }

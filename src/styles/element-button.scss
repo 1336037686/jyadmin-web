@@ -1,0 +1,56 @@
+// 自定义按钮样式，扩展Element UI原始的几种按钮 primary，success，warning，danger，default
+
+// ========== 紫色按钮 type="purple" START ===========
+.el-button--purple {
+  color:#fff;
+  background-color:#bc69f7;
+  border-color:#bc69f7
+}
+
+.el-button--purple:focus, .el-button--purple:hover {
+  background: #bc8af7;
+  border-color: #bc8af7;
+  color: #FFF
+}
+
+.el-button--purple.is-active, .el-button--purple:active {
+  background: #bc5af7;
+  border-color: #bc5af7;
+  color: #FFF
+}
+
+.el-button--purple:active {
+  outline: 0
+}
+
+.el-button--purple.is-disabled, .el-button--purple.is-disabled:active, .el-button--purple.is-disabled:focus, .el-button--purple.is-disabled:hover {
+  color: #FFF;
+  background-color: #bca2f7;
+  border-color: #bca2f7
+}
+
+.el-button--purple.is-plain {
+  color: #bc69f7;
+  background: #bca2f7;
+  border-color: #bc8af7
+}
+
+.el-button--purple.is-plain:focus, .el-button--purple.is-plain:hover {
+  background: #bc69f7;
+  border-color: #bc69f7;
+  color: #FFF
+}
+
+.el-button--purple.is-plain:active {
+  background: #bc5af7;
+  border-color: #bc5af7;
+  color: #FFF;
+  outline: 0
+}
+
+.el-button--purple.is-plain.is-disabled, .el-button--purple.is-plain.is-disabled:active, .el-button--purple.is-plain.is-disabled:focus, .el-button--purple.is-plain.is-disabled:hover {
+  color: #bc69f7;
+  background-color: #bca2f7;
+  border-color: #bc92f7
+}
+// ========== 紫色按钮 type="purple" END ===========

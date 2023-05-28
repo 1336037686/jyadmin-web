@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px">
     <el-card class="box-card" shadow="always">
-      <el-form :inline="true" v-show="queryFormVisiable" size="mini"  :model="queryForm" label-width="100px">
+      <el-form v-show="queryFormVisiable" :inline="true" size="mini" :model="queryForm" label-width="100px">
         <el-form-item label="类别名称：">
           <el-input v-model="queryForm.name" placeholder="类别名称" />
         </el-form-item>
@@ -18,6 +18,7 @@
         <el-button type="success" icon="el-icon-plus" size="mini" @click="handleCreate">新 增</el-button>
         <el-button type="warning" icon="el-icon-edit-outline" size="mini" @click="handleUpdate">修 改</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleRemove">删 除</el-button>
+        <el-button type="purple" icon="el-icon-share" size="mini" @click="handleReport">导 出</el-button>
       </div>
     </el-card>
 
@@ -43,10 +44,10 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column type="index" width="80" label="序号" align="center" />
-        <el-table-column prop="name" label="类别名称" align="center"  />
-        <el-table-column prop="code" label="类别编码" align="center"  />
-        <el-table-column prop="createTime" label="创建时间" align="center"  />
-        <el-table-column prop="intro" label="类别简介" width="600" align="center"  />
+        <el-table-column prop="name" label="类别名称" align="center" />
+        <el-table-column prop="code" label="类别编码" align="center" />
+        <el-table-column prop="createTime" label="创建时间" align="center" />
+        <el-table-column prop="intro" label="类别简介" width="600" align="center" />
       </el-table>
     </el-card>
 
@@ -71,6 +72,7 @@
 import jyCategoryApi from '@/api/module/jy-category'
 import JyCategoryForm from '@/views/module/blog/category/category-form'
 import JyCategoryDetail from '@/views/module/blog/category/category-detail'
+import parseResponseContentDisposition from '@/utils/response'
 export default {
   components: { JyCategoryDetail, JyCategoryForm },
   data() {
@@ -170,6 +172,23 @@ export default {
         }).catch(e => {
           this.$notify.error({ title: '失败', message: '删除失败' })
         })
+      })
+    },
+    handleReport() {
+      jyCategoryApi.dataExport(this.queryForm).then(res => {
+        // 获取响应头部信息
+        const contentDisposition = res.headers['content-disposition']
+        // 解析出文件名
+        const fileName = parseResponseContentDisposition(contentDisposition)
+        // 处理文件下载
+        const url = window.URL.createObjectURL(new Blob([res.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', fileName)
+        document.body.appendChild(link)
+        link.click()
+      }).catch(function(error) {
+        console.error(error)
       })
     },
     handleTableRowClick(row, column, event) {

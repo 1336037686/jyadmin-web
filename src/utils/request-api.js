@@ -53,7 +53,7 @@ service.interceptors.response.use(
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
       Message({
-        message: res.msg || 'Error',
+        message: res.msg || '服务异常',
         type: 'error',
         duration: 5 * 1000
       })
@@ -69,7 +69,7 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(res.msg || 'Error'))
+      return Promise.reject(new Error(res.msg || '服务异常'))
     } else {
       return res
     }
@@ -77,7 +77,7 @@ service.interceptors.response.use(
   error => {
     console.log('err' + error) // for debug
     Message({
-      message: error.msg,
+      message: error.msg || '服务异常',
       type: 'error',
       duration: 5 * 1000
     })

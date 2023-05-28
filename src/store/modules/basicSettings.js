@@ -20,7 +20,7 @@ const actions = {
           settings[data[i].code] = data[i].value
         }
         commit('SET_SETTINGS', settings)
-        // 保存到cookie中，防止vuex刷新状态消失
+        // 保存到localstorage 中，防止vuex刷新状态消失
         setBasicSettings(settings)
         resolve()
       }).catch(error => {
