@@ -2,6 +2,7 @@ import axios from 'axios'
 import { MessageBox, Notification } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import jwt_decode from 'jwt-decode'
 
 // create an axios instance
 const service = axios.create({
@@ -12,13 +13,11 @@ const service = axios.create({
 
 // request interceptor
 service.interceptors.request.use(
-  config => {
+  async config => {
     // do something before request is sent
 
+    // 设置token
     if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
       config.headers['X-Token'] = getToken()
     }
     return config
@@ -33,24 +32,31 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   /**
-   * If you want to get http information such as headers or status
-   * Please return  response => response
+   * 如果您想获得http信息，如标头或状态 return  response => response
+   * 自定义代码确定请求状态
   */
-
-  /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
-   */
-  response => {
+  async response => {
     const res = response.data
     // 如果是文件下载
     if (response.headers.requesttype && response.headers.requesttype === 'file') {
       return response
     }
     // 请求正常 res.code == 200
-    console.log(res)
     if (res.code === 200) return res
+
+    // 请求异常 res.code == 10103 Token过期，自动续期重新发送请求
+    if (res.code === 10103) {
+      // 判断当前是否过期
+      const decodedToken = jwt_decode(store.getters.token)
+      const decodedRefreshToken = jwt_decode(store.getters.refreshToken)
+      const currentTime = Date.now() / 1000 // 将毫秒转成秒
+      // access token 过期 且 refresh token 未过期，发送续期请求，获取新 access token，并重新发起请求
+      if (currentTime > decodedToken.exp && currentTime <= decodedRefreshToken.exp) {
+        await store.dispatch('user/refreshToken')
+        return service.request(response.config) // 重新发起请求
+      }
+    }
+
     // 请求异常 res.code != 200
     Notification({
       title: '失败',
@@ -58,16 +64,17 @@ service.interceptors.response.use(
       type: 'error',
       duration: 5 * 1000
     })
+
     // 登陆失效
     if (res.code === 10002 || res.code === 10008 || res.code === 10009) {
       // 重新登陆
       toReLogin()
     }
+
     // 返回错误
     return Promise.reject(new Error(res.msg || '服务异常'))
   },
   error => {
-    console.log('request api error')
     console.error('err' + error) // for debug
     Notification({
       title: '失败',

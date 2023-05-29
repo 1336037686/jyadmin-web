@@ -133,8 +133,7 @@ const actions = {
       })
     })
   },
-
-  // remove token
+  // 清除所有token信息，以及相关权限信息
   resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')

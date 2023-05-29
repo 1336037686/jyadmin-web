@@ -12,9 +12,7 @@ export function refreshToken(data) {
   return request({
     url: '/api/auth/refreshToken',
     method: 'post',
-    headers: {
-      'X-RefreshToken': data
-    }
+    headers: { 'X-RefreshToken': data }
   })
 }
 
