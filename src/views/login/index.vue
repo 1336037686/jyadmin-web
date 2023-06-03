@@ -1,12 +1,12 @@
 <template>
   <div class="login-container" :style="{ backgroundImage: 'url(' + loginBasicSettings.sysLoginWallpaper + ')' }">
     <el-row style="height: auto;margin-top: 250px">
-      <el-col :span="16" :offset="1" v-if="loginBasicSettings.sysLoginOpenHtmlEnable === '1'" v-html="loginBasicSettings.sysLoginOpenHtml"></el-col>
+      <el-col v-if="loginBasicSettings.sysLoginOpenHtmlEnable === '1'" :span="16" :offset="1" v-html="loginBasicSettings.sysLoginOpenHtml" />
       <el-col :span="5" :offset="loginBasicSettings.sysLoginOpenHtmlEnable === '1' ? 1 : 18">
         <el-card>
           <el-form ref="loginForm" :model="loginForm" :rules="loginRules" autocomplete="on" label-position="left">
             <div class="title-container">
-              <h3 class="title"> {{loginBasicSettings.sysSiteName}} </h3>
+              <h3 class="title"> {{ loginBasicSettings.sysSiteName }} </h3>
             </div>
             <el-form-item prop="username">
               <span class="svg-container">
@@ -63,13 +63,14 @@
         </el-card>
       </el-col>
     </el-row>
-    <div class="div_foot" style="color: white" v-html="loginBasicSettings.sysCopyright"></div>
+    <div class="div_foot" style="color: white" v-html="loginBasicSettings.sysCopyright" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { guid } from '@/utils'
+import { guid, deepClone } from '@/utils'
+import { encryptByDES } from '@/utils/encry-util'
 export default {
   name: 'Login',
   data() {
@@ -197,7 +198,10 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
+          // 拷贝表单
+          const cloneLoginForm = deepClone(this.loginForm)
+          cloneLoginForm.password = encryptByDES(cloneLoginForm.password)
+          this.$store.dispatch('user/login', cloneLoginForm)
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
