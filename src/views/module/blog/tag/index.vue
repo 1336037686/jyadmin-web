@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px">
     <el-card class="box-card" shadow="always">
-      <el-form :inline="true" v-show="queryFormVisiable" :model="queryForm" size="mini" label-width="100px">
+      <el-form v-show="queryFormVisiable" :inline="true" :model="queryForm" size="mini" label-width="100px">
         <el-form-item label="标签名称：">
           <el-input v-model="queryForm.name" placeholder="标签名称" />
         </el-form-item>
@@ -44,9 +44,9 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column type="index" width="80" label="序号" align="center" />
-        <el-table-column prop="name" label="标签名称"  align="center" />
-        <el-table-column prop="code" label="标签编码"  align="center" />
-        <el-table-column prop="createTime" label="创建时间" align="center"  />
+        <el-table-column prop="name" label="标签名称" align="center" />
+        <el-table-column prop="code" label="标签编码" align="center" />
+        <el-table-column prop="createTime" label="创建时间" align="center" />
         <el-table-column prop="intro" label="标签简介" align="center" width="600" />
       </el-table>
     </el-card>
@@ -63,12 +63,13 @@
       />
     </div>
 
-    <jy-tag-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
+    <jy-tag-form :id="editData.id" :title="editData.title" :idempotent-token="idempotentToken" :visible.sync="editData.visiable" />
     <jy-tag-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
   </div>
 </template>
 
 <script>
+import { getIdempotentToken } from '@/api/system/auth/jy-auth'
 import jyTagApi from '@/api/module/jy-tag'
 import JyTagForm from '@/views/module/blog/tag/tag-form'
 import JyTagDetail from '@/views/module/blog/tag/tag-detail'
@@ -76,6 +77,7 @@ export default {
   components: { JyTagDetail, JyTagForm },
   data() {
     return {
+      idempotentToken: null,
       queryFormVisiable: true,
       queryForm: {
         name: '',
@@ -139,18 +141,24 @@ export default {
       this.showData.visiable = true
     },
     handleCreate() {
-      this.editData.title = '新增标签'
-      this.editData.id = null
-      this.editData.visiable = true
+      getIdempotentToken().then(res => {
+        this.idempotentToken = res.data
+        this.editData.title = '新增标签'
+        this.editData.id = null
+        this.editData.visiable = true
+      })
     },
     handleUpdate() {
       if (!this.selectData.current) {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.editData.title = '修改标签'
-      this.editData.id = this.selectData.current.id
-      this.editData.visiable = true
+      getIdempotentToken().then(res => {
+        this.idempotentToken = res.data
+        this.editData.title = '修改标签'
+        this.editData.id = this.selectData.current.id
+        this.editData.visiable = true
+      })
     },
     handleRemove() {
       const selectRows = this.$refs.table.selection

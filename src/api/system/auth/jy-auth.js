@@ -36,3 +36,10 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function getIdempotentToken() {
+  return request({
+    url: '/api/auth/idempotent-token',
+    method: 'get'
+  })
+}

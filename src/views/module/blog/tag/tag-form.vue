@@ -36,6 +36,10 @@ export default {
       type: String,
       default: 'Demo'
     },
+    idempotentToken: {
+      type: String,
+      default: null
+    },
     id: {
       type: String,
       default: null
@@ -96,34 +100,28 @@ export default {
       })
     },
     handleCreate() {
-      jyTagApi.add(this.form).then(response => {
+      jyTagApi.add(this.form, this.idempotentToken).then(response => {
         this.$notify.success({ title: '成功', message: '添加成功' })
         this.$parent.getList()
         this.tmpVisible = false
 
         this.resetForm('form')
         this.form.id = null
-      }).catch(e => {
-        this.$notify.error({ title: '失败', message: '添加失败' })
       })
     },
     handleUpdate() {
-      jyTagApi.update(this.form).then(response => {
+      jyTagApi.update(this.form, this.idempotentToken).then(response => {
         this.$notify.success({ title: '成功', message: '修改成功' })
         this.$parent.getList()
         this.tmpVisible = false
 
         this.resetForm('form')
         this.form.id = null
-      }).catch(e => {
-        this.$notify.error({ title: '失败', message: '修改失败' })
       })
     },
     getById(id) {
       jyTagApi.getById(id).then(response => {
         this.form = response.data
-      }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
       })
     },
     resetForm(formName) {

@@ -16,26 +16,29 @@ export default {
     })
   },
 
-  add(data) {
+  add(data, idempotentToken) {
     return request({
       url: '/api/tag/create',
       method: 'post',
+      params: { 'idempotent-token': idempotentToken },
       data
     })
   },
 
-  update(data) {
+  update(data, idempotentToken) {
     return request({
       url: '/api/tag/update',
       method: 'put',
+      params: { 'idempotent-token': idempotentToken },
       data
     })
   },
 
-  remove(data) {
+  remove(data, idempotentToken) {
     return request({
       url: '/api/tag/remove',
       method: 'delete',
+      params: { 'idempotent-token': idempotentToken },
       data
     })
   }
