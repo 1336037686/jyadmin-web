@@ -1,12 +1,17 @@
 import basicSettingApi from '@/api/system/basic-setting/jy-basic-settings'
-import { getBasicSettings, setBasicSettings } from '@/utils/basic-settings'
+import { getRsaPublicKey } from '@/api/system/auth/jy-auth'
+import { getBasicSettings, setBasicSettings, getLocalStorageRsaPublicKey, setLocalStorageRsaPublicKey } from '@/utils/basic-settings'
 const state = {
-  settings: getBasicSettings()
+  settings: getBasicSettings(),
+  rsaPublicKey: getLocalStorageRsaPublicKey()
 }
 
 const mutations = {
   SET_SETTINGS: (state, settings) => {
     state.settings = settings
+  },
+  SET_RSA_PUBLIC_KEY: (state, rsaPublicKey) => {
+    state.rsaPublicKey = rsaPublicKey
   }
 }
 
@@ -22,6 +27,19 @@ const actions = {
         commit('SET_SETTINGS', settings)
         // 保存到localstorage 中，防止vuex刷新状态消失
         setBasicSettings(settings)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getRsaPublicKey({ commit }) {
+    return new Promise((resolve, reject) => {
+      getRsaPublicKey().then(response => {
+        commit('SET_RSA_PUBLIC_KEY', response.data)
+        // 保存到localstorage 中，防止vuex刷新状态消失
+        setLocalStorageRsaPublicKey(response.data)
         resolve()
       }).catch(error => {
         reject(error)

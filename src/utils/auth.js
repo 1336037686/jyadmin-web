@@ -1,5 +1,7 @@
 
+// access token
 const TokenKey = 'Admin-Token'
+// refresh token
 const RefreshTokenKey = 'Admin-Refresh-Token'
 
 export function getToken() {
@@ -25,3 +27,4 @@ export function setRefreshToken(refreshToken) {
 export function removeRefreshToken() {
   return localStorage.removeItem(RefreshTokenKey)
 }
+

@@ -70,7 +70,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { guid, deepClone } from '@/utils'
-import { encryptByDES } from '@/utils/encry-util'
+import { encryptByRSA } from '@/utils/rsa-util'
 export default {
   name: 'Login',
   data() {
@@ -152,8 +152,9 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    loadBasicSettings() {
-      this.$store.dispatch('basicSettings/getBasicSettings').then(() => {
+    async loadBasicSettings() {
+      await this.$store.dispatch('basicSettings/getRsaPublicKey')
+      await this.$store.dispatch('basicSettings/getBasicSettings').then(() => {
         this.loginBasicSettings.sysSiteName = this.basicSettings['sys_site_name']
         this.loginBasicSettings.sysLogo = this.basicSettings['sys_logo']
         this.loginBasicSettings.sysLoginWallpaper = this.basicSettings['sys_login_wallpaper']
@@ -200,7 +201,7 @@ export default {
           this.loading = true
           // 拷贝表单
           const cloneLoginForm = deepClone(this.loginForm)
-          cloneLoginForm.password = encryptByDES(cloneLoginForm.password)
+          cloneLoginForm.password = encryptByRSA(cloneLoginForm.password)
           this.$store.dispatch('user/login', cloneLoginForm)
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
