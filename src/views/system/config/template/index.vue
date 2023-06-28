@@ -4,7 +4,7 @@
       <el-col :span="8" style="padding-right: 15px">
         <el-card class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 配置模板</span>
+            <span><i class="el-icon-caret-right" /> 配置模板</span>
             <el-row style="float: right">
               <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
               <el-button icon="el-icon-refresh" circle size="mini" @click="getConfigTemplateList()" />
@@ -21,10 +21,10 @@
               </el-form-item>
             </el-form>
             <div>
-              <el-button type="primary" size="mini"  icon="el-icon-view" @click="configTemplateHandleShow"></el-button>
-              <el-button type="success" size="mini"  icon="el-icon-plus" @click="configTemplateHandleCreate"></el-button>
-              <el-button type="warning" size="mini"  icon="el-icon-edit-outline" @click="configTemplateHandleUpdate"></el-button>
-              <el-button type="danger"  size="mini" icon="el-icon-delete" @click="configTemplateHandleRemove"></el-button>
+              <el-button type="primary" size="mini" icon="el-icon-view" @click="configTemplateHandleShow" />
+              <el-button type="success" size="mini" icon="el-icon-plus" @click="configTemplateHandleCreate" />
+              <el-button type="warning" size="mini" icon="el-icon-edit-outline" @click="configTemplateHandleUpdate" />
+              <el-button type="danger" size="mini" icon="el-icon-delete" @click="configTemplateHandleRemove" />
             </div>
           </div>
           <el-table
@@ -39,8 +39,8 @@
             :header-cell-style="{background:'#FAFAFA'}"
             @row-click="configTemplateHandleTableRowClick"
           >
-            <el-table-column type="index" label="序号" align="center" width="80"/>
-            <el-table-column prop="name" label="模板名称" align="center" show-overflow-tooltip  />
+            <el-table-column type="index" label="序号" align="center" width="80" />
+            <el-table-column prop="name" label="模板名称" align="center" show-overflow-tooltip />
             <el-table-column prop="code" label="模板编码" align="center" show-overflow-tooltip />
           </el-table>
         </el-card>
@@ -48,16 +48,16 @@
       <el-col :span="16">
         <el-card v-if="!configTemplateSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 模板明细</span>
+            <span><i class="el-icon-caret-right" /> 模板明细</span>
           </div>
           <div>
-            <el-empty description="请先指定某个模板"></el-empty>
-<!--            <el-alert title="请先指定某个模板" type="info" :closable="false" />-->
+            <el-empty description="请先指定某个模板" />
+            <!--            <el-alert title="请先指定某个模板" type="info" :closable="false" />-->
           </div>
         </el-card>
         <el-card v-if="configTemplateSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 模板明细</span>
+            <span><i class="el-icon-caret-right" /> 模板明细</span>
           </div>
           <div>
             <el-form :inline="true" label-width="90px" size="mini">
@@ -75,16 +75,16 @@
             empty-text="暂无数据"
             :header-cell-style="{background:'#FAFAFA'}"
           >
-            <el-table-column type="index" label="序号"  width="80" align="center"/>
+            <el-table-column type="index" label="序号" width="80" align="center" />
             <el-table-column prop="name" label="字段名称" width="200" align="center" show-overflow-tooltip />
             <el-table-column prop="code" label="字段编码" width="200" align="center" show-overflow-tooltip />
-            <el-table-column prop="type" label="字段类型" width="200" align="center" show-overflow-tooltip >
+            <el-table-column prop="type" label="字段类型" width="200" align="center" show-overflow-tooltip>
               <template slot-scope="scope">
-                {{getNameByCode(typeDict, scope.row.type)}}
+                {{ getNameByCode(typeDict, scope.row.type) }}
               </template>
             </el-table-column>
             <el-table-column prop="defaultValue" label="缺省值" width="200" align="center" show-overflow-tooltip />
-            <el-table-column prop="sort" label="排序" width="100"  align="center" show-overflow-tooltip />
+            <el-table-column prop="sort" label="排序" width="100" align="center" show-overflow-tooltip />
             <el-table-column prop="comment" label="注释" align="center" show-overflow-tooltip />
           </el-table>
         </el-card>
@@ -100,13 +100,11 @@
 
 <script>
 import configTemplateApi from '@/api/system/config/jy-config-template.js'
-import permission from '@/directive/permission/index.js' // 权限判断指令
 import JyConfigTemplateForm from '@/views/system/config/template/config-template-form'
 import JyConfigTemplateDetail from '@/views/system/config/template/config-template-detail'
 import JyConfigTemplateInfoForm from '@/views/system/config/template/config-template-info-form'
 
 export default {
-  directives: { permission },
   components: { JyConfigTemplateForm, JyConfigTemplateDetail, JyConfigTemplateInfoForm },
   data() {
     return {
@@ -159,7 +157,7 @@ export default {
           return
         }
 
-        let firstRow = this.configTemplateTableData.records[0]
+        const firstRow = this.configTemplateTableData.records[0]
         this.configTemplateSelectData.current = firstRow
         this.$refs.table.setCurrentRow(firstRow)
         this.configTemplateTableData.loading = false

@@ -65,10 +65,8 @@
 import dictApi from '@/api/system/datadict/jy-dict'
 import DictForm from '@/views/system/datadict/cascade-dict/dict-form'
 import DictDetail from '@/views/system/datadict/cascade-dict/dict-detail'
-import permission from '@/directive/permission' // 权限判断指令
 export default {
   name: 'Dict',
-  directives: { permission },
   components: { DictDetail, DictForm },
   data() {
     return {

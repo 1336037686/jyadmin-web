@@ -48,12 +48,12 @@
             <el-table-column type="index" width="55" label="序号" align="center" />
             <el-table-column prop="name" align="center" label="角色名称" show-overflow-tooltip />
             <el-table-column prop="code" align="center" label="角色编码" show-overflow-tooltip />
-            <el-table-column prop="apiPermission" label="角色接口权限" align="center" width="220"  show-overflow-tooltip>
+            <el-table-column prop="apiPermission" label="角色接口权限" align="center" width="220" show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-tag>{{ getNameByCode(apiPermissionOptions, scope.row.apiPermission) }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="status" align="center" label="状态" width="100" >
+            <el-table-column prop="status" align="center" label="状态" width="100">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> 启 用 </el-tag>
                 <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> 禁 用 </el-tag>
@@ -123,9 +123,7 @@ import roleApi from '@/api/system/role/jy-role'
 import menuApi from '@/api/system/permission/jy-permission-menu'
 import JyRoleDetail from '@/views/system/role/jy-role-detail'
 import JyRoleForm from '@/views/system/role/jy-role-form'
-import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
-  directives: { permission },
   components: { JyRoleForm, JyRoleDetail },
   data() {
     return {

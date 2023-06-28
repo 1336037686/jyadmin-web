@@ -61,6 +61,10 @@ Vue.use(VForm) // 全局注册VForm(同时注册了v-form-designer和v-form-rend
 import dict from '@/utils/dict'
 Vue.use(dict)
 
+// 权限判断
+import permission from '@/directive/permission/index.js'
+Vue.use(permission)
+
 // register global utility filters
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

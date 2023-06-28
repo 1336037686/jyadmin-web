@@ -4,7 +4,7 @@
       <el-col :span="7" style="padding-right: 15px">
         <el-card class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 配置模板列表</span>
+            <span><i class="el-icon-caret-right" /> 配置模板列表</span>
             <el-row style="float: right">
               <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
               <el-button icon="el-icon-refresh" circle size="mini" @click="getConfigTemplateList()" />
@@ -33,8 +33,8 @@
             :header-cell-style="{background:'#FAFAFA'}"
             @row-click="configTemplateRowClick"
           >
-            <el-table-column type="index" label="序号" align="center" width="80"/>
-            <el-table-column prop="name" label="模板名称" align="center" show-overflow-tooltip  />
+            <el-table-column type="index" label="序号" align="center" width="80" />
+            <el-table-column prop="name" label="模板名称" align="center" show-overflow-tooltip />
             <el-table-column prop="code" label="模板编码" align="center" show-overflow-tooltip />
           </el-table>
         </el-card>
@@ -42,23 +42,23 @@
       <el-col :span="17">
         <el-card v-if="!configTemplateSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 具体配置</span>
+            <span><i class="el-icon-caret-right" /> 具体配置</span>
           </div>
           <div>
-            <el-empty description="请先指定某个模板"></el-empty>
+            <el-empty description="请先指定某个模板" />
             <!--            <el-alert title="请先指定某个模板" type="info" :closable="false" />-->
           </div>
         </el-card>
         <el-card v-if="configTemplateSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 具体配置</span>
+            <span><i class="el-icon-caret-right" /> 具体配置</span>
           </div>
           <div>
             <el-form :inline="true" label-width="90px" size="mini">
               <el-form-item>
                 <el-button type="success" size="mini" icon="el-icon-plus" @click="configDetailCreate">新 增</el-button>
                 <el-button type="warning" size="mini" icon="el-icon-edit-outline" @click="configDetailUpdate">修 改</el-button>
-                <el-button type="danger"  size="mini" icon="el-icon-delete" @click="configDetailRemove">删 除</el-button>
+                <el-button type="danger" size="mini" icon="el-icon-delete" @click="configDetailRemove">删 除</el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -75,10 +75,10 @@
             :header-cell-style="{background:'#FAFAFA'}"
             @row-click="configDetailTableRowClick"
           >
-            <el-table-column type="index" label="序号"  width="80" align="center" />
+            <el-table-column type="index" label="序号" width="80" align="center" />
             <el-table-column prop="name" label="配置名称" align="center" show-overflow-tooltip />
             <el-table-column prop="code" label="配置编码" align="center" show-overflow-tooltip />
-            <el-table-column prop="status" label="是否启用" align="center" show-overflow-tooltip >
+            <el-table-column prop="status" label="是否启用" align="center" show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.status"
@@ -110,12 +110,10 @@
 <script>
 import configTemplateApi from '@/api/system/config/jy-config-template.js'
 import configDetailApi from '@/api/system/config/jy-config-detail.js'
-import permission from '@/directive/permission/index.js' // 权限判断指令
 import JyConfigDetailForm from '@/views/system/config/detail/config-detail-form'
 import JyConfigDetailDetail from '@/views/system/config/detail/config-detail-detail'
 
 export default {
-  directives: { permission },
   components: { JyConfigDetailForm, JyConfigDetailDetail },
   data() {
     return {
@@ -167,7 +165,7 @@ export default {
           return
         }
 
-        let firstRow = this.configTemplateTableData.records[0]
+        const firstRow = this.configTemplateTableData.records[0]
         this.configTemplateSelectData.current = firstRow
         this.$refs.table.setCurrentRow(firstRow)
         this.configTemplateTableData.loading = false

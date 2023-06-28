@@ -47,17 +47,17 @@
         <el-table-column prop="phone" label="接收人" align="center" show-overflow-tooltip />
         <el-table-column prop="source" label="发送平台" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
-            {{ getNameByCode(storageTypeOptions, scope.row.source)}}
+            {{ getNameByCode(storageTypeOptions, scope.row.source) }}
           </template>
         </el-table-column>
         <el-table-column prop="relevance" label="业务标识" align="center" show-overflow-tooltip />
-        <el-table-column prop="content" label="短信内容"  width="500" align="center" show-overflow-tooltip />
+        <el-table-column prop="content" label="短信内容" width="500" align="center" show-overflow-tooltip />
         <el-table-column prop="createTime" label="创建时间" align="center" />
-<!--        <el-table-column label="操作" width="120" align="center">-->
-<!--          <template slot-scope="scope">-->
-<!--            <el-button type="text" @click="preview(scope.row)">查看</el-button>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
+        <!--        <el-table-column label="操作" width="120" align="center">-->
+        <!--          <template slot-scope="scope">-->
+        <!--            <el-button type="text" @click="preview(scope.row)">查看</el-button>-->
+        <!--          </template>-->
+        <!--        </el-table-column>-->
       </el-table>
     </el-card>
 
@@ -73,20 +73,18 @@
       />
     </div>
 
-<!--    <el-drawer-->
-<!--      :title="showData.title"-->
-<!--      :visible.sync="showData.visiable"-->
-<!--      :before-close="handleDrawerClose">-->
-<!--      <div v-html="showData.data.body" style="margin: 20px"></div>-->
-<!--    </el-drawer>-->
+    <!--    <el-drawer-->
+    <!--      :title="showData.title"-->
+    <!--      :visible.sync="showData.visiable"-->
+    <!--      :before-close="handleDrawerClose">-->
+    <!--      <div v-html="showData.data.body" style="margin: 20px"></div>-->
+    <!--    </el-drawer>-->
   </div>
 </template>
 
 <script>
 import api from '@/api/system/sms/jy-sms-record'
-import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
-  directives: { permission },
   data() {
     return {
       storageTypeOptions: [],

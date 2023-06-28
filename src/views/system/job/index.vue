@@ -100,12 +100,10 @@
 
 <script>
 import quartzJobApi from '@/api/system/job/jy-quartz-job'
-import permission from '@/directive/permission/index.js'
 import JobDetail from '@/views/system/job/job-detail'
 import JobForm from '@/views/system/job/job-form'
 import JobLog from '@/views/system/job/job-log' // 权限判断指令
 export default {
-  directives: { permission },
   components: { JobLog, JobForm, JobDetail },
   data() {
     return {

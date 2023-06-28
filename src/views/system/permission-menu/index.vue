@@ -26,7 +26,7 @@
       <el-col :span="18">
         <el-card class="box-card" shadow="always" style="margin-top: 5px">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 菜单列表</span>
+            <span><i class="el-icon-caret-right" /> 菜单列表</span>
             <el-row style="float: right">
               <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
               <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
@@ -64,27 +64,27 @@
             <el-table-column prop="url" label="路由地址" align="center" :show-overflow-tooltip="true" />
             <el-table-column prop="path" label="组件路径" align="center" :show-overflow-tooltip="true" />
             <el-table-column prop="link" label="外链" width="80" align="center">
-                <template slot-scope="scope">
-                  <el-tag v-if="scope.row.link === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success"/> 是 </el-tag>
-                  <el-tag v-if="scope.row.link === 0" size="mini" effect="plain" type="danger" > <i class="el-icon-error"/> 否 </el-tag>
-                </template>
+              <template slot-scope="scope">
+                <el-tag v-if="scope.row.link === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success" /> 是 </el-tag>
+                <el-tag v-if="scope.row.link === 0" size="mini" effect="plain" type="danger"> <i class="el-icon-error" /> 否 </el-tag>
+              </template>
             </el-table-column>
             <el-table-column prop="cache" label="缓存" width="80" align="center">
               <template slot-scope="scope">
-                <el-tag v-if="scope.row.cache === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success"/> 是 </el-tag>
-                <el-tag v-if="scope.row.cache === 0" size="mini" effect="plain" type="danger" > <i class="el-icon-error"/> 否 </el-tag>
+                <el-tag v-if="scope.row.cache === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success" /> 是 </el-tag>
+                <el-tag v-if="scope.row.cache === 0" size="mini" effect="plain" type="danger"> <i class="el-icon-error" /> 否 </el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="visiable" label="可见" width="80" align="center">
               <template slot-scope="scope">
-                <el-tag v-if="scope.row.visiable === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success"/> 是 </el-tag>
-                <el-tag v-if="scope.row.visiable === 0" size="mini" effect="plain" type="danger" > <i class="el-icon-error"/> 否 </el-tag>
+                <el-tag v-if="scope.row.visiable === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success" /> 是 </el-tag>
+                <el-tag v-if="scope.row.visiable === 0" size="mini" effect="plain" type="danger"> <i class="el-icon-error" /> 否 </el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="status" label="状态" width="80" align="center">
               <template slot-scope="scope">
-                <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success"/> 启 用</el-tag>
-                <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> <i class="el-icon-error"/> 禁 用</el-tag>
+                <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success" /> 启 用</el-tag>
+                <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> <i class="el-icon-error" /> 禁 用</el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="sort" label="排序" width="80" align="center" />
@@ -101,7 +101,7 @@
           style="margin-top: 5px"
         >
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 接口分配</span>
+            <span><i class="el-icon-caret-right" /> 接口分配</span>
             <el-button v-permission="['menu:addAction']" style="float: right;" size="mini" type="primary" icon="el-icon-circle-check" @click="handleUpdateMenuActions">保存</el-button>
           </div>
 
@@ -133,9 +133,7 @@ import menuApi from '@/api/system/permission/jy-permission-menu'
 import actionApi from '@/api/system/permission/jy-permission-action'
 import JyPermissionMenuForm from '@/views/system/permission-menu/permission-menu-form'
 import JyPermissionMenuDetail from '@/views/system/permission-menu/permission-menu-detail'
-import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
-  directives: { permission },
   components: { JyPermissionMenuDetail, JyPermissionMenuForm },
   data() {
     return {

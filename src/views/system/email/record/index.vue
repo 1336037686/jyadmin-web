@@ -54,7 +54,7 @@
         <el-table-column prop="receiver" label="接收人" align="center" show-overflow-tooltip />
         <el-table-column prop="source" label="发送平台" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
-            {{ getNameByCode(storageTypeOptions, scope.row.source)}}
+            {{ getNameByCode(storageTypeOptions, scope.row.source) }}
           </template>
         </el-table-column>
         <el-table-column prop="relevance" label="业务标识" align="center" show-overflow-tooltip />
@@ -83,17 +83,16 @@
     <el-drawer
       :title="showData.title"
       :visible.sync="showData.visiable"
-      :before-close="handleDrawerClose">
-      <div v-html="showData.data.body" style="margin: 20px"></div>
+      :before-close="handleDrawerClose"
+    >
+      <div style="margin: 20px" v-html="showData.data.body" />
     </el-drawer>
   </div>
 </template>
 
 <script>
 import api from '@/api/system/email/jy-email-record'
-import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
-  directives: { permission },
   data() {
     return {
       storageTypeOptions: [],

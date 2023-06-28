@@ -5,15 +5,15 @@
       <el-col :span="6" style="padding-right: 15px">
         <el-card class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 接口分组</span>
+            <span><i class="el-icon-caret-right" /> 接口分组</span>
           </div>
           <div>
             <el-form :inline="true" label-width="100px" size="mini">
               <el-form-item>
-                <el-button v-permission="['action:api-show']" type="primary" size="mini"  icon="el-icon-view" @click="groupHandleShow"></el-button>
-                <el-button v-permission="['action:api-add']" type="success" size="mini"  icon="el-icon-plus" @click="groupHandleCreate"></el-button>
-                <el-button v-permission="['action:api-update']" type="warning" size="mini"  icon="el-icon-edit-outline" @click="groupHandleUpdate"></el-button>
-                <el-button v-permission="['action:api-delete']" type="danger"  size="mini" icon="el-icon-delete" @click="groupHandleRemove"></el-button>
+                <el-button v-permission="['action:api-show']" type="primary" size="mini" icon="el-icon-view" @click="groupHandleShow" />
+                <el-button v-permission="['action:api-add']" type="success" size="mini" icon="el-icon-plus" @click="groupHandleCreate" />
+                <el-button v-permission="['action:api-update']" type="warning" size="mini" icon="el-icon-edit-outline" @click="groupHandleUpdate" />
+                <el-button v-permission="['action:api-delete']" type="danger" size="mini" icon="el-icon-delete" @click="groupHandleRemove" />
               </el-form-item>
             </el-form>
           </div>
@@ -29,8 +29,8 @@
             :header-cell-style="{background:'#FAFAFA'}"
             @row-click="groupHandleTableRowClick"
           >
-            <el-table-column type="index" label="序号" align="center" width="80"/>
-            <el-table-column prop="name" label="分组名称" show-overflow-tooltip  />
+            <el-table-column type="index" label="序号" align="center" width="80" />
+            <el-table-column prop="name" label="分组名称" show-overflow-tooltip />
             <el-table-column prop="code" label="标识" align="center" width="100" show-overflow-tooltip />
           </el-table>
         </el-card>
@@ -38,16 +38,16 @@
       <el-col :span="18">
         <el-card v-if="!groupSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 接口列表</span>
+            <span><i class="el-icon-caret-right" /> 接口列表</span>
           </div>
           <div>
-            <el-empty description="请先指定某个分组"></el-empty>
-<!--            <el-alert title="请先指定某个分组" type="info" :closable="false" />-->
+            <el-empty description="请先指定某个分组" />
+            <!--            <el-alert title="请先指定某个分组" type="info" :closable="false" />-->
           </div>
         </el-card>
         <el-card v-if="groupSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 接口列表</span>
+            <span><i class="el-icon-caret-right" /> 接口列表</span>
             <el-row style="float: right">
               <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
               <el-button icon="el-icon-refresh" circle size="mini" @click="getActionList()" />
@@ -70,7 +70,7 @@
               <el-button v-permission="['action:group-show']" type="primary" size="mini" icon="el-icon-view" @click="actionHandleShow">查 看</el-button>
               <el-button v-permission="['action:group-add']" type="success" size="mini" icon="el-icon-plus" @click="actionHandleCreate">新 增</el-button>
               <el-button v-permission="['action:group-update']" type="warning" size="mini" icon="el-icon-edit-outline" @click="actionHandleUpdate">修 改</el-button>
-              <el-button v-permission="['action:group-delete']" type="danger"  size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
+              <el-button v-permission="['action:group-delete']" type="danger" size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
             </div>
           </div>
 
@@ -90,7 +90,7 @@
             <el-table-column type="index" width="55" label="序号" align="center" />
             <el-table-column prop="name" label="接口名称" width="200" align="center" show-overflow-tooltip />
             <el-table-column prop="code" label="权限标识" width="200" align="center" show-overflow-tooltip />
-            <el-table-column prop="sort" label="排序" align="center" width="80"  />
+            <el-table-column prop="sort" label="排序" align="center" width="80" />
             <el-table-column prop="status" label="状态" width="150" align="center">
               <template slot-scope="scope">
                 <el-switch
@@ -105,7 +105,7 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" width="220" align="center"/>
+            <el-table-column prop="createTime" label="创建时间" width="220" align="center" />
             <el-table-column prop="description" label="描述" :show-overflow-tooltip="true" />
           </el-table>
         </el-card>
@@ -137,11 +137,9 @@ import JyPermissionGroupForm from '@/views/system/permission-action/permission-g
 import JyPermissionGroupDetail from '@/views/system/permission-action/permission-group-detail'
 import JyPermissionActionForm from '@/views/system/permission-action/permission-action-form'
 import JyPermissionActionDetail from '@/views/system/permission-action/permission-action-detail'
-import permission from '@/directive/permission/index.js' // 权限判断指令
 
 export default {
   name: 'JyPermissionGroup',
-  directives: { permission },
   components: { JyPermissionActionDetail, JyPermissionActionForm, JyPermissionGroupDetail, JyPermissionGroupForm },
   data() {
     return {
@@ -160,7 +158,7 @@ export default {
         id: null
       },
       groupSelectData: {
-        current: null,
+        current: null
       },
       // action
       queryFormVisiable: true,
@@ -205,7 +203,7 @@ export default {
           return
         }
 
-        let firstRow = this.groupTableData.records[0]
+        const firstRow = this.groupTableData.records[0]
         this.groupSelectData.current = firstRow
         this.$refs.table.setCurrentRow(firstRow)
         this.groupTableData.loading = false

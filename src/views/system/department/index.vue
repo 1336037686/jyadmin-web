@@ -49,10 +49,10 @@
             <el-table-column type="selection" width="60" align="center" />
             <el-table-column prop="name" label="部门名称" :show-overflow-tooltip="true" />
             <el-table-column prop="code" label="部门编码" align="center" :show-overflow-tooltip="true" />
-            <el-table-column prop="status" label="状态" align="center" :show-overflow-tooltip="true" >
+            <el-table-column prop="status" label="状态" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">
-                <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success"/> 启 用</el-tag>
-                <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> <i class="el-icon-error"/> 禁 用</el-tag>
+                <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success" /> 启 用</el-tag>
+                <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> <i class="el-icon-error" /> 禁 用</el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="sort" label="排序" align="center" :show-overflow-tooltip="true" />
@@ -71,9 +71,7 @@
 import deptApi from '@/api/system/department/jy-department'
 import DeptForm from '@/views/system/department/dept-form'
 import DeptDetail from '@/views/system/department/dept-detail'
-import permission from '@/directive/permission' // 权限判断指令
 export default {
-  directives: { permission },
   components: { DeptDetail, DeptForm },
   data() {
     return {

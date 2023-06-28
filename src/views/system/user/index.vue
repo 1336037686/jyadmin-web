@@ -26,7 +26,7 @@
           >
             <span slot-scope="{ node, data }" class="custom-tree-node">
               <span v-if="data.type === 'showAll'" style="font-size: 14px;color: #4A9FF9"><b>{{ node.label }}</b></span>
-              <span style="font-size: 14px;" v-else>{{ node.label }}</span>
+              <span v-else style="font-size: 14px;">{{ node.label }}</span>
             </span>
           </el-tree>
         </el-card>
@@ -41,7 +41,7 @@
               <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
             </el-row>
           </div>
-          <div >
+          <div>
             <el-form v-show="queryFormVisiable" :inline="true" :model="queryForm" size="mini" label-width="80px">
               <el-form-item label="用户名：">
                 <el-input v-model="queryForm.username" placeholder="用户名" />
@@ -86,7 +86,7 @@
             <el-table-column prop="phone" label="电话" align="center" />
             <el-table-column prop="roles" label="当前角色" align="center">
               <template slot-scope="scope">
-                {{scope.row.roleNames.join('、')}}
+                {{ scope.row.roleNames.join('、') }}
               </template>
             </el-table-column>
             <el-table-column prop="departmentName" label="所属部门" align="center" show-overflow-tooltip />
@@ -134,9 +134,7 @@ import JyUserDetail from '@/views/system/user/jy-user-detail'
 import JyUserForm from '@/views/system/user/jy-user-form'
 import JyUserRole from '@/views/system/user/jy-user-role'
 import JyUserPassword from '@/views/system/user/jy-user-password'
-import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
-  directives: { permission },
   components: { JyUserPassword, JyUserRole, JyUserForm, JyUserDetail },
   data() {
     return {

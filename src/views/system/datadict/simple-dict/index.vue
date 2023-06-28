@@ -5,7 +5,7 @@
       <el-col :span="8" style="padding-right: 15px">
         <el-card class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 通用字典</span>
+            <span><i class="el-icon-caret-right" /> 通用字典</span>
             <el-row style="float: right">
               <el-button icon="el-icon-search" circle size="mini" @click="() => this.groupQueryFormVisiable = !this.groupQueryFormVisiable" />
               <el-button icon="el-icon-refresh" circle size="mini" @click="getGroupList()" />
@@ -22,10 +22,10 @@
               </el-form-item>
             </el-form>
             <div>
-              <el-button type="primary" size="mini"  icon="el-icon-view" @click="groupHandleShow"></el-button>
-              <el-button type="success" size="mini"  icon="el-icon-plus" @click="groupHandleCreate"></el-button>
-              <el-button type="warning" size="mini"  icon="el-icon-edit-outline" @click="groupHandleUpdate"></el-button>
-              <el-button type="danger"  size="mini" icon="el-icon-delete" @click="groupHandleRemove"></el-button>
+              <el-button type="primary" size="mini" icon="el-icon-view" @click="groupHandleShow" />
+              <el-button type="success" size="mini" icon="el-icon-plus" @click="groupHandleCreate" />
+              <el-button type="warning" size="mini" icon="el-icon-edit-outline" @click="groupHandleUpdate" />
+              <el-button type="danger" size="mini" icon="el-icon-delete" @click="groupHandleRemove" />
             </div>
           </div>
           <el-table
@@ -40,8 +40,8 @@
             :header-cell-style="{background:'#FAFAFA'}"
             @row-click="groupHandleTableRowClick"
           >
-            <el-table-column type="index" label="序号" align="center" width="80"/>
-            <el-table-column prop="name" label="字典名称" align="center" show-overflow-tooltip  />
+            <el-table-column type="index" label="序号" align="center" width="80" />
+            <el-table-column prop="name" label="字典名称" align="center" show-overflow-tooltip />
             <el-table-column prop="code" label="字典编码" align="center" show-overflow-tooltip />
           </el-table>
         </el-card>
@@ -49,16 +49,16 @@
       <el-col :span="16">
         <el-card v-if="!groupSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 字典明细</span>
+            <span><i class="el-icon-caret-right" /> 字典明细</span>
           </div>
           <div>
-            <el-empty description="请先指定某个分组"></el-empty>
-<!--            <el-alert title="请先指定某个分组" type="info" :closable="false" />-->
+            <el-empty description="请先指定某个分组" />
+            <!--            <el-alert title="请先指定某个分组" type="info" :closable="false" />-->
           </div>
         </el-card>
         <el-card v-if="groupSelectData.current" class="box-card" shadow="always">
           <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right"/> 字典明细</span>
+            <span><i class="el-icon-caret-right" /> 字典明细</span>
             <el-row style="float: right">
               <el-button icon="el-icon-search" circle size="mini" @click="() => this.actionQueryFormVisiable = !this.actionQueryFormVisiable" />
               <el-button icon="el-icon-refresh" circle size="mini" @click="getActionList()" />
@@ -81,7 +81,7 @@
               <el-button type="primary" size="mini" icon="el-icon-view" @click="actionHandleShow">查 看</el-button>
               <el-button type="success" size="mini" icon="el-icon-plus" @click="actionHandleCreate">新 增</el-button>
               <el-button type="warning" size="mini" icon="el-icon-edit-outline" @click="actionHandleUpdate">修 改</el-button>
-              <el-button type="danger"  size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
+              <el-button type="danger" size="mini" icon="el-icon-delete" @click="actionHandleRemove">删 除</el-button>
             </div>
           </div>
 
@@ -98,7 +98,7 @@
             @row-click="actionHandleTableRowClick"
           >
             <el-table-column type="selection" width="60" align="center" />
-            <el-table-column type="index" label="序号" align="center" width="50"/>
+            <el-table-column type="index" label="序号" align="center" width="50" />
             <el-table-column prop="name" label="字段名称" align="center" show-overflow-tooltip />
             <el-table-column prop="code" label="字段编码" align="center" show-overflow-tooltip />
             <el-table-column prop="createTime" label="创建时间" align="center" show-overflow-tooltip />
@@ -133,10 +133,8 @@ import JySimpleDictForm from '@/views/system/datadict/simple-dict/simple-dict-fo
 import JySimpleDictDetail from '@/views/system/datadict/simple-dict/simple-dict-detail'
 import JySimpleDictDetailForm from '@/views/system/datadict/simple-dict/simple-dict-detail-form'
 import JySimpleDictDetailInfo from '@/views/system/datadict/simple-dict/simple-dict-detail-info'
-import permission from '@/directive/permission/index.js' // 权限判断指令
 
 export default {
-  directives: { permission },
   components: { JySimpleDictDetailForm, JySimpleDictDetailInfo, JySimpleDictDetail, JySimpleDictForm },
   data() {
     return {
@@ -204,7 +202,7 @@ export default {
           return
         }
 
-        let firstRow = this.groupTableData.records[0]
+        const firstRow = this.groupTableData.records[0]
         this.groupSelectData.current = firstRow
         this.$refs.table.setCurrentRow(firstRow)
         this.groupTableData.loading = false

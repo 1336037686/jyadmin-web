@@ -91,9 +91,7 @@
 <script>
 import api from '@/api/system/file/jy-file-record'
 import processApi from '@/api/system/file/jy-file-process'
-import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
-  directives: { permission },
   data() {
     return {
       storageTypeOptions: [],
