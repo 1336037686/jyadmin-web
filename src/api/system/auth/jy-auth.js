@@ -43,3 +43,10 @@ export function getIdempotentToken() {
     method: 'get'
   })
 }
+
+export function getRsaPublicKey() {
+  return request({
+    url: '/api/auth/rsa-public-key',
+    method: 'get'
+  })
+}
