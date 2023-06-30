@@ -1,7 +1,12 @@
 <template>
-  <div style="margin: 10px">
-    <el-card class="box-card" shadow="always">
-      <el-form :inline="true" v-show="queryFormVisiable" :model="queryForm" size="mini" label-width="100px">
+  <div
+    v-loading="deleteLoading"
+    style="margin: 10px;"
+    element-loading-text="删除中，请稍后..."
+    element-loading-spinner="el-icon-loading"
+  >
+    <el-card class="jy-card-query" shadow="never">
+      <el-form v-show="queryFormVisiable" :inline="true" :model="queryForm" size="mini" label-width="100px">
         <el-form-item label="岗位名称：">
           <el-input v-model="queryForm.name" placeholder="岗位名称" />
         </el-form-item>
@@ -22,7 +27,7 @@
       </div>
     </el-card>
 
-    <el-card class="box-card" shadow="always" style="margin-top: 5px">
+    <el-card class="jy-card" shadow="never" style="margin-top: 10px">
       <div slot="header" class="clearfix">
         <span><i class="el-icon-caret-right" /> 岗位列表</span>
         <el-row style="float: right">
@@ -39,14 +44,14 @@
         highlight-current-row
         style="width: 100%"
         empty-text="暂无数据"
-        :header-cell-style="{background:'#FAFAFA'}"
+        :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
         @row-click="handleTableRowClick"
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column type="index" width="80" label="序号" align="center" />
-        <el-table-column prop="name" label="岗位名称"  align="center" />
-        <el-table-column prop="code" label="岗位编码"  align="center" />
-        <el-table-column prop="createTime" label="创建时间" align="center"  />
+        <el-table-column prop="name" label="岗位名称" align="center" />
+        <el-table-column prop="code" label="岗位编码" align="center" />
+        <el-table-column prop="createTime" label="创建时间" align="center" />
         <el-table-column prop="description" label="岗位简介" align="center" width="600" />
       </el-table>
     </el-card>
@@ -77,6 +82,7 @@ export default {
   data() {
     return {
       queryFormVisiable: true,
+      deleteLoading: false,
       queryForm: {
         name: '',
         code: ''
@@ -117,6 +123,8 @@ export default {
       postApi.getList(queryForm).then(response => {
         this.tableData.loading = false
         this.tableData = response
+      }).catch(e => {
+        this.tableData.loading = false
       })
     },
     handleQuery() {
@@ -161,15 +169,18 @@ export default {
       this.$confirm('此操作将永久删除选中数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        customClass: 'jy-message-box'
       }).then(() => {
         const ids = []
         for (let i = 0; i < this.$refs.table.selection.length; i++) ids.push(this.$refs.table.selection[i].id)
+        this.deleteLoading = true
         postApi.remove(ids).then(response => {
-          this.getList()
+          this.deleteLoading = false
           this.$notify.success({ title: '成功', message: '删除成功' })
+          this.getList()
         }).catch(e => {
-          this.$notify.error({ title: '失败', message: '删除失败' })
+          this.deleteLoading = false
         })
       })
     },

@@ -22,10 +22,31 @@
 }
 /* jyadmin 自定义表单样式 END */
 
-
 /* jyadmin message-box 样式修改 START */
 .jy-message-box {
   border-radius: 13px;
   border: 1px solid #ccc;
 }
 /* jyadmin message-box 样式修改 END */
+
+/* jyadmin table 选中行颜色 START */
+.el-table__body tr.current-row>td{
+  background-color: #E6F5F3 !important;
+  // color: #fff;
+}
+.el-table tbody tr:hover > td {
+   background-color: #F5F7FA !important;
+  // color: #ffffff;
+}
+/* jyadmin table 选中行颜色 END */
+
+/* jyadmin card START */
+.jy-card-query {
+  width: 100%;
+}
+
+.jy-card-content {
+  width: 100%;
+}
+
+/* jyadmin card END */
