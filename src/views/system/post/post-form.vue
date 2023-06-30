@@ -6,6 +6,7 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="30%"
+    class="jy-dialog"
   >
     <div>
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">

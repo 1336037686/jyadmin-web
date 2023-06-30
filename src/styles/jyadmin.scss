@@ -1,0 +1,31 @@
+
+
+/* jyadmin 自定义表单样式 START */
+.jy-dialog .el-dialog {
+  border-radius: 13px;
+  border: 1px solid #ccc;
+}
+
+.jy-dialog .el-dialog__header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #ccc;
+  color: #333;
+}
+
+.jy-dialog .el-dialog__body {
+  padding: 20px;
+}
+
+.jy-dialog .el-dialog__footer {
+  padding: 15px 20px;
+  border-top: 1px solid #ccc;
+}
+/* jyadmin 自定义表单样式 END */
+
+
+/* jyadmin message-box 样式修改 START */
+.jy-message-box {
+  border-radius: 13px;
+  border: 1px solid #ccc;
+}
+/* jyadmin message-box 样式修改 END */

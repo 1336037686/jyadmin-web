@@ -6,9 +6,18 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="30%"
+    class="jy-dialog"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="120px">
+      <el-form
+        ref="form"
+        v-loading="initloading"
+        :rules="rules"
+        :model="form"
+        label-width="120px"
+        element-loading-text="加载中，请稍后..."
+        element-loading-spinner="el-icon-loading"
+      >
         <el-form-item label="部门名称：" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
@@ -21,7 +30,7 @@
             <el-radio-button :label="1">是</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="上级部门：" prop="parentId" v-show="form.isRoot === 0">
+        <el-form-item v-show="form.isRoot === 0" label="上级部门：" prop="parentId">
           <treeselect
             v-model="form.parentId"
             :options="depts"
@@ -46,7 +55,7 @@
       </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="handleSubmit('form')">确 定</el-button>
+      <el-button type="primary" :loading="submitLoading" @click="handleSubmit('form')">确 定</el-button>
       <el-button @click="resetForm('form')">取 消</el-button>
     </span>
   </el-dialog>
@@ -84,6 +93,8 @@ export default {
       }
     }
     return {
+      initloading: false,
+      submitLoading: false,
       tmpVisible: this.visible,
       type: 'insert',
       form: {
@@ -144,9 +155,7 @@ export default {
   },
   methods: {
     handleSubmit(formName) {
-      console.log(this.form)
       this.$refs[formName].validate((valid) => {
-        console.log(valid)
         if (valid) {
           if (this.type === 'insert') this.handleCreate()
           else this.handleUpdate()
@@ -154,32 +163,38 @@ export default {
       })
     },
     handleCreate() {
+      this.submitLoading = true
       deptApi.add(this.form).then(response => {
+        this.submitLoading = false
         this.$notify.success({ title: '成功', message: '添加成功' })
         this.$parent.getList()
         this.tmpVisible = false
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '添加失败' })
+        this.submitLoading = false
       })
     },
     handleUpdate() {
+      this.submitLoading = true
       deptApi.update(this.form).then(response => {
+        this.submitLoading = false
         this.$notify.success({ title: '成功', message: '修改成功' })
         this.$parent.getList()
         this.tmpVisible = false
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '修改失败' })
+        this.submitLoading = false
       })
     },
     getById(id) {
+      this.initloading = true
       deptApi.getById(id).then(response => {
+        this.initloading = false
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.initloading = false
       })
     },
     changeIsRoot(label) {
@@ -188,7 +203,7 @@ export default {
     },
     getDeptTree() {
       deptApi.layer().then(response => {
-        this.depts = (!response.data || response.data.length == 0) ? [] : response.data
+        this.depts = (!response.data || response.data.length === 0) ? [] : response.data
       })
     },
     resetForm(formName) {
@@ -210,3 +225,4 @@ export default {
 <style scoped>
 
 </style>
+

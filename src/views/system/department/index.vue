@@ -1,5 +1,10 @@
 <template>
-  <div style="margin: 10px;">
+  <div
+    v-loading="deleteLoading"
+    style="margin: 10px;"
+    element-loading-text="删除中，请稍后..."
+    element-loading-spinner="el-icon-loading"
+  >
     <el-card class="box-card" shadow="always">
       <el-form v-show="queryFormVisiable" :inline="true" :model="queryForm" label-width="100px" size="mini">
         <el-form-item label="部门名称：">
@@ -76,6 +81,7 @@ export default {
   data() {
     return {
       queryFormVisiable: true,
+      deleteLoading: false,
       queryForm: {
         name: '',
         code: ''
@@ -110,6 +116,8 @@ export default {
       const queryForm = { ...this.queryForm }
       deptApi.layer(queryForm).then(response => {
         this.tableData.records = response.data
+        this.tableData.loading = false
+      }).catch(e => {
         this.tableData.loading = false
       })
     },
@@ -157,15 +165,18 @@ export default {
       this.$confirm('此操作将永久删除选中数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        customClass: 'jy-message-box'
       }).then(() => {
         const ids = []
         for (let i = 0; i < this.$refs.table.selection.length; i++) ids.push(this.$refs.table.selection[i].id)
+        this.deleteLoading = true
         deptApi.remove(ids).then(response => {
-          this.getList()
+          this.deleteLoading = false
           this.$notify.success({ title: '成功', message: '删除成功' })
+          this.getList()
         }).catch(e => {
-          this.$notify.error({ title: '失败', message: '删除失败' })
+          this.deleteLoading = false
         })
       })
     },
