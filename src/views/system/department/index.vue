@@ -119,7 +119,7 @@ export default {
       this.$nextTick(() => {
         const element = this.$el.querySelector('.jy-card-query')
         const height = element.clientHeight
-        this.elCardContentHeight = height + 160
+        this.elCardContentHeight = height + 130
       })
     },
     getList() {
