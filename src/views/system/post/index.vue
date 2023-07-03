@@ -46,6 +46,7 @@
         empty-text="暂无数据"
         :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
         @row-click="handleTableRowClick"
+        @select="handleTableRowSelect"
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column type="index" width="80" label="序号" align="center" />
@@ -54,20 +55,18 @@
         <el-table-column prop="createTime" label="创建时间" align="center" />
         <el-table-column prop="description" label="岗位简介" align="center" width="600" />
       </el-table>
+      <div style="text-align: center;margin-top: 10px">
+        <el-pagination
+          v-model="tableData.pageNumber"
+          background
+          layout="prev, pager, next"
+          :page-size="tableData.pageSize"
+          :hide-on-single-page="true"
+          :total="tableData.total"
+          @current-change="handleChangePage"
+        />
+      </div>
     </el-card>
-
-    <div style="text-align: center;margin-top: 10px">
-      <el-pagination
-        v-model="tableData.pageNumber"
-        background
-        layout="prev, pager, next"
-        :page-size="tableData.pageSize"
-        :hide-on-single-page="true"
-        :total="tableData.total"
-        @current-change="handleChangePage"
-      />
-    </div>
-
     <post-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
     <post-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
   </div>
@@ -75,8 +74,8 @@
 
 <script>
 import postApi from '@/api/system/post/jy-post'
-import PostForm from '@/views/system/post/post-form'
-import PostDetail from '@/views/system/post/post-detail'
+import PostForm from './post-form'
+import PostDetail from './post-detail'
 export default {
   components: { PostDetail, PostForm },
   data() {
@@ -187,6 +186,10 @@ export default {
     handleTableRowClick(row, column, event) {
       this.selectData.current = row
       this.$refs.table.toggleRowSelection(row)
+    },
+    handleTableRowSelect(selection, row) {
+      this.selectData.current = row
+      this.$refs.table.setCurrentRow(row)
     },
     handleChangePage(page) {
       this.tableData.pageNumber = page

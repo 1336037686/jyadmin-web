@@ -1,5 +1,10 @@
 <template>
-  <div style="margin: 10px">
+  <div
+    v-loading="deleteLoading"
+    style="margin: 10px;"
+    element-loading-text="删除中，请稍后..."
+    element-loading-spinner="el-icon-loading"
+  >
     <el-row style="margin-top: 10px">
       <!-- 左 -->
       <el-col :span="5" style="padding-right: 15px">
@@ -76,8 +81,9 @@
             highlight-current-row
             style="width: 100%;margin-top: 10px"
             empty-text="暂无数据"
-            :header-cell-style="{background:'#FAFAFA'}"
+            :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
             @row-click="handleTableRowClick"
+            @select="handleTableRowSelect"
           >
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column type="index" width="55" label="序号" align="center" />
@@ -105,40 +111,41 @@
             </el-table-column>
             <el-table-column prop="createTime" label="创建时间" width="220" align="center" />
           </el-table>
+          <div style="text-align: center;margin-top: 10px">
+            <el-pagination
+              v-model="tableData.pageNumber"
+              background
+              layout="total, prev, pager, next"
+              :page-size="tableData.pageSize"
+              :hide-on-single-page="true"
+              :total="tableData.total"
+              @current-change="handleChangePage"
+            />
+          </div>
         </el-card>
-        <div style="text-align: center;margin-top: 10px">
-          <el-pagination
-            v-model="tableData.pageNumber"
-            background
-            layout="total, prev, pager, next"
-            :page-size="tableData.pageSize"
-            :hide-on-single-page="true"
-            :total="tableData.total"
-            @current-change="handleChangePage"
-          />
-        </div>
       </el-col>
     </el-row>
 
-    <jy-user-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
-    <jy-user-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
-    <jy-user-role :id="roleEditData.id" :name="roleEditData.name" :title="roleEditData.title" :visible.sync="roleEditData.visiable" />
-    <jy-user-password :id="passwordEditData.id" :name="passwordEditData.name" :title="passwordEditData.title" :visible.sync="passwordEditData.visiable" />
+    <user-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
+    <user-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <user-role :id="roleEditData.id" :name="roleEditData.name" :title="roleEditData.title" :visible.sync="roleEditData.visiable" />
+    <user-password :id="passwordEditData.id" :name="passwordEditData.name" :title="passwordEditData.title" :visible.sync="passwordEditData.visiable" />
   </div>
 </template>
 
 <script>
 import deptApi from '@/api/system/department/jy-department'
 import userApi from '@/api/system/user/jy-user'
-import JyUserDetail from '@/views/system/user/jy-user-detail'
-import JyUserForm from '@/views/system/user/jy-user-form'
-import JyUserRole from '@/views/system/user/jy-user-role'
-import JyUserPassword from '@/views/system/user/jy-user-password'
+import UserDetail from './user-detail'
+import UserForm from './user-form'
+import UserRole from './user-role'
+import UserPassword from './user-password'
 export default {
-  components: { JyUserPassword, JyUserRole, JyUserForm, JyUserDetail },
+  components: { UserPassword, UserRole, UserForm, UserDetail },
   data() {
     return {
       queryFormVisiable: true,
+      deleteLoading: false,
       queryForm: {
         username: '',
         nickname: '',
@@ -250,7 +257,6 @@ export default {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-
       this.roleEditData.title = '角色分配'
       this.roleEditData.id = this.selectData.current.id
       this.roleEditData.name = this.selectData.current.username
@@ -285,21 +291,28 @@ export default {
       this.$confirm('此操作将永久删除选中数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        customClass: 'jy-message-box'
       }).then(() => {
         const ids = []
         for (let i = 0; i < this.$refs.table.selection.length; i++) ids.push(this.$refs.table.selection[i].id)
+        this.deleteLoading = true
         userApi.remove(ids).then(response => {
+          this.deleteLoading = false
           this.getList()
           this.$notify.success({ title: '成功', message: '删除成功' })
         }).catch(e => {
-          this.$notify.error({ title: '失败', message: '删除失败' })
+          this.deleteLoading = false
         })
       })
     },
     handleTableRowClick(row, column, event) {
       this.selectData.current = row
       this.$refs.table.toggleRowSelection(row)
+    },
+    handleTableRowSelect(selection, row) {
+      this.selectData.current = row
+      this.$refs.table.setCurrentRow(row)
     },
     handleChangePage(page) {
       this.tableData.pageNumber = page

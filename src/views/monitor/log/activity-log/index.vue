@@ -37,7 +37,7 @@
         highlight-current-row
         style="width: 100%"
         empty-text="暂无数据"
-        :header-cell-style="{background:'#FAFAFA'}"
+        :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
         @row-click="handleTableRowClick"
       >
         <el-table-column type="selection" width="55" align="center" />
@@ -54,7 +54,7 @@
         <!--        <el-table-column prop="requestParam" label="请求参数" />-->
         <el-table-column prop="requestTime" label="请求时间" align="center" show-overflow-tooltip />
         <!--        <el-table-column prop="method" label="请求类方法" />-->
-        <el-table-column prop="executeStatus" label="执行状态" align="center" width="100" >
+        <el-table-column prop="executeStatus" label="执行状态" align="center" width="100">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.executeStatus === 1" size="mini" effect="plain" type="success"> 成 功 </el-tag>
             <el-tag v-if="scope.row.executeStatus === 0" size="mini" effect="plain" type="danger"> 失 败 </el-tag>
@@ -78,22 +78,19 @@
           </template>
         </el-table-column>
       </el-table>
+      <div style="text-align: center;margin-top: 10px">
+        <el-pagination
+          v-model="tableData.pageNumber"
+          background
+          layout="total, prev, pager, next"
+          :page-size="tableData.pageSize"
+          :hide-on-single-page="true"
+          :total="tableData.total"
+          @current-change="handleChangePage"
+        />
+      </div>
     </el-card>
-
-    <div style="text-align: center;margin-top: 10px">
-      <el-pagination
-        v-model="tableData.pageNumber"
-        background
-        layout="total, prev, pager, next"
-        :page-size="tableData.pageSize"
-        :hide-on-single-page="true"
-        :total="tableData.total"
-        @current-change="handleChangePage"
-      />
-    </div>
-
     <jy-log-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
-
     <el-drawer
       size="40%"
       :wrapper-closable="false"

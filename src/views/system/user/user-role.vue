@@ -6,9 +6,18 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="30%"
+    class="jy-dialog"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+      <el-form
+        ref="form"
+        v-loading="initloading"
+        :rules="rules"
+        :model="form"
+        label-width="80px"
+        element-loading-text="加载中，请稍后..."
+        element-loading-spinner="el-icon-loading"
+      >
         <el-row>
           <el-col :span="24">
             <el-form-item label="用户名称" prop="name">
@@ -36,7 +45,7 @@
       </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="handleSubmit('form')">确 定</el-button>
+      <el-button type="primary" :loading="submitLoading" @click="handleSubmit('form')">确 定</el-button>
       <el-button @click="resetForm('form')">取 消</el-button>
     </span>
   </el-dialog>
@@ -65,6 +74,8 @@ export default {
   },
   data() {
     return {
+      initloading: false,
+      submitLoading: false,
       tmpVisible: this.visible,
       type: 'insert',
       roles: [],
@@ -106,12 +117,15 @@ export default {
       })
     },
     getFromUser() {
+      this.initloading = true
       roleApi.getFromUser(this.id).then(response => {
+        this.initloading = false
         this.form.roleIds = response.data
+      }).catch(e => {
+        this.initloading = false
       })
     },
     handleSubmit(formName) {
-      console.log(this.form)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.handleUpdate()
@@ -119,15 +133,16 @@ export default {
       })
     },
     handleUpdate() {
+      this.submitLoading = true
       roleApi.addFromUser(this.id, this.form.roleIds).then(response => {
+        this.submitLoading = false
         this.$notify.success({ title: '成功', message: '设置成功' })
         this.$parent.getList()
         this.tmpVisible = false
-
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '设置失败' })
+        this.submitLoading = false
       })
     },
     resetForm(formName) {

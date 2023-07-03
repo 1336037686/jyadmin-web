@@ -29,7 +29,7 @@
 
     <el-row style="margin-top: 10px">
       <el-col :span="24">
-        <el-card class="jy-card-content" :style="{ 'min-height': `calc(100vh - ${elCardContentHeight}px)`, width: '100%'}" shadow="never">
+        <el-card class="jy-card-content" shadow="never">
           <div slot="header" class="clearfix">
             <span>部门列表</span>
             <el-row style="float: right">
@@ -50,6 +50,7 @@
             empty-text="暂无数据"
             :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
             @row-click="handleTableRowClick"
+            @select="handleTableRowSelect"
           >
             <el-table-column type="selection" width="60" align="center" />
             <el-table-column prop="name" label="部门名称" :show-overflow-tooltip="true" />
@@ -80,7 +81,6 @@ export default {
   components: { DeptDetail, DeptForm },
   data() {
     return {
-      elCardContentHeight: 0,
       queryFormVisiable: true,
       deleteLoading: false,
       queryForm: {
@@ -111,17 +111,7 @@ export default {
   created() {
     this.getList()
   },
-  mounted() {
-    this.calculateElementStyle()
-  },
   methods: {
-    calculateElementStyle() {
-      this.$nextTick(() => {
-        const element = this.$el.querySelector('.jy-card-query')
-        const height = element.clientHeight
-        this.elCardContentHeight = height + 130
-      })
-    },
     getList() {
       this.tableData.loading = true
       const queryForm = { ...this.queryForm }
@@ -194,6 +184,10 @@ export default {
     handleTableRowClick(row, column, event) {
       this.selectData.current = row
       this.$refs.table.toggleRowSelection(row)
+    },
+    handleTableRowSelect(selection, row) {
+      this.selectData.current = row
+      this.$refs.table.setCurrentRow(row)
     }
   }
 }

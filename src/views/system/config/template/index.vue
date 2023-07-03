@@ -36,7 +36,7 @@
             highlight-current-row
             style="width: 100%;margin-top: 10px"
             empty-text="暂无数据"
-            :header-cell-style="{background:'#FAFAFA'}"
+            :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
             @row-click="configTemplateHandleTableRowClick"
           >
             <el-table-column type="index" label="序号" align="center" width="80" />
@@ -73,7 +73,7 @@
             highlight-current-row
             style="width: 100%"
             empty-text="暂无数据"
-            :header-cell-style="{background:'#FAFAFA'}"
+            :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
           >
             <el-table-column type="index" label="序号" width="80" align="center" />
             <el-table-column prop="name" label="字段名称" width="200" align="center" show-overflow-tooltip />

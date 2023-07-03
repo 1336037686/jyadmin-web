@@ -37,7 +37,7 @@
             highlight-current-row
             style="width: 100%;margin-top: 10px"
             empty-text="暂无数据"
-            :header-cell-style="{background:'#FAFAFA'}"
+            :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
             @row-click="groupHandleTableRowClick"
           >
             <el-table-column type="index" label="序号" align="center" width="80" />
@@ -94,7 +94,7 @@
             highlight-current-row
             style="width: 100%;margin-top: 10px"
             empty-text="暂无数据"
-            :header-cell-style="{background:'#FAFAFA'}"
+            :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
             @row-click="actionHandleTableRowClick"
           >
             <el-table-column type="selection" width="60" align="center" />

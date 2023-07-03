@@ -138,7 +138,11 @@
           <span>属性信息</span>
         </div>
 
-        <el-table :data="form.fields" style="width: 100%">
+        <el-table
+          :data="form.fields"
+          style="width: 100%"
+          :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
+        >
           <el-table-column type="index" label="序号" align="center" width="80" />
           <el-table-column prop="field.fieldName" label="字段名" show-overflow-tooltip width="150" align="center" />
           <el-table-column prop="field.fieldType" label="字段类型" show-overflow-tooltip width="150" align="center" />

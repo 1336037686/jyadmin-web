@@ -6,14 +6,23 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="30%"
+    class="jy-dialog"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="120px">
+      <el-form
+        ref="form"
+        v-loading="initloading"
+        :rules="rules"
+        :model="form"
+        label-width="120px"
+        element-loading-text="加载中，请稍后..."
+        element-loading-spinner="el-icon-loading"
+      >
         <el-form-item label="用户名：" prop="username">
           <el-input v-model="form.username" />
         </el-form-item>
-        <el-form-item label="密码：" prop="password" v-if="type === 'insert'">
-          <el-input type="password" v-model="form.password" />
+        <el-form-item v-if="type === 'insert'" label="密码：" prop="password">
+          <el-input v-model="form.password" type="password" />
         </el-form-item>
         <el-form-item label="昵称：" prop="nickname">
           <el-input v-model="form.nickname" />
@@ -54,7 +63,7 @@
       </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="handleSubmit('form')">确 定</el-button>
+      <el-button type="primary" :loading="submitLoading" @click="handleSubmit('form')">确 定</el-button>
       <el-button @click="resetForm('form')">取 消</el-button>
     </span>
   </el-dialog>
@@ -86,6 +95,8 @@ export default {
   },
   data() {
     return {
+      initloading: false,
+      submitLoading: false,
       tmpVisible: this.visible,
       type: 'insert',
       form: {
@@ -158,7 +169,9 @@ export default {
       })
     },
     handleCreate() {
+      this.submitLoading = true
       userApi.add(this.form).then(response => {
+        this.submitLoading = false
         this.$notify.success({ title: '成功', message: '添加成功' })
         this.$parent.getList()
         this.tmpVisible = false
@@ -166,11 +179,13 @@ export default {
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '添加失败' })
+        this.submitLoading = false
       })
     },
     handleUpdate() {
+      this.submitLoading = true
       userApi.update(this.form).then(response => {
+        this.submitLoading = false
         this.$notify.success({ title: '成功', message: '修改成功' })
         this.$parent.getList()
         this.tmpVisible = false
@@ -178,14 +193,16 @@ export default {
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '修改失败' })
+        this.submitLoading = false
       })
     },
     getById(id) {
+      this.initloading = true
       userApi.getById(id).then(response => {
+        this.initloading = false
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.initloading = false
       })
     },
     resetForm(formName) {

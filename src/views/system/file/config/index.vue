@@ -4,8 +4,8 @@
       <el-row style="margin-top: 10px">
         <el-col :span="6">
           <el-card
-            shadow="never"
             v-loading="loading"
+            shadow="never"
             element-loading-text="加载中，请稍后..."
             element-loading-spinner="el-icon-loading"
           >
@@ -44,12 +44,13 @@
               highlight-current-row
               style="width: 100%"
               empty-text="暂无数据"
+              :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
             >
               <el-table-column prop="name" label="字段名称" width="150" align="center" show-overflow-tooltip />
               <el-table-column prop="code" label="字段编码" width="150" align="center" show-overflow-tooltip />
               <el-table-column prop="type" label="字段类型" width="150" align="center" show-overflow-tooltip>
                 <template slot-scope="scope">
-                  {{getNameByCode(fieldTypeOptions, scope.row.type)}}
+                  {{ getNameByCode(fieldTypeOptions, scope.row.type) }}
                 </template>
               </el-table-column>
               <el-table-column prop="defaultValue" label="缺省值" width="150" align="center" show-overflow-tooltip />

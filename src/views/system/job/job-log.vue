@@ -16,11 +16,11 @@
         highlight-current-row
         style="width: 100%"
         empty-text="暂无数据"
-        :header-cell-style="{background:'#FAFAFA'}"
+        :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
       >
         <el-table-column type="expand">
           <template slot-scope="props">
-            <div style="margin: 10px" >
+            <div style="margin: 10px">
               <el-card shadow="never">
                 异常信息：{{ props.row.execStatus === 0 ? props.row.errorDesc : '暂无异常' }}
               </el-card>

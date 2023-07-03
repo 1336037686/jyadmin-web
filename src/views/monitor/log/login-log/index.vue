@@ -34,7 +34,7 @@
         highlight-current-row
         style="width: 100%"
         empty-text="暂无数据"
-        :header-cell-style="{background:'#FAFAFA'}"
+        :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
         @row-click="handleTableRowClick"
       >
         <el-table-column type="selection" width="55" align="center" />
@@ -44,7 +44,7 @@
         <el-table-column prop="handleDesc" label="操作描述" align="center" show-overflow-tooltip />
         <el-table-column prop="ipAddress" label="IP地址" align="center" show-overflow-tooltip />
         <el-table-column prop="ipArea" label="所属地区" align="center" show-overflow-tooltip />
-        <el-table-column prop="browser" label="浏览器" align="center"  />
+        <el-table-column prop="browser" label="浏览器" align="center" />
         <el-table-column prop="application" label="设备" align="center" />
         <el-table-column prop="requestTime" label="请求时间" align="center" show-overflow-tooltip />
       </el-table>

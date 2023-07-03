@@ -22,7 +22,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="所属模板：">
-              {{ template ? template.name : '' }} ( {{ template ? template.code : ''}} )
+              {{ template ? template.name : '' }} ( {{ template ? template.code : '' }} )
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -42,60 +42,60 @@
         <el-row>
           <el-col :span="24">
             <el-table
+              ref="configTemplateInfoTable"
               border
               stripe
-              ref="configTemplateInfoTable"
               :data="form.jsonObjs"
               highlight-current-row
               style="width: 100%"
               empty-text="暂无数据"
-              :header-cell-style="{background:'#FAFAFA'}"
+              :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
             >
               <el-table-column prop="name" label="字段名称" width="160" align="center">
                 <template slot-scope="scope">
-                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.name'" :rules="rules.name" label-width="0" >
-                    {{scope.row.name}}
+                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.name'" :rules="rules.name" label-width="0">
+                    {{ scope.row.name }}
                   </el-form-item>
                 </template>
               </el-table-column>
-              <el-table-column prop="code" label="字段编码" width="160"  align="center">
+              <el-table-column prop="code" label="字段编码" width="160" align="center">
                 <template slot-scope="scope">
-                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.code'" :rules="rules.code" label-width="0" >
-                    {{scope.row.code}}
+                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.code'" :rules="rules.code" label-width="0">
+                    {{ scope.row.code }}
                   </el-form-item>
                 </template>
               </el-table-column>
               <el-table-column prop="type" label="字段类型" width="160" align="center">
                 <template slot-scope="scope">
-                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.type'" :rules="rules.type" label-width="0" >
-                    {{scope.row.type}}
+                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.type'" :rules="rules.type" label-width="0">
+                    {{ scope.row.type }}
                   </el-form-item>
                 </template>
               </el-table-column>
               <el-table-column prop="defaultValue" label="缺省值" width="160" align="center">
                 <template slot-scope="scope">
-                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.defaultValue'" :rules="rules.defaultValue" label-width="0" >
-                    {{scope.row.defaultValue}}
+                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.defaultValue'" :rules="rules.defaultValue" label-width="0">
+                    {{ scope.row.defaultValue }}
                   </el-form-item>
                 </template>
               </el-table-column>
               <el-table-column prop="value" label="值" width="160" align="center">
                 <template slot-scope="scope">
-                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.value'" :rules="rules.value" label-width="0" >
+                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.value'" :rules="rules.value" label-width="0">
                     <el-input v-model="scope.row.value" />
                   </el-form-item>
                 </template>
               </el-table-column>
-              <el-table-column prop="sort" label="排序" width="100"  align="center">
+              <el-table-column prop="sort" label="排序" width="100" align="center">
                 <template slot-scope="scope">
-                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.sort'" :rules="rules.sort" label-width="0" >
-                    {{scope.row.sort}}
+                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.sort'" :rules="rules.sort" label-width="0">
+                    {{ scope.row.sort }}
                   </el-form-item>
                 </template>
               </el-table-column>
               <el-table-column prop="comment" label="注释" align="center">
                 <template slot-scope="scope">
-                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.comment'" :rules="rules.comment" label-width="0" >
+                  <el-form-item :prop="'jsonObjs.' + scope.$index + '.comment'" :rules="rules.comment" label-width="0">
                     <el-input v-model="scope.row.comment" />
                   </el-form-item>
                 </template>

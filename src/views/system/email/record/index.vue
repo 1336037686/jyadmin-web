@@ -45,7 +45,7 @@
         highlight-current-row
         style="width: 100%"
         empty-text="暂无数据"
-        :header-cell-style="{background:'#FAFAFA'}"
+        :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
         @row-click="handleTableRowClick"
       >
         <el-table-column type="selection" width="55" align="center" />

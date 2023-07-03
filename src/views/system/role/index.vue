@@ -1,5 +1,10 @@
 <template>
-  <div style="margin: 10px">
+  <div
+    v-loading="deleteLoading"
+    style="margin: 10px"
+    element-loading-text="删除中，请稍后..."
+    element-loading-spinner="el-icon-loading"
+  >
     <el-card class="box-card" shadow="always">
       <el-form v-show="queryFormVisiable" :inline="true" size="mini" :model="queryForm" label-width="100px">
         <el-form-item label="角色名称：">
@@ -41,8 +46,9 @@
             highlight-current-row
             style="width: 100%"
             empty-text="暂无数据"
-            :header-cell-style="{background:'#FAFAFA'}"
+            :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
             @row-click="handleTableRowClick"
+            @select="handleTableRowSelect"
           >
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column type="index" width="55" label="序号" align="center" />
@@ -63,18 +69,18 @@
             <el-table-column prop="createTime" label="创建时间" width="220" align="center" />
             <el-table-column prop="description" label="角色描述" />
           </el-table>
+          <div style="text-align: center;margin-top: 10px">
+            <el-pagination
+              v-model="tableData.pageNumber"
+              background
+              layout="total, prev, pager, next"
+              :page-size="tableData.pageSize"
+              :hide-on-single-page="true"
+              :total="tableData.total"
+              @current-change="handleChangePage"
+            />
+          </div>
         </el-card>
-        <div style="text-align: center;margin-top: 10px">
-          <el-pagination
-            v-model="tableData.pageNumber"
-            background
-            layout="total, prev, pager, next"
-            :page-size="tableData.pageSize"
-            :hide-on-single-page="true"
-            :total="tableData.total"
-            @current-change="handleChangePage"
-          />
-        </div>
       </el-col>
       <el-col :span="6" style="padding-left: 10px">
         <el-card
@@ -87,7 +93,7 @@
         >
           <div slot="header" class="clearfix">
             <span><i class="el-icon-caret-right" /> 菜单分配</span>
-            <el-button v-permission="['role:menu']" style="float: right;" size="mini" type="primary" icon="el-icon-circle-check" @click="handleUpdateRoleMenus">保存</el-button>
+            <el-button v-permission="['role:menu']" style="float: right;" size="mini" type="primary" icon="el-icon-circle-check" :loading="savePermissionLoading" @click="handleUpdateRoleMenus">保存</el-button>
           </div>
           <el-tree
             ref="menuTree"
@@ -113,21 +119,23 @@
       </el-col>
     </el-row>
 
-    <jy-role-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
-    <jy-role-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <role-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
+    <role-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
   </div>
 </template>
 
 <script>
 import roleApi from '@/api/system/role/jy-role'
 import menuApi from '@/api/system/permission/jy-permission-menu'
-import JyRoleDetail from '@/views/system/role/jy-role-detail'
-import JyRoleForm from '@/views/system/role/jy-role-form'
+import RoleDetail from './role-detail'
+import RoleForm from './role-form'
 export default {
-  components: { JyRoleForm, JyRoleDetail },
+  components: { RoleForm, RoleDetail },
   data() {
     return {
       queryFormVisiable: true,
+      deleteLoading: false,
+      savePermissionLoading: false,
       queryForm: {
         name: '',
         code: ''
@@ -222,22 +230,30 @@ export default {
       this.$confirm('此操作将永久删除选中数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        customClass: 'jy-message-box'
       }).then(() => {
         const ids = []
         for (let i = 0; i < this.$refs.table.selection.length; i++) ids.push(this.$refs.table.selection[i].id)
+        this.deleteLoading = true
         roleApi.remove(ids).then(response => {
-          this.getList()
+          this.deleteLoading = false
           this.$notify.success({ title: '成功', message: '删除成功' })
+          this.getList()
         }).catch(e => {
-          this.$notify.error({ title: '失败', message: '删除失败' })
+          this.deleteLoading = false
         })
       })
     },
     handleTableRowClick(row, column, event) {
       this.selectData.current = row
       this.$refs.table.toggleRowSelection(row)
-
+      // 获取角色菜单
+      this.getRoleMenus()
+    },
+    handleTableRowSelect(selection, row) {
+      this.selectData.current = row
+      this.$refs.table.setCurrentRow(row)
       // 获取角色菜单
       this.getRoleMenus()
     },
@@ -276,11 +292,13 @@ export default {
           menuIds.push(checkedNodes[i].id)
         }
       }
+      this.savePermissionLoading = true
       menuApi.addFromRole(this.selectData.current.id, menuIds).then(response => {
+        this.savePermissionLoading = false
         this.$notify.success({ title: '成功', message: '设置成功' })
         this.getRoleMenus()
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '设置失败' })
+        this.savePermissionLoading = false
       })
     }
   }

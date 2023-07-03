@@ -1,5 +1,10 @@
 <template>
-  <div style="margin: 10px;">
+  <div
+    v-loading="deleteLoading"
+    style="margin: 10px;"
+    element-loading-text="删除中，请稍后..."
+    element-loading-spinner="el-icon-loading"
+  >
     <el-card class="box-card" shadow="always">
       <el-form v-show="queryFormVisiable" :inline="true" :model="queryForm" label-width="100px" size="mini">
         <el-form-item label="菜单名称：">
@@ -43,8 +48,9 @@
             highlight-current-row
             style="width: 100%"
             empty-text="暂无数据"
-            :header-cell-style="{background:'#FAFAFA'}"
+            :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
             @row-click="handleTableRowClick"
+            @select="handleTableRowSelect"
           >
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column prop="name" label="菜单标题" width="180" :show-overflow-tooltip="true" />
@@ -217,22 +223,30 @@ export default {
       this.$confirm('此操作将永久删除选中数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        customClass: 'jy-message-box'
       }).then(() => {
         const ids = []
         for (let i = 0; i < this.$refs.table.selection.length; i++) ids.push(this.$refs.table.selection[i].id)
+        this.deleteLoading = true
         menuApi.remove(ids).then(response => {
-          this.getList()
+          this.deleteLoading = false
           this.$notify.success({ title: '成功', message: '删除成功' })
+          this.getList()
         }).catch(e => {
-          this.$notify.error({ title: '失败', message: '删除失败' })
+          this.deleteLoading = false
         })
       })
     },
     handleTableRowClick(row, column, event) {
       this.selectData.current = row
       this.$refs.table.toggleRowSelection(row)
-
+      // 获取菜单权限
+      this.getMenuActions()
+    },
+    handleTableRowSelect(selection, row) {
+      this.selectData.current = row
+      this.$refs.table.setCurrentRow(row)
       // 获取菜单权限
       this.getMenuActions()
     },

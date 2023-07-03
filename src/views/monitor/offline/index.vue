@@ -14,15 +14,15 @@
 
     <el-card class="box-card" shadow="always" style="margin-top: 5px">
       <el-table
-        v-loading="loading"
-        element-loading-text = "加载中，请稍后..."
-        element-loading-spinner = "el-icon-loading"
         ref="table"
+        v-loading="loading"
+        element-loading-text="加载中，请稍后..."
+        element-loading-spinner="el-icon-loading"
         :data="tableData.records"
         highlight-current-row
         style="width: 100%"
         empty-text="暂无数据"
-        :header-cell-style="{background:'#FAFAFA'}"
+        :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
       >
         <el-table-column type="index" width="120" label="序号" align="center" />
         <el-table-column prop="username" label="登录用户" />

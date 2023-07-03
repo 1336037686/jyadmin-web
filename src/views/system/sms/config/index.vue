@@ -4,8 +4,8 @@
       <el-row style="margin-top: 10px">
         <el-col :span="6">
           <el-card
-            shadow="never"
             v-loading="loading"
+            shadow="never"
             element-loading-text="加载中，请稍后..."
             element-loading-spinner="el-icon-loading"
           >
@@ -34,23 +34,24 @@
             <div slot="header" class="clearfix">
               <span><i class="el-icon-caret-right" />  配置列表</span>
             </div>
-            <el-empty v-if="!configOptions || configOptions.length === 0" description="暂无配置"></el-empty>
-            <el-collapse accordion v-else>
+            <el-empty v-if="!configOptions || configOptions.length === 0" description="暂无配置" />
+            <el-collapse v-else accordion>
               <el-collapse-item v-for="(item, index) in configOptions" :key="'configOptions_' + index" :title="'（' + (index + 1) + '）' + item.name + ' ' + item.code" :name="index">
                 <div>
                   <el-table
+                    :key="'configDetailInfoTable_' + index"
                     border
                     :data="item.jsonObjs"
-                    :key="'configDetailInfoTable_' + index"
                     highlight-current-row
                     style="width: 100%"
                     empty-text="暂无数据"
+                    :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
                   >
                     <el-table-column prop="name" label="字段名称" width="150" align="center" show-overflow-tooltip />
                     <el-table-column prop="code" label="字段编码" width="150" align="center" show-overflow-tooltip />
                     <el-table-column prop="type" label="字段类型" width="150" align="center" show-overflow-tooltip>
                       <template slot-scope="scope">
-                        {{getNameByCode(fieldTypeOptions, scope.row.type)}}
+                        {{ getNameByCode(fieldTypeOptions, scope.row.type) }}
                       </template>
                     </el-table-column>
                     <el-table-column prop="defaultValue" label="缺省值" width="150" align="center" show-overflow-tooltip />
@@ -66,9 +67,9 @@
     </el-tab-pane>
     <el-tab-pane label="发送测试" name="test">
       <el-card shadow="never" style="width: 900px">
-        <el-form :model="smsForm" :rules="smsFormRules" ref="smsForm" label-width="100px" class="demo-ruleForm">
+        <el-form ref="smsForm" :model="smsForm" :rules="smsFormRules" label-width="100px" class="demo-ruleForm">
           <el-form-item label="接收人" prop="receiver">
-            <el-input type="phone" v-model="smsForm.receiver" style="width: 700px" placeholder="请填写手机号码"></el-input>
+            <el-input v-model="smsForm.receiver" type="phone" style="width: 700px" placeholder="请填写手机号码" />
           </el-form-item>
           <el-form-item>
             <el-button @click="onResetSms('smsForm')">重置表单</el-button>
