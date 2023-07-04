@@ -6,8 +6,13 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="30%"
+    class="jy-dialog"
   >
-    <div>
+    <div
+      v-loading="initloading"
+      element-loading-text="加载中，请稍后..."
+      element-loading-spinner="el-icon-loading"
+    >
       <el-form ref="form" :rules="rules" :model="form" label-width="120px">
         <el-form-item label="接口名称：" prop="name">
           <el-input v-model="form.name" />
@@ -30,7 +35,7 @@
       </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="handleSubmit('form')">确 定</el-button>
+      <el-button type="primary" :loading="submitLoading" @click="handleSubmit('form')">确 定</el-button>
       <el-button @click="resetForm('form')">取 消</el-button>
     </span>
   </el-dialog>
@@ -64,6 +69,8 @@ export default {
   },
   data() {
     return {
+      initloading: false,
+      submitLoading: false,
       tmpVisible: this.visible,
       type: 'insert',
       form: {
@@ -125,7 +132,9 @@ export default {
       })
     },
     handleCreate() {
+      this.submitLoading = true
       api.add(this.form).then(response => {
+        this.submitLoading = false
         this.$notify.success({ title: '成功', message: '添加成功' })
         this.$parent.getActionList()
         this.tmpVisible = false
@@ -133,11 +142,13 @@ export default {
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '添加失败' })
+        this.submitLoading = false
       })
     },
     handleUpdate() {
+      this.submitLoading = true
       api.update(this.form).then(response => {
+        this.submitLoading = false
         this.$notify.success({ title: '成功', message: '修改成功' })
         this.$parent.getActionList()
         this.tmpVisible = false
@@ -145,14 +156,16 @@ export default {
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '修改失败' })
+        this.submitLoading = false
       })
     },
     getById(id) {
+      this.initloading = true
       api.getById(id).then(response => {
+        this.initloading = false
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.initloading = false
       })
     },
     resetForm(formName) {

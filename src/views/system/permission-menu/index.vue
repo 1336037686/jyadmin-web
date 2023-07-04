@@ -108,7 +108,7 @@
         >
           <div slot="header" class="clearfix">
             <span><i class="el-icon-caret-right" /> 接口分配</span>
-            <el-button v-permission="['menu:addAction']" style="float: right;" size="mini" type="primary" icon="el-icon-circle-check" @click="handleUpdateMenuActions">保存</el-button>
+            <el-button v-permission="['menu:addAction']" style="float: right;" size="mini" :loading="saveActionLoading" type="primary" icon="el-icon-circle-check" @click="handleUpdateMenuActions">保存</el-button>
           </div>
 
           <el-tree
@@ -144,6 +144,8 @@ export default {
   data() {
     return {
       queryFormVisiable: true,
+      deleteLoading: false,
+      saveActionLoading: false,
       queryForm: {
         name: '',
         code: ''
@@ -290,12 +292,13 @@ export default {
           }
         }
       }
-
+      this.saveActionLoading = true
       actionApi.addFromMenu(this.selectData.current.id, actionIds).then(response => {
+        this.saveActionLoading = false
         this.$notify.success({ title: '成功', message: '设置成功' })
         this.getMenuActions()
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '设置失败' })
+        this.saveActionLoading = false
       })
     }
 
