@@ -1,5 +1,10 @@
 <template>
-  <div style="margin: 10px">
+  <div
+    v-loading="deleteLoading"
+    style="margin: 10px"
+    element-loading-text="删除中，请稍后..."
+    element-loading-spinner="el-icon-loading"
+  >
 
     <el-row style="margin-top: 10px">
       <el-col :span="8" style="padding-right: 15px">
@@ -138,6 +143,7 @@ export default {
   components: { JySimpleDictDetailForm, JySimpleDictDetailInfo, JySimpleDictDetail, JySimpleDictForm },
   data() {
     return {
+      deleteLoading: false,
       groupQueryFormVisiable: true,
       groupQueryForm: {
         name: ''
@@ -245,14 +251,17 @@ export default {
       this.$confirm('此操作将永久删除选中数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        customClass: 'jy-message-box'
       }).then(() => {
         const ids = [selectRow.id]
+        this.deleteLoading = true
         groupApi.remove(ids).then(response => {
-          this.getGroupList()
+          this.deleteLoading = false
           this.$notify.success({ title: '成功', message: '删除成功' })
+          this.getGroupList()
         }).catch(e => {
-          this.$notify.error({ title: '失败', message: '删除失败' })
+          this.deleteLoading = false
         })
       })
     },
@@ -312,15 +321,18 @@ export default {
       this.$confirm('此操作将永久删除选中数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        customClass: 'jy-message-box'
       }).then(() => {
         const ids = []
         for (let i = 0; i < this.$refs.actionTable.selection.length; i++) ids.push(this.$refs.actionTable.selection[i].id)
+        this.deleteLoading = true
         actionApi.remove(ids).then(response => {
-          this.getActionList()
+          this.deleteLoading = false
           this.$notify.success({ title: '成功', message: '删除成功' })
+          this.getActionList()
         }).catch(e => {
-          this.$notify.error({ title: '失败', message: '删除失败' })
+          this.deleteLoading = false
         })
       })
     },

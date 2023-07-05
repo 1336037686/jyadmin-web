@@ -6,9 +6,18 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="30%"
+    class="jy-dialog"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="120px">
+      <el-form
+        ref="form"
+        v-loading="initloading"
+        :rules="rules"
+        :model="form"
+        label-width="120px"
+        element-loading-text="加载中，请稍后..."
+        element-loading-spinner="el-icon-loading"
+      >
         <el-form-item label="字段名称：" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
@@ -21,7 +30,7 @@
       </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="handleSubmit('form')">确 定</el-button>
+      <el-button type="primary" :loading="submitLoading" @click="handleSubmit('form')">确 定</el-button>
       <el-button @click="resetForm('form')">取 消</el-button>
     </span>
   </el-dialog>
@@ -54,6 +63,8 @@ export default {
   },
   data() {
     return {
+      initloading: false,
+      submitLoading: false,
       tmpVisible: this.visible,
       type: 'insert',
       form: {
@@ -129,10 +140,12 @@ export default {
       })
     },
     getById(id) {
+      this.initloading = true
       api.getById(id).then(response => {
+        this.initloading = false
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.initloading = false
       })
     },
     resetForm(formName) {
