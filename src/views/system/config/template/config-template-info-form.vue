@@ -6,13 +6,21 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="55%"
+    class="jy-dialog"
   >
     <div>
-      <el-form ref="form" :model="form" :rules="rules">
+      <el-form
+        ref="form"
+        v-loading="initloading"
+        :model="form"
+        :rules="rules"
+        element-loading-text="加载中，请稍后..."
+        element-loading-spinner="el-icon-loading"
+      >
         <el-table
+          ref="configTemplateInfoTable"
           border
           stripe
-          ref="configTemplateInfoTable"
           :data="form.jsonObjs"
           highlight-current-row
           style="width: 100%"
@@ -21,56 +29,56 @@
         >
           <el-table-column prop="name" label="字段名称" width="160" align="center">
             <template slot-scope="scope">
-              <el-form-item :prop="'jsonObjs.' + scope.$index + '.name'" :rules="rules.name" label-width="0" >
+              <el-form-item :prop="'jsonObjs.' + scope.$index + '.name'" :rules="rules.name" label-width="0">
                 <el-input v-model="scope.row.name" />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="code" label="字段编码" width="160"  align="center">
+          <el-table-column prop="code" label="字段编码" width="160" align="center">
             <template slot-scope="scope">
-              <el-form-item :prop="'jsonObjs.' + scope.$index + '.code'" :rules="rules.code" label-width="0" >
+              <el-form-item :prop="'jsonObjs.' + scope.$index + '.code'" :rules="rules.code" label-width="0">
                 <el-input v-model="scope.row.code" />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="type" label="字段类型" width="200" align="center">
             <template slot-scope="scope">
-              <el-form-item :prop="'jsonObjs.' + scope.$index + '.type'" :rules="rules.type" label-width="0" >
+              <el-form-item :prop="'jsonObjs.' + scope.$index + '.type'" :rules="rules.type" label-width="0">
                 <el-select v-model="scope.row.type" placeholder="请选择">
                   <el-option
                     v-for="item in typeDict"
                     :key="item.id"
                     :label="item.name"
-                    :value="item.code">
-                  </el-option>
+                    :value="item.code"
+                  />
                 </el-select>
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="defaultValue" label="缺省值" width="160" align="center">
             <template slot-scope="scope">
-              <el-form-item :prop="'jsonObjs.' + scope.$index + '.defaultValue'" :rules="rules.defaultValue" label-width="0" >
+              <el-form-item :prop="'jsonObjs.' + scope.$index + '.defaultValue'" :rules="rules.defaultValue" label-width="0">
                 <el-input v-model="scope.row.defaultValue" />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="sort" label="排序" width="100"  align="center">
+          <el-table-column prop="sort" label="排序" width="100" align="center">
             <template slot-scope="scope">
-              <el-form-item :prop="'jsonObjs.' + scope.$index + '.sort'" :rules="rules.sort" label-width="0" >
+              <el-form-item :prop="'jsonObjs.' + scope.$index + '.sort'" :rules="rules.sort" label-width="0">
                 <el-input v-model.number="scope.row.sort" />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="comment" label="注释" align="center">
             <template slot-scope="scope">
-              <el-form-item :prop="'jsonObjs.' + scope.$index + '.comment'" :rules="rules.comment" label-width="0" >
+              <el-form-item :prop="'jsonObjs.' + scope.$index + '.comment'" :rules="rules.comment" label-width="0">
                 <el-input v-model="scope.row.comment" />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="handler" width="100" label="操作" align="center">
             <template slot-scope="scope">
-              <el-form-item label-width="0" >
+              <el-form-item label-width="0">
                 <el-button type="danger" @click="delField(scope.$index)">删除</el-button>
               </el-form-item>
             </template>
@@ -79,8 +87,8 @@
       </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="addField">新增字段</el-button>
-      <el-button type="primary" @click="handleSubmit('form')">确 定</el-button>
+      <el-button type="primary" @click="addField">新增字段</el-button>
+      <el-button type="primary" :loading="submitLoading" @click="handleSubmit('form')">确 定</el-button>
       <el-button @click="resetForm('form')">取 消</el-button>
     </span>
   </el-dialog>
@@ -105,6 +113,8 @@ export default {
   },
   data() {
     return {
+      initloading: false,
+      submitLoading: false,
       tmpVisible: this.visible,
       type: 'insert',
       typeDict: [],
@@ -181,7 +191,9 @@ export default {
     },
     handleUpdate() {
       this.form.template = JSON.stringify(this.form.jsonObjs)
+      this.submitLoading = true
       api.update(this.form).then(response => {
+        this.submitLoading = false
         this.$notify.success({ title: '成功', message: '编辑成功' })
         this.$parent.getConfigTemplateList()
         this.tmpVisible = false
@@ -189,14 +201,16 @@ export default {
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '编辑失败' })
+        this.submitLoading = false
       })
     },
     getById(id) {
+      this.initloading = true
       api.getById(id).then(response => {
+        this.initloading = false
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.initloading = false
       })
     },
     resetForm(formName) {
