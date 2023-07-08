@@ -6,8 +6,13 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="50%"
+    class="jy-dialog"
   >
-    <div>
+    <div
+      v-loading="initloading"
+      element-loading-text="加载中，请稍后..."
+      element-loading-spinner="el-icon-loading"
+    >
       <el-descriptions :column="2" border>
         <el-descriptions-item>
           <template slot="label">
@@ -80,6 +85,7 @@ export default {
   data() {
     return {
       tmpVisible: this.visible,
+      initloading: false,
       form: {
         id: '',
         tableName: '',
@@ -107,10 +113,12 @@ export default {
   },
   methods: {
     getById(id) {
+      this.initloading = true
       codeGenApi.getSingleTableById(id).then(response => {
+        this.initloading = false
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.initloading = false
       })
     }
   }

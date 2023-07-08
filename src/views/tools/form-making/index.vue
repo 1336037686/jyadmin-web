@@ -1,9 +1,7 @@
 <template>
-
-    <!-- 引自 https://github.com/JakHuang/form-generator 表单设计工具， 后续需参照其进行二次开发，封装成一个单独的组件进行引入 -->
-<!--    <iframe :src="iframeUrl" width="100%" height="800px" scrolling="no" frameborder="0"  id="docIframe"></iframe>-->
-
-  <el-card shadow="" style="margin: 10px;">
+  <!-- 引自 https://github.com/JakHuang/form-generator 表单设计工具， 后续需参照其进行二次开发，封装成一个单独的组件进行引入 -->
+  <!--<iframe :src="iframeUrl" width="100%" height="800px" scrolling="no" frameborder="0"  id="docIframe"></iframe>-->
+  <el-card shadow="never" style="padding: 0;margin: 0">
     <!--  官方文档：https://www.yuque.com/variantdev/vform  -->
     <v-form-designer ref="vfDesigner" :designer-config="designerConfig" />
   </el-card>
@@ -26,8 +24,7 @@ export default {
         // 是否显示导出JSON器按钮
         exportJsonButton: false,
         // 是否显示导出代码按钮
-        exportCodeButton: false,
-
+        exportCodeButton: false
       }
     }
   },
@@ -57,5 +54,9 @@ export default {
 
   .el-header.main-header {
     display: none !important;
+  }
+
+  .main-container {
+    background-color: #ffffff!important;
   }
 </style>

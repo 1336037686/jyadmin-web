@@ -6,6 +6,7 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="40%"
+    class="jy-dialog"
   >
     <div>
       <div>
@@ -29,7 +30,7 @@
           highlight-current-row
           style="width: 100%"
           empty-text="暂无数据"
-          :header-cell-style="{background:'#FAFAFA'}"
+          :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
         >
           <!--          <el-table-column type="selection" width="55" align="center" />-->
           <el-table-column type="index" width="100" label="序号" align="center" />

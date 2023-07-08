@@ -6,8 +6,13 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="50%"
+    class="jy-dialog"
   >
-    <div>
+    <div
+      v-loading="initloading"
+      element-loading-text="加载中，请稍后..."
+      element-loading-spinner="el-icon-loading"
+    >
       <el-descriptions :column="2" border>
 
         <el-descriptions-item>
@@ -69,12 +74,12 @@
           {{ form.requestMethod }}
         </el-descriptions-item>
 
-<!--        <el-descriptions-item>-->
-<!--          <template slot="label">-->
-<!--            请求参数-->
-<!--          </template>-->
-<!--          {{ form.requestParam }}-->
-<!--        </el-descriptions-item>-->
+        <!--        <el-descriptions-item>-->
+        <!--          <template slot="label">-->
+        <!--            请求参数-->
+        <!--          </template>-->
+        <!--          {{ form.requestParam }}-->
+        <!--        </el-descriptions-item>-->
         <el-descriptions-item>
           <template slot="label">
             请求时间
@@ -87,7 +92,6 @@
           </template>
           {{ form.method }}
         </el-descriptions-item>
-
 
         <el-descriptions-item>
           <template slot="label">
@@ -102,18 +106,18 @@
           {{ form.executeTime }}
         </el-descriptions-item>
 
-<!--        <el-descriptions-item :span="2">-->
-<!--          <template slot="label">-->
-<!--            返回数据-->
-<!--          </template>-->
-<!--          {{ form.responseData }}-->
-<!--        </el-descriptions-item>-->
-<!--        <el-descriptions-item :span="2">-->
-<!--          <template slot="label">-->
-<!--            异常内容-->
-<!--          </template>-->
-<!--          {{ form.errorDesc }}-->
-<!--        </el-descriptions-item>-->
+        <!--        <el-descriptions-item :span="2">-->
+        <!--          <template slot="label">-->
+        <!--            返回数据-->
+        <!--          </template>-->
+        <!--          {{ form.responseData }}-->
+        <!--        </el-descriptions-item>-->
+        <!--        <el-descriptions-item :span="2">-->
+        <!--          <template slot="label">-->
+        <!--            异常内容-->
+        <!--          </template>-->
+        <!--          {{ form.errorDesc }}-->
+        <!--        </el-descriptions-item>-->
 
       </el-descriptions>
     </div>
@@ -142,6 +146,7 @@ export default {
   },
   data() {
     return {
+      initloading: false,
       tmpVisible: this.visible,
       form: {
         id: '',
@@ -178,10 +183,12 @@ export default {
   },
   methods: {
     getById(id) {
+      this.initloading = true
       logApi.getById(id).then(response => {
+        this.initloading = false
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.initloading = false
       })
     }
   }

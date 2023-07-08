@@ -5,20 +5,18 @@
     :direction="'rtl'"
     :wrapper-closable="false"
     size="90%"
+    class="jy-drawer"
   >
     <div
       v-loading="tmpLoading"
-      style="margin: 10px"
       element-loading-text="加载中，请稍后..."
       element-loading-spinner="el-icon-loading"
     >
-      <div style="margin: 10px">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane v-for="(item, index) in codeDatas" :key="'code_' + index" :label="item.name" :name="item.name" />
-        </el-tabs>
-        <div class="json-editor" style="margin: 5px;border: 1px solid #ccc;">
-          <codemirror v-model="code" class="code" :options="cmOptions" />
-        </div>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane v-for="(item, index) in codeDatas" :key="'code_' + index" :label="item.name" :name="item.name" />
+      </el-tabs>
+      <div class="json-editor" style="margin: 5px;border: 1px solid #ccc;">
+        <codemirror v-model="code" class="code" :options="cmOptions" />
       </div>
     </div>
   </el-drawer>
@@ -103,6 +101,8 @@ export default {
           this.activeName = this.codeDatas[0].name
           this.handleClick()
         }
+      }).catch(e => {
+        this.tmpLoading = false
       })
     },
     handleClick() {

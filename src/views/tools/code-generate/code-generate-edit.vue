@@ -5,16 +5,16 @@
     :direction="'rtl'"
     :wrapper-closable="false"
     size="90%"
+    class="jy-drawer"
   >
     <div
       v-loading="tmpLoading"
-      style="margin: 10px"
       element-loading-text="加载中，请稍后..."
       element-loading-spinner="el-icon-loading"
     >
-      <div style="margin-top: 10px; text-align: right;">
+      <div style="text-align: right;">
         <el-button type="warning" @click="handleReset('tableConfigForm')"> 重 置  </el-button>
-        <el-button type="primary" @click="handleSubmit('tableConfigForm')"> 保 存  </el-button>
+        <el-button type="primary" :loading="submitLoading" @click="handleSubmit('tableConfigForm')"> 保 存  </el-button>
       </div>
 
       <el-card class="box-card" shadow="always" style="margin-top: 10px;">
@@ -293,6 +293,7 @@ export default {
   data() {
     return {
       tmpLoading: false,
+      submitLoading: false,
       tmpVisible: this.visible,
       okOptions: [
         { name: '否', code: '0' },
@@ -424,15 +425,14 @@ export default {
           for (let i = 0; i < this.form.fields.length; i++) {
             fieldConfigs.push(this.form.fields[i].fieldConfig)
           }
-          console.log('handleSubmit')
-          console.log(tableConfig)
-          console.log(fieldConfigs)
+          this.submitLoading = true
           codeGenApi.updateConfig({ tableConfig: tableConfig, fieldConfigs: fieldConfigs }).then(response => {
+            this.submitLoading = false
             this.$notify.success({ title: '成功', message: '修改成功' })
             this.$parent.getList()
             this.getById(this.id)
           }).catch(e => {
-            this.$notify.error({ title: '失败', message: '修改失败' })
+            this.submitLoading = false
           })
         }
       })

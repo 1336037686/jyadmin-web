@@ -1,5 +1,10 @@
 <template>
-  <div style="margin: 10px">
+  <div
+    v-loading="deleteLoading"
+    style="margin: 10px"
+    element-loading-text="删除中，请稍后..."
+    element-loading-spinner="el-icon-loading"
+  >
     <el-card class="box-card" shadow="always">
       <el-form v-show="queryFormVisiable" :inline="true" :model="queryForm" label-width="100px">
         <el-form-item label="操作用户：">
@@ -48,20 +53,18 @@
         <el-table-column prop="application" label="设备" align="center" />
         <el-table-column prop="requestTime" label="请求时间" align="center" show-overflow-tooltip />
       </el-table>
+      <div style="text-align: center;margin-top: 10px">
+        <el-pagination
+          v-model="tableData.pageNumber"
+          background
+          layout="total, prev, pager, next"
+          :page-size="tableData.pageSize"
+          :hide-on-single-page="true"
+          :total="tableData.total"
+          @current-change="handleChangePage"
+        />
+      </div>
     </el-card>
-
-    <div style="text-align: center;margin-top: 10px">
-      <el-pagination
-        v-model="tableData.pageNumber"
-        background
-        layout="total, prev, pager, next"
-        :page-size="tableData.pageSize"
-        :hide-on-single-page="true"
-        :total="tableData.total"
-        @current-change="handleChangePage"
-      />
-    </div>
-
     <jy-log-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
   </div>
 </template>
@@ -75,6 +78,7 @@ export default {
   data() {
     return {
       queryFormVisiable: true,
+      deleteLoading: false,
       queryForm: {
         username: '',
         handleName: ''
@@ -140,15 +144,18 @@ export default {
       this.$confirm('此操作将永久删除选中数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        customClass: 'jy-message-box'
       }).then(() => {
         const ids = []
         for (let i = 0; i < this.$refs.table.selection.length; i++) ids.push(this.$refs.table.selection[i].id)
+        this.deleteLoading = true
         logApi.remove(ids).then(response => {
+          this.deleteLoading = false
           this.getList()
           this.$notify.success({ title: '成功', message: '删除成功' })
         }).catch(e => {
-          this.$notify.error({ title: '失败', message: '删除失败' })
+          this.deleteLoading = false
         })
       })
     },
