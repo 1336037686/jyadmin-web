@@ -1,5 +1,5 @@
 <template>
-  <el-card shadow="never" >
+  <el-card shadow="never">
     <el-form ref="form" :label-position="'left'" :rules="rules" :model="currUserInfo">
       <el-form-item label="">
         <el-avatar shape="square" :size="100" :fit="'fill'" :src="currUserInfo.avatar" />
@@ -12,8 +12,8 @@
         <el-input v-model.trim="currUserInfo.phone" />
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="default" @click="reset" size="small" style="margin-top: 10px" icon="el-icon-refresh">重置信息</el-button>
-        <el-button type="primary" @click="submit" size="small" style="margin-top: 10px;margin-left: 10px" icon="el-icon-edit">确认修改</el-button>
+        <el-button type="default" size="small" style="margin-top: 10px" icon="el-icon-refresh" @click="reset">重置信息</el-button>
+        <el-button type="primary" size="small" style="margin-top: 10px;margin-left: 10px" icon="el-icon-edit" @click="submit">确认修改</el-button>
       </el-form-item>
     </el-form>
     <el-dialog title="上传头像" :visible.sync="dialogVisible" width="30%">
@@ -200,3 +200,16 @@ export default {
   }
 }
 </script>
+<style scoped>
+/deep/ .el-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/deep/ .el-avatar img {
+  max-width: 100%;
+  max-height: 100%;
+}
+</style>
