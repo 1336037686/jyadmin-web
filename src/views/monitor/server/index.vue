@@ -8,10 +8,13 @@
         </div>
         <div>
           <el-table
+            v-loading="systemInfoLoading"
             border
             :show-header="false"
             :empty-text="'暂无数据'"
             :data="systemInfoRecord"
+            element-loading-text="加载中，请稍后..."
+            element-loading-spinner="el-icon-loading"
             style="width: 100%"
           >
             <el-table-column prop="label" width="150" align="center" />
@@ -32,10 +35,13 @@
         <div v-show="cpuInfoShowType === 'table'">
           <el-scrollbar style="height:300px" wrap-style="overflow-x:hidden;">
             <el-table
+              v-loading="cpuInfoLoading"
               border
               :show-header="false"
               :empty-text="'暂无数据'"
               :data="cpuInfoRecord"
+              element-loading-text="加载中，请稍后..."
+              element-loading-spinner="el-icon-loading"
               style="width: 100%"
             >
               <el-table-column prop="label" width="180" align="center" />
@@ -60,10 +66,13 @@
         <div v-show="memoryInfoShowType === 'table'">
           <el-scrollbar style="height:300px" wrap-style="overflow-x:hidden;">
             <el-table
+              v-loading="memoryInfoLoading"
               border
               :show-header="false"
               :empty-text="'暂无数据'"
               :data="memoryInfoRecord"
+              element-loading-text="加载中，请稍后..."
+              element-loading-spinner="el-icon-loading"
               style="width: 100%"
             >
               <el-table-column prop="label" width="180" align="center" />
@@ -87,9 +96,12 @@
         <div>
           <el-scrollbar style="height:300px" wrap-style="overflow-x:hidden;">
             <el-table
+              v-loading="networkInfoLoading"
               border
               :empty-text="'暂无数据'"
               :data="networkInfoRecord"
+              element-loading-text="加载中，请稍后..."
+              element-loading-spinner="el-icon-loading"
               style="width: 100%"
             >
               <el-table-column prop="displayName" label="网卡名称" align="center" show-overflow-tooltip />
@@ -113,30 +125,33 @@
         <div>
           <el-scrollbar style="height:300px" wrap-style="overflow-x:hidden;">
             <el-table
+              v-loading="diskInfoLoading"
               border
               :empty-text="'暂无数据'"
               :data="diskInfoRecord"
+              element-loading-text="加载中，请稍后..."
+              element-loading-spinner="el-icon-loading"
               style="width: 100%"
             >
               <el-table-column prop="dirName" label="盘符路径" align="center" show-overflow-tooltip />
-<!--              <el-table-column prop="sysTypeName" label="盘符类型" width="100" align="center" show-overflow-tooltip />-->
-<!--              <el-table-column prop="typeName" label="文件类型"  width="100" align="center" show-overflow-tooltip />-->
-              <el-table-column prop="total" label="总大小" align="center" show-overflow-tooltip >
+              <!--              <el-table-column prop="sysTypeName" label="盘符类型" width="100" align="center" show-overflow-tooltip />-->
+              <!--              <el-table-column prop="typeName" label="文件类型"  width="100" align="center" show-overflow-tooltip />-->
+              <el-table-column prop="total" label="总大小" align="center" show-overflow-tooltip>
                 <template slot-scope="scope">
                   {{ (scope.row.total / 1024 / 1024 / 1024 ).toFixed(2) + ' GB' }}
                 </template>
               </el-table-column>
-              <el-table-column prop="used" label="已经使用量" align="center" show-overflow-tooltip >
+              <el-table-column prop="used" label="已经使用量" align="center" show-overflow-tooltip>
                 <template slot-scope="scope">
                   {{ (scope.row.used / 1024 / 1024 / 1024 ).toFixed(2) + ' GB' }}
                 </template>
               </el-table-column>
-              <el-table-column prop="free" label="剩余大小" align="center" show-overflow-tooltip >
+              <el-table-column prop="free" label="剩余大小" align="center" show-overflow-tooltip>
                 <template slot-scope="scope">
                   {{ (scope.row.free / 1024 / 1024 / 1024 ).toFixed(2) + ' GB' }}
                 </template>
               </el-table-column>
-              <el-table-column prop="usage" label="资源使用率" align="center" show-overflow-tooltip >
+              <el-table-column prop="usage" label="资源使用率" align="center" show-overflow-tooltip>
                 <template slot-scope="scope">
                   {{ (scope.row.usage * 100) + ' %' }}
                 </template>
@@ -157,10 +172,13 @@
         <div>
           <el-scrollbar style="height:300px" wrap-style="overflow-x:hidden;">
             <el-table
+              v-loading="jvmInfoLoading"
               border
               :show-header="false"
               :empty-text="'暂无数据'"
               :data="jvmInfoRecord"
+              element-loading-text="加载中，请稍后..."
+              element-loading-spinner="el-icon-loading"
               style="width: 100%"
             >
               <el-table-column prop="label" width="180" align="center" />
@@ -193,7 +211,13 @@ export default {
       diskInfo: null,
       diskInfoRecord: [],
       networkInfo: null,
-      networkInfoRecord: []
+      networkInfoRecord: [],
+      systemInfoLoading: false,
+      cpuInfoLoading: false,
+      memoryInfoLoading: false,
+      networkInfoLoading: false,
+      diskInfoLoading: false,
+      jvmInfoLoading: false
     }
   },
   mounted() {
@@ -206,7 +230,9 @@ export default {
   },
   methods: {
     getSystemInfo() {
+      this.systemInfoLoading = true
       api.getSystemInfo().then(res => {
+        this.systemInfoLoading = false
         this.systemInfo = res.data
         this.systemInfoRecord = []
         this.systemInfoRecord.push({ label: '服务器名称', value: res.data.computerName })
@@ -214,10 +240,14 @@ export default {
         this.systemInfoRecord.push({ label: '操作系统', value: res.data.osName })
         this.systemInfoRecord.push({ label: '系统架构', value: res.data.osArch })
         this.systemInfoRecord.push({ label: '项目路径', value: res.data.userDir })
+      }).catch(e => {
+        this.systemInfoLoading = false
       })
     },
     getCpuInfo() {
+      this.cpuInfoLoading = true
       api.getCpuInfo().then(res => {
+        this.cpuInfoLoading = false
         this.cpuInfo = res.data
         this.cpuInfoRecord = []
         this.cpuInfoRecord.push({ label: 'CPU型号信息', value: res.data.cpuModel })
@@ -229,11 +259,12 @@ export default {
         this.cpuInfoRecord.push({ label: 'CPU用户使用率（%）', value: res.data.user })
         this.cpuInfoRecord.push({ label: 'CPU当前等待率（%）', value: res.data.wait })
         this.drawCpuInfoChart()
+      }).catch(e => {
+        this.cpuInfoLoading = false
       })
     },
     drawCpuInfoChart() {
       const chart = echarts.init(document.getElementById('cpuInfo'))
-
       const option = {
         tooltip: {
           trigger: 'item',
@@ -290,13 +321,17 @@ export default {
       chart.setOption(option)
     },
     getMemoryInfo() {
+      this.memoryInfoLoading = true
       api.getMemoryInfo().then(res => {
+        this.memoryInfoLoading = false
         this.memoryInfo = res.data
         this.memoryInfoRecord = []
         this.memoryInfoRecord.push({ label: '内存总量', value: (res.data.total / 1024 / 1024 / 1024).toFixed(2) + ' GB' })
         this.memoryInfoRecord.push({ label: '已用内存', value: (res.data.used / 1024 / 1024 / 1024).toFixed(2) + ' GB' })
         this.memoryInfoRecord.push({ label: '剩余内存', value: (res.data.free / 1024 / 1024 / 1024).toFixed(2) + ' GB' })
         this.drawMemoryInfoChart()
+      }).catch(e => {
+        this.memoryInfoLoading = false
       })
     },
     drawMemoryInfoChart() {
@@ -358,7 +393,9 @@ export default {
       chart.setOption(option)
     },
     getJvmInfo() {
+      this.jvmInfoLoading = true
       api.getJvmInfo().then(res => {
+        this.jvmInfoLoading = false
         this.jvmInfo = res.data
         this.jvmInfoRecord = []
         this.jvmInfoRecord.push({ label: 'JVM名称', value: res.data.name })
@@ -369,18 +406,28 @@ export default {
         this.jvmInfoRecord.push({ label: 'JVM空闲内存', value: (res.data.freeMemory / 1024 / 1024).toFixed(2) + ' MB' })
         this.jvmInfoRecord.push({ label: 'JVM已分配内存', value: (res.data.totalMemory / 1024 / 1024).toFixed(2) + ' MB' })
         this.jvmInfoRecord.push({ label: 'JVM最大可用内存', value: (res.data.usableMemory / 1024 / 1024).toFixed(2) + ' MB' })
+      }).catch(e => {
+        this.jvmInfoLoading = false
       })
     },
     getDiskInfo() {
+      this.diskInfoLoading = true
       api.getDiskInfo().then(res => {
+        this.diskInfoLoading = false
         this.diskInfo = res.data
         this.diskInfoRecord = res.data
+      }).catch(e => {
+        this.diskInfoLoading = false
       })
     },
     getNetworkInfo() {
+      this.networkInfoLoading = true
       api.getNetworkInfo().then(res => {
+        this.networkInfoLoading = false
         this.networkInfo = res.data
         this.networkInfoRecord = res.data
+      }).catch(e => {
+        this.networkInfoLoading = false
       })
     }
   }
