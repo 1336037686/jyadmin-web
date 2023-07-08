@@ -5,7 +5,7 @@
     :close-on-press-escape="false"
     :close-on-click-modal="false"
     :show-close="false"
-    width="55%"
+    width="60%"
     class="jy-dialog"
   >
     <div>
@@ -25,7 +25,8 @@
           highlight-current-row
           style="width: 100%"
           empty-text="暂无数据"
-          :header-cell-style="{background:'#FAFAFA'}"
+          :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
+          max-height="500"
         >
           <el-table-column prop="name" label="字段名称" width="160" align="center">
             <template slot-scope="scope">
@@ -223,5 +224,23 @@ export default {
 </script>
 
 <style scoped>
+/deep/ ::-webkit-scrollbar {
+  width: 7px;
+}
 
+/deep/ ::-webkit-scrollbar-track {
+  background-color: #f3f3f3;
+}
+
+/deep/ ::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+}
+
+/deep/ ::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
+}
+
+/deep/ ::-webkit-scrollbar-thumb:active {
+  background-color: #aaa;
+}
 </style>

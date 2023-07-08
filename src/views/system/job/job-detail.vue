@@ -6,8 +6,13 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="35%"
+    class="jy-dialog"
   >
-    <div>
+    <div
+      v-loading="initloading"
+      element-loading-text="加载中，请稍后..."
+      element-loading-spinner="el-icon-loading"
+    >
       <el-descriptions :column="2" border>
         <el-descriptions-item :span="1">
           <template slot="label">
@@ -15,25 +20,25 @@
           </template>
           {{ form.code }}
         </el-descriptions-item>
-        <el-descriptions-item :span="1" >
+        <el-descriptions-item :span="1">
           <template slot="label">
             任务名称
           </template>
           {{ form.name }}
         </el-descriptions-item>
-        <el-descriptions-item :span="1" >
+        <el-descriptions-item :span="1">
           <template slot="label">
             cron表达式
           </template>
           {{ form.cronExpression }}
         </el-descriptions-item>
-        <el-descriptions-item :span="1" >
+        <el-descriptions-item :span="1">
           <template slot="label">
             定时任务类
           </template>
           {{ form.bean }}
         </el-descriptions-item>
-        <el-descriptions-item :span="1" >
+        <el-descriptions-item :span="1">
           <template slot="label">
             定时任务方法
           </template>
@@ -121,6 +126,7 @@ export default {
   data() {
     return {
       tmpVisible: this.visible,
+      initloading: false,
       form: {
         createTime: null,
         updateTime: null,
@@ -154,10 +160,12 @@ export default {
   },
   methods: {
     getById(id) {
+      this.initloading = true
       api.getById(id).then(response => {
+        this.initloading = false
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.initloading = false
       })
     }
   }

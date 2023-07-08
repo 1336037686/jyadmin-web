@@ -59,19 +59,18 @@
         <!--          </template>-->
         <!--        </el-table-column>-->
       </el-table>
+      <div style="text-align: center;margin-top: 10px">
+        <el-pagination
+          v-model="tableData.pageNumber"
+          background
+          layout="total, prev, pager, next"
+          :page-size="tableData.pageSize"
+          :hide-on-single-page="true"
+          :total="tableData.total"
+          @current-change="handleChangePage"
+        />
+      </div>
     </el-card>
-
-    <div style="text-align: center;margin-top: 10px">
-      <el-pagination
-        v-model="tableData.pageNumber"
-        background
-        layout="total, prev, pager, next"
-        :page-size="tableData.pageSize"
-        :hide-on-single-page="true"
-        :total="tableData.total"
-        @current-change="handleChangePage"
-      />
-    </div>
 
     <!--    <el-drawer-->
     <!--      :title="showData.title"-->

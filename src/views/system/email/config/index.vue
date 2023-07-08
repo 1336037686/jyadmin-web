@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="tab" style="margin: 20px">
+  <el-tabs v-model="tab" type="border-card" style="margin: 10px">
     <el-tab-pane label="邮件配置" name="config">
       <el-row style="margin-top: 10px">
         <el-col :span="6">

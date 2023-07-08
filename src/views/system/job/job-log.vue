@@ -5,8 +5,9 @@
     :wrapper-closable="false"
     direction="rtl"
     size="70%"
+    class="jy-drawer"
   >
-    <div style="margin: 10px">
+    <div>
       <el-table
         ref="table"
         v-loading="tableData.loading"

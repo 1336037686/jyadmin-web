@@ -5,10 +5,19 @@
     :close-on-press-escape="false"
     :close-on-click-modal="false"
     :show-close="false"
-    width="40%"
+    width="45%"
+    class="jy-dialog"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="140px">
+      <el-form
+        ref="form"
+        v-loading="initloading"
+        :rules="rules"
+        :model="form"
+        label-width="150px"
+        element-loading-text="加载中，请稍后..."
+        element-loading-spinner="el-icon-loading"
+      >
         <el-row>
           <el-col :span="12">
             <el-form-item label="任务编号：" prop="code">
@@ -20,7 +29,8 @@
               <el-input v-model="form.name" />
             </el-form-item>
           </el-col>
-
+        </el-row>
+        <el-row>
           <el-col :span="12">
             <el-form-item label="cron表达式：" prop="cronExpression">
               <el-input v-model="form.cronExpression" placeholder="* * * * * * ?" />
@@ -31,6 +41,8 @@
               <el-input v-model="form.bean" />
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12">
             <el-form-item label="定时任务方法：" prop="method">
               <el-input v-model="form.method" />
@@ -44,6 +56,8 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12">
             <el-form-item label="负责人：" prop="principal">
               <el-input v-model="form.principal" />
@@ -54,11 +68,15 @@
               <el-input v-model="form.email" type="email" />
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="24">
             <el-form-item label="任务参数(JSON)：" prop="params">
               <el-input v-model="form.params" placeholder="{ name: 'zhangsan', age: 16 }" />
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="24">
             <el-form-item label="描述：" prop="email">
               <el-input v-model="form.description" type="textarea" />
@@ -68,7 +86,7 @@
       </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="handleSubmit('form')">确 定</el-button>
+      <el-button type="primary" :loading="submitLoading" @click="handleSubmit('form')">确 定</el-button>
       <el-button @click="resetForm('form')">取 消</el-button>
     </span>
   </el-dialog>
@@ -103,6 +121,8 @@ export default {
 
     return {
       tmpVisible: this.visible,
+      initloading: false,
+      submitLoading: false,
       type: 'insert',
       form: {
         createTime: null,
@@ -187,7 +207,9 @@ export default {
       })
     },
     handleCreate() {
+      this.submitLoading = true
       api.add(this.form).then(response => {
+        this.submitLoading = false
         this.$notify.success({ title: '成功', message: '添加成功' })
         this.$parent.getList()
         this.tmpVisible = false
@@ -195,11 +217,13 @@ export default {
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '添加失败' })
+        this.submitLoading = false
       })
     },
     handleUpdate() {
+      this.submitLoading = true
       api.update(this.form).then(response => {
+        this.submitLoading = false
         this.$notify.success({ title: '成功', message: '修改成功' })
         this.$parent.getList()
         this.tmpVisible = false
@@ -207,14 +231,16 @@ export default {
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '修改失败' })
+        this.submitLoading = false
       })
     },
     getById(id) {
+      this.initloading = true
       api.getById(id).then(response => {
+        this.initloading = false
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.initloading = false
       })
     },
     resetForm(formName) {

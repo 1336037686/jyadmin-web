@@ -5,9 +5,14 @@
     :close-on-press-escape="false"
     :close-on-click-modal="false"
     :show-close="false"
-    width="55%"
+    width="60%"
+    class="jy-dialog"
   >
-    <div>
+    <div
+      v-loading="initloading"
+      element-loading-text="加载中，请稍后..."
+      element-loading-spinner="el-icon-loading"
+    >
       <el-table
         ref="configDetailInfoTable"
         border
@@ -16,6 +21,7 @@
         style="width: 100%"
         empty-text="暂无数据"
         :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
+        max-height="500"
       >
         <el-table-column prop="name" label="字段名称" width="180" align="center" show-overflow-tooltip />
         <el-table-column prop="code" label="字段编码" width="180" align="center" show-overflow-tooltip />
@@ -54,6 +60,7 @@ export default {
   },
   data() {
     return {
+      initloading: false,
       tmpVisible: this.visible,
       fieldTypeOptions: [],
       form: {
@@ -86,10 +93,12 @@ export default {
   },
   methods: {
     getById(id) {
+      this.initloading = true
       api.getById(id).then(response => {
+        this.initloading = false
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.initloading = false
       })
     }
   }
@@ -97,5 +106,23 @@ export default {
 </script>
 
 <style scoped>
+/deep/ ::-webkit-scrollbar {
+  width: 7px;
+}
 
+/deep/ ::-webkit-scrollbar-track {
+  background-color: #f3f3f3;
+}
+
+/deep/ ::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+}
+
+/deep/ ::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
+}
+
+/deep/ ::-webkit-scrollbar-thumb:active {
+  background-color: #aaa;
+}
 </style>
