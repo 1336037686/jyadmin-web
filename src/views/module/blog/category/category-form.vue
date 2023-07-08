@@ -6,9 +6,18 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="30%"
+    class="jy-dialog"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+      <el-form
+        ref="form"
+        v-loading="initloading"
+        :rules="rules"
+        :model="form"
+        label-width="80px"
+        element-loading-text="加载中，请稍后..."
+        element-loading-spinner="el-icon-loading"
+      >
         <el-form-item label="类别名称" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
@@ -22,7 +31,7 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="resetForm('form')">取 消</el-button>
-      <el-button type="primary" @click="handleSubmit('form')">确 定</el-button>
+      <el-button type="primary" :loading="submitLoading" @click="handleSubmit('form')">确 定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -48,6 +57,8 @@ export default {
   data() {
     return {
       tmpVisible: this.visible,
+      initloading: false,
+      submitLoading: false,
       type: 'insert',
       form: {
         id: '',
