@@ -31,8 +31,8 @@
           </el-card>
         </el-col>
 
-        <el-col :span="17" style="margin-left: 20px">
-          <el-card>
+        <el-col :span="18">
+          <el-card shadow="never">
             <div slot="header" class="clearfix">
               <span><i class="el-icon-caret-right" />  所选配置详情</span>
             </div>

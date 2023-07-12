@@ -30,7 +30,7 @@
         </el-col>
 
         <el-col :span="17" style="margin-left: 20px">
-          <el-card>
+          <el-card shadow="never">
             <div slot="header" class="clearfix">
               <span><i class="el-icon-caret-right" />  配置列表</span>
             </div>
