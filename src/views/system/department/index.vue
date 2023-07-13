@@ -33,8 +33,9 @@
           <div slot="header" class="clearfix">
             <span>部门列表</span>
             <el-row style="float: right">
-              <el-button icon="el-icon-search" circle size="mini" @click="() => {this.queryFormVisiable = !this.queryFormVisiable;calculateElementStyle()}" />
+              <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
               <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
+              <el-button icon="el-icon-s-grid" circle size="mini" @click="selectColumns()" />
             </el-row>
           </div>
           <el-table
@@ -53,23 +54,24 @@
             @select="handleTableRowSelect"
           >
             <el-table-column type="selection" width="60" align="center" />
-            <el-table-column prop="name" label="部门名称" :show-overflow-tooltip="true" />
-            <el-table-column prop="code" label="部门编码" align="center" :show-overflow-tooltip="true" />
-            <el-table-column prop="status" label="状态" align="center" :show-overflow-tooltip="true">
+            <el-table-column v-if="checkColumnDisplayed('name', columnsData.columns)" prop="name" label="部门名称" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('code', columnsData.columns)" prop="code" label="部门编码" align="center" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('status', columnsData.columns)" prop="status" label="状态" align="center" :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success" /> 启 用</el-tag>
                 <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> <i class="el-icon-error" /> 禁 用</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="sort" label="排序" align="center" :show-overflow-tooltip="true" />
-            <el-table-column prop="createTime" label="创建时间" align="center" :show-overflow-tooltip="true" />
-            <el-table-column prop="description" label="描述" align="center" width="350" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('sort', columnsData.columns)" prop="sort" label="排序" align="center" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('createTime', columnsData.columns)" prop="createTime" label="创建时间" align="center" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('description', columnsData.columns)" prop="description" label="描述" align="center" width="350" :show-overflow-tooltip="true" />
           </el-table>
         </el-card>
       </el-col>
     </el-row>
     <dept-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
     <dept-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <select-columns :title="columnsData.title" :columns="columnsData.columns" :visible.sync="columnsData.visiable" />
   </div>
 </template>
 
@@ -77,8 +79,9 @@
 import deptApi from '@/api/system/department/jy-department'
 import DeptForm from '@/views/system/department/dept-form'
 import DeptDetail from '@/views/system/department/dept-detail'
+import SelectColumns from '@/components/SelectColumns'
 export default {
-  components: { DeptDetail, DeptForm },
+  components: { DeptDetail, DeptForm, SelectColumns },
   data() {
     return {
       queryFormVisiable: true,
@@ -105,6 +108,17 @@ export default {
         current: null,
         record: []
       },
+      columnsData: {
+        visiable: false,
+        columns: [
+          { key: 'name', label: '部门名称', _showed: true },
+          { key: 'code', label: '部门编码', _showed: true },
+          { key: 'status', label: '状态', _showed: true },
+          { key: 'sort', label: '排序', _showed: true },
+          { key: 'createTime', label: '创建时间', _showed: true },
+          { key: 'description', label: '描述', _showed: true }
+        ]
+      },
       actionTreeData: []
     }
   },
@@ -121,6 +135,9 @@ export default {
       }).catch(e => {
         this.tableData.loading = false
       })
+    },
+    selectColumns() {
+      this.columnsData.visiable = true
     },
     handleQuery() {
       this.getList()

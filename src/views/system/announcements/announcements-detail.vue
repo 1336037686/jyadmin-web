@@ -9,29 +9,25 @@
   >
     <div>
       <el-descriptions :column="2" border>
-        <el-descriptions-item>
-          <template slot="label">
-            ID
-          </template>
-          {{ form.id }}
-        </el-descriptions-item>
-        <el-descriptions-item>
+        <el-descriptions-item span="2">
           <template slot="label">
             公告标题
           </template>
           {{ form.title }}
         </el-descriptions-item>
-        <el-descriptions-item>
+        <el-descriptions-item span="2">
+          <template slot="label">
+            公告状态
+          </template>
+          <el-tag v-if="form.status === 'draft'" type="info" effect="plain">{{ getNameByCode(statusOptions, form.status) }}</el-tag>
+          <el-tag v-if="form.status === 'published'" effect="plain">{{ getNameByCode(statusOptions, form.status) }}</el-tag>
+          <el-tag v-if="form.status === 'expired'" type="danger" effect="plain">{{ getNameByCode(statusOptions, form.status) }}</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item span="2">
           <template slot="label">
             公告内容
           </template>
           {{ form.content }}
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            公告状态草稿（draft）、已发布（published）、已过期（expired）
-          </template>
-          {{ form.status }}
         </el-descriptions-item>
       </el-descriptions>
     </div>
@@ -68,7 +64,8 @@ export default {
         title: null,
         content: null,
         status: null
-      }
+      },
+      statusOptions: []
     }
   },
   watch: {
@@ -83,12 +80,20 @@ export default {
     },
     deep: true
   },
+  created() {
+    this.getStatusOptions()
+  },
   methods: {
     getById(id) {
       AnnouncementsApi.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '获取数据失败' })
+      })
+    },
+    getStatusOptions() {
+      this.getDictByCode('sys_announcements_status').then(res => {
+        this.statusOptions = res.data
       })
     }
   }

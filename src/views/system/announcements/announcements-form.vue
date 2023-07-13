@@ -16,7 +16,9 @@
           <el-input v-model="form.content" />
         </el-form-item>
         <el-form-item label="公告状态" prop="status">
-          <el-input v-model="form.status" />
+          <el-select v-model="form.status" placeholder="" style="width: 100%">
+            <el-option v-for="item in statusOptions" :key="item.code" :label="item.name" :value="item.code" />
+          </el-select>
         </el-form-item>
       </el-form>
     </div>
@@ -69,7 +71,8 @@ export default {
         status: [
           { required: true, message: '请输入公告状态', trigger: 'blur' }
         ]
-      }
+      },
+      statusOptions: []
     }
   },
   watch: {
@@ -90,6 +93,9 @@ export default {
       this.$emit('update:visible', newVal)
     },
     deep: true
+  },
+  created() {
+    this.getStatusOptions()
   },
   methods: {
     handleSubmit(formName) {
@@ -129,6 +135,11 @@ export default {
         this.form = response.data
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '获取数据失败' })
+      })
+    },
+    getStatusOptions() {
+      this.getDictByCode('sys_announcements_status').then(res => {
+        this.statusOptions = res.data
       })
     },
     resetForm(formName) {

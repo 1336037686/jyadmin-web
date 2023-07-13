@@ -23,7 +23,7 @@ export default {
       type: Boolean
     },
     buttonTop: {
-      default: 250,
+      default: 300,
       type: Number
     }
   },
@@ -125,21 +125,21 @@ export default {
 }
 
 .handle-button {
-  width: 48px;
-  height: 48px;
+  width: 35px;
+  height: 35px;
   position: absolute;
-  left: -48px;
+  left: -35px;
   text-align: center;
-  font-size: 24px;
+  font-size: 18px;
   border-radius: 6px 0 0 6px !important;
   z-index: 0;
   pointer-events: auto;
   cursor: pointer;
   color: #fff;
-  line-height: 48px;
+  line-height: 35px;
   i {
-    font-size: 24px;
-    line-height: 48px;
+    font-size: 18px;
+    line-height: 35px;
   }
 }
 </style>

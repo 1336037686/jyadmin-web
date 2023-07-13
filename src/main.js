@@ -61,8 +61,12 @@ Vue.use(VForm) // 全局注册VForm(同时注册了v-form-designer和v-form-rend
 import dict from '@/utils/dict'
 Vue.use(dict)
 
+// 添加表格列判断工具类
+import columns from '@/utils/columns'
+Vue.use(columns)
+
 // 权限判断
-import permission from '@/directive/permission/index.js'
+import permission from '@/directive/permission'
 Vue.use(permission)
 
 // register global utility filters

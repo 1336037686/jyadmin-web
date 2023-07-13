@@ -6,7 +6,7 @@
       </el-button>
     </el-badge>
 
-    <el-dialog :visible.sync="dialogTableVisible" width="80%" append-to-body>
+    <el-dialog :visible.sync="dialogTableVisible" width="80%" append-to-body class="jy-dialog">
       <div slot="title">
         <span style="padding-right: 10px;">页面错误日志</span>
         <el-button size="mini" type="primary" icon="el-icon-delete" @click="clearAll">清除全部</el-button>

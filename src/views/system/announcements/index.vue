@@ -43,10 +43,15 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column type="index" width="80" label="序号" align="center" />
-        <el-table-column prop="id" label="ID" align="center" show-overflow-tooltip />
         <el-table-column prop="title" label="公告标题" align="center" show-overflow-tooltip />
-        <el-table-column prop="content" label="公告内容" align="center" show-overflow-tooltip />
-        <el-table-column prop="status" label="公告状态草稿（draft）、已发布（published）、已过期（expired）" align="center" show-overflow-tooltip />
+        <el-table-column prop="status" label="公告状态" align="center" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.status === 'draft'" type="info" effect="plain">{{ getNameByCode(statusOptions, scope.row.status) }}</el-tag>
+            <el-tag v-if="scope.row.status === 'published'" effect="plain">{{ getNameByCode(statusOptions, scope.row.status) }}</el-tag>
+            <el-tag v-if="scope.row.status === 'expired'" type="danger" effect="plain">{{ getNameByCode(statusOptions, scope.row.status) }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" align="center" show-overflow-tooltip />
       </el-table>
     </el-card>
 
@@ -103,10 +108,12 @@ export default {
       selectData: {
         current: null,
         record: []
-      }
+      },
+      statusOptions: []
     }
   },
   created() {
+    this.getStatusOptions()
     this.getList()
   },
   methods: {
@@ -133,12 +140,12 @@ export default {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.showData.title = '查看${field.fieldRemark}'
+      this.showData.title = '查看'
       this.showData.id = this.selectData.current.id
       this.showData.visiable = true
     },
     handleCreate() {
-      this.editData.title = '新增${field.fieldRemark}'
+      this.editData.title = '新增'
       this.editData.id = null
       this.editData.visiable = true
     },
@@ -147,7 +154,7 @@ export default {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.editData.title = '修改${field.fieldRemark}'
+      this.editData.title = '修改'
       this.editData.id = this.selectData.current.id
       this.editData.visiable = true
     },
@@ -170,6 +177,11 @@ export default {
         }).catch(e => {
           this.$notify.error({ title: '失败', message: '删除失败' })
         })
+      })
+    },
+    getStatusOptions() {
+      this.getDictByCode('sys_announcements_status').then(res => {
+        this.statusOptions = res.data
       })
     },
     handleTableRowClick(row, column, event) {
