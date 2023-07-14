@@ -35,6 +35,7 @@
             <el-row style="float: right">
               <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
               <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
+              <el-button icon="el-icon-s-grid" circle size="mini" @click="selectColumns()" />
             </el-row>
           </div>
           <el-table
@@ -52,22 +53,22 @@
           >
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column type="index" width="55" label="序号" align="center" />
-            <el-table-column prop="name" align="center" label="角色名称" show-overflow-tooltip />
-            <el-table-column prop="code" align="center" label="角色编码" show-overflow-tooltip />
-            <el-table-column prop="apiPermission" label="角色接口权限" align="center" width="220" show-overflow-tooltip>
+            <el-table-column v-if="checkColumnDisplayed('name', columnsData.columns)" prop="name" align="center" label="角色名称" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('code', columnsData.columns)" prop="code" align="center" label="角色编码" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('apiPermission', columnsData.columns)" prop="apiPermission" label="角色接口权限" align="center" width="220" show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-tag>{{ getNameByCode(apiPermissionOptions, scope.row.apiPermission) }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="status" align="center" label="状态" width="100">
+            <el-table-column v-if="checkColumnDisplayed('status', columnsData.columns)" prop="status" align="center" label="状态" width="100">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> 启 用 </el-tag>
                 <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> 禁 用 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="sort" align="center" label="排序" width="100" />
-            <el-table-column prop="createTime" label="创建时间" width="220" align="center" />
-            <el-table-column prop="description" label="角色描述" />
+            <el-table-column v-if="checkColumnDisplayed('sort', columnsData.columns)" prop="sort" align="center" label="排序" width="100" />
+            <el-table-column v-if="checkColumnDisplayed('createTime', columnsData.columns)" prop="createTime" label="创建时间" width="220" align="center" />
+            <el-table-column v-if="checkColumnDisplayed('description', columnsData.columns)" prop="description" label="角色描述" />
           </el-table>
           <div style="text-align: center;margin-top: 10px">
             <el-pagination
@@ -121,6 +122,7 @@
 
     <role-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
     <role-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <select-columns :title="columnsData.title" :columns="columnsData.columns" :visible.sync="columnsData.visiable" />
   </div>
 </template>
 
@@ -129,8 +131,9 @@ import roleApi from '@/api/system/role/jy-role'
 import menuApi from '@/api/system/permission/jy-permission-menu'
 import RoleDetail from './role-detail'
 import RoleForm from './role-form'
+import SelectColumns from '@/components/SelectColumns'
 export default {
-  components: { RoleForm, RoleDetail },
+  components: { RoleForm, RoleDetail, SelectColumns },
   data() {
     return {
       queryFormVisiable: true,
@@ -165,6 +168,18 @@ export default {
         current: null,
         record: []
       },
+      columnsData: {
+        visiable: false,
+        columns: [
+          { key: 'name', label: '角色名称', _showed: true },
+          { key: 'code', label: '角色编码', _showed: true },
+          { key: 'apiPermission', label: '角色接口权限', _showed: true },
+          { key: 'status', label: '状态', _showed: true },
+          { key: 'sort', label: '排序', _showed: true },
+          { key: 'createTime', label: '创建时间', _showed: true },
+          { key: 'description', label: '角色描述', _showed: true }
+        ]
+      },
       menuTreeData: [],
       apiPermissionOptions: []
     }
@@ -187,6 +202,9 @@ export default {
         this.tableData = response
         this.tableData.loading = false
       })
+    },
+    selectColumns() {
+      this.columnsData.visiable = true
     },
     handleQuery() {
       this.tableData.pageNumber = 1
