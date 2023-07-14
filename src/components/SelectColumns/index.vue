@@ -23,7 +23,7 @@
               inactive-color="#ff4949"
               :active-value="true"
               :inactive-value="false"
-              @change="changeStatus"
+              @change="changeStatus(scope.row)"
             />
           </template>
         </el-table-column>
@@ -74,8 +74,13 @@ export default {
     deep: true
   },
   methods: {
-    changeStatus() {
-      console.log(this.tableData)
+    changeStatus(row) {
+      const count = this.tableData ? this.tableData.filter(item => item._showed === true).length : 0
+      if (count === 0) {
+        row._showed = true
+        this.$notify.warning({ title: '警告', message: '至少有一个展示列' })
+        return
+      }
       this.$emit('update:columns', this.tableData)
     }
   }

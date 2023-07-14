@@ -33,6 +33,7 @@
         <el-row style="float: right">
           <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
           <el-button icon="el-icon-refresh" circle size="mini" @click="handleQuery()" />
+          <el-button icon="el-icon-s-grid" circle size="mini" @click="selectColumns()" />
         </el-row>
       </div>
       <el-table
@@ -50,10 +51,10 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column type="index" width="80" label="序号" align="center" />
-        <el-table-column prop="name" label="岗位名称" align="center" />
-        <el-table-column prop="code" label="岗位编码" align="center" />
-        <el-table-column prop="createTime" label="创建时间" align="center" />
-        <el-table-column prop="description" label="岗位简介" align="center" width="600" />
+        <el-table-column v-if="checkColumnDisplayed('name', columnsData.columns)" prop="name" label="岗位名称" align="center" />
+        <el-table-column v-if="checkColumnDisplayed('code', columnsData.columns)" prop="code" label="岗位编码" align="center" />
+        <el-table-column v-if="checkColumnDisplayed('createTime', columnsData.columns)" prop="createTime" label="创建时间" align="center" />
+        <el-table-column v-if="checkColumnDisplayed('description', columnsData.columns)" prop="description" label="岗位简介" align="center" width="600" />
       </el-table>
       <div style="text-align: center;margin-top: 10px">
         <el-pagination
@@ -69,6 +70,7 @@
     </el-card>
     <post-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
     <post-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <select-columns :title="columnsData.title" :columns="columnsData.columns" :visible.sync="columnsData.visiable" />
   </div>
 </template>
 
@@ -76,8 +78,9 @@
 import postApi from '@/api/system/post/jy-post'
 import PostForm from './post-form'
 import PostDetail from './post-detail'
+import SelectColumns from '@/components/SelectColumns'
 export default {
-  components: { PostDetail, PostForm },
+  components: { PostDetail, PostForm, SelectColumns },
   data() {
     return {
       queryFormVisiable: true,
@@ -109,6 +112,15 @@ export default {
       selectData: {
         current: null,
         record: []
+      },
+      columnsData: {
+        visiable: false,
+        columns: [
+          { key: 'name', label: '岗位名称', _showed: true },
+          { key: 'code', label: '岗位编码', _showed: true },
+          { key: 'createTime', label: '创建时间', _showed: true },
+          { key: 'description', label: '岗位简介', _showed: true }
+        ]
       }
     }
   },
@@ -125,6 +137,9 @@ export default {
       }).catch(e => {
         this.tableData.loading = false
       })
+    },
+    selectColumns() {
+      this.columnsData.visiable = true
     },
     handleQuery() {
       this.tableData.pageNumber = 1
