@@ -35,6 +35,7 @@
             <el-row style="float: right">
               <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
               <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
+              <el-button icon="el-icon-s-grid" circle size="mini" @click="selectColumns()" />
             </el-row>
           </div>
           <el-table
@@ -53,17 +54,18 @@
             @select="handleTableRowSelect"
           >
             <el-table-column type="selection" width="60" align="center" />
-            <el-table-column prop="name" label="字典名称" :show-overflow-tooltip="true" />
-            <el-table-column prop="code" label="字典编码" align="center" :show-overflow-tooltip="true" />
-            <el-table-column prop="dictType" label="字典类型" align="center" :show-overflow-tooltip="true" />
-            <el-table-column prop="sort" label="排序" align="center" :show-overflow-tooltip="true" />
-            <el-table-column prop="createTime" label="创建时间" align="center" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('name', columnsData.columns)" prop="name" label="字典名称" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('code', columnsData.columns)" prop="code" label="字典编码" align="center" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('dictType', columnsData.columns)" prop="dictType" label="字典类型" align="center" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('sort', columnsData.columns)" prop="sort" label="排序" align="center" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('createTime', columnsData.columns)" prop="createTime" label="创建时间" align="center" :show-overflow-tooltip="true" />
           </el-table>
         </el-card>
       </el-col>
     </el-row>
     <dict-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
     <dict-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <select-columns :title="columnsData.title" :columns="columnsData.columns" :visible.sync="columnsData.visiable" />
   </div>
 </template>
 
@@ -71,9 +73,10 @@
 import dictApi from '@/api/system/datadict/jy-dict'
 import DictForm from '@/views/system/datadict/cascade-dict/dict-form'
 import DictDetail from '@/views/system/datadict/cascade-dict/dict-detail'
+import SelectColumns from '@/components/SelectColumns'
 export default {
   name: 'Dict',
-  components: { DictDetail, DictForm },
+  components: { DictDetail, DictForm, SelectColumns },
   data() {
     return {
       queryFormVisiable: true,
@@ -100,6 +103,16 @@ export default {
         current: null,
         record: []
       },
+      columnsData: {
+        visiable: false,
+        columns: [
+          { key: 'name', label: '字典名称', _showed: true },
+          { key: 'code', label: '字典编码', _showed: true },
+          { key: 'dictType', label: '字典类型', _showed: true },
+          { key: 'sort', label: '排序', _showed: true },
+          { key: 'createTime', label: '创建时间', _showed: true }
+        ]
+      },
       actionTreeData: []
     }
   },
@@ -114,6 +127,9 @@ export default {
         this.tableData.records = response.data
         this.tableData.loading = false
       })
+    },
+    selectColumns() {
+      this.columnsData.visiable = true
     },
     handleQuery() {
       this.getList()

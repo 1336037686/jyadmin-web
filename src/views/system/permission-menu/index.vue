@@ -35,6 +35,7 @@
             <el-row style="float: right">
               <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
               <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
+              <el-button icon="el-icon-s-grid" circle size="mini" @click="selectColumns()" />
             </el-row>
           </div>
           <el-table
@@ -53,47 +54,47 @@
             @select="handleTableRowSelect"
           >
             <el-table-column type="selection" width="55" align="center" />
-            <el-table-column prop="name" label="菜单标题" width="180" :show-overflow-tooltip="true" />
-            <el-table-column prop="code" label="菜单标识" width="180" align="center" :show-overflow-tooltip="true" />
-            <el-table-column prop="icon" label="图标" width="80" align="center">
+            <el-table-column v-if="checkColumnDisplayed('name', columnsData.columns)" prop="name" label="菜单标题" width="180" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('code', columnsData.columns)" prop="code" label="菜单标识" width="180" align="center" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('icon', columnsData.columns)" prop="icon" label="图标" width="80" align="center">
               <template slot-scope="scope">
                 <e-icon :icon-name="scope.row.icon" style="font-size: 20px" />
               </template>
             </el-table-column>
-            <el-table-column prop="type" label="菜单类别" width="100" align="center">
+            <el-table-column v-if="checkColumnDisplayed('type', columnsData.columns)" prop="type" label="菜单类别" width="100" align="center">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.type === 0" size="mini" effect="plain"> C 目 录</el-tag>
                 <el-tag v-if="scope.row.type === 1" size="mini" effect="plain" type="success"> M 菜 单</el-tag>
                 <el-tag v-if="scope.row.type === 2" size="mini" effect="plain" type="warning"> B 按 钮</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="url" label="路由地址" align="center" :show-overflow-tooltip="true" />
-            <el-table-column prop="path" label="组件路径" align="center" :show-overflow-tooltip="true" />
-            <el-table-column prop="link" label="外链" width="80" align="center">
+            <el-table-column v-if="checkColumnDisplayed('url', columnsData.columns)" prop="url" label="路由地址" align="center" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('path', columnsData.columns)" prop="path" label="组件路径" align="center" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('link', columnsData.columns)" prop="link" label="外链" width="80" align="center">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.link === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success" /> 是 </el-tag>
                 <el-tag v-if="scope.row.link === 0" size="mini" effect="plain" type="danger"> <i class="el-icon-error" /> 否 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="cache" label="缓存" width="80" align="center">
+            <el-table-column v-if="checkColumnDisplayed('cache', columnsData.columns)" prop="cache" label="缓存" width="80" align="center">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.cache === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success" /> 是 </el-tag>
                 <el-tag v-if="scope.row.cache === 0" size="mini" effect="plain" type="danger"> <i class="el-icon-error" /> 否 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="visiable" label="可见" width="80" align="center">
+            <el-table-column v-if="checkColumnDisplayed('visiable', columnsData.columns)" prop="visiable" label="可见" width="80" align="center">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.visiable === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success" /> 是 </el-tag>
                 <el-tag v-if="scope.row.visiable === 0" size="mini" effect="plain" type="danger"> <i class="el-icon-error" /> 否 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="status" label="状态" width="80" align="center">
+            <el-table-column v-if="checkColumnDisplayed('status', columnsData.columns)" prop="status" label="状态" width="80" align="center">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> <i class="el-icon-success" /> 启 用</el-tag>
                 <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> <i class="el-icon-error" /> 禁 用</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="sort" label="排序" width="80" align="center" />
+            <el-table-column v-if="checkColumnDisplayed('sort', columnsData.columns)" prop="sort" label="排序" width="80" align="center" />
           </el-table>
         </el-card>
       </el-col>
@@ -131,6 +132,7 @@
     </el-row>
     <jy-permission-menu-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
     <jy-permission-menu-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <select-columns :title="columnsData.title" :columns="columnsData.columns" :visible.sync="columnsData.visiable" />
   </div>
 </template>
 
@@ -139,8 +141,9 @@ import menuApi from '@/api/system/permission/jy-permission-menu'
 import actionApi from '@/api/system/permission/jy-permission-action'
 import JyPermissionMenuForm from '@/views/system/permission-menu/permission-menu-form'
 import JyPermissionMenuDetail from '@/views/system/permission-menu/permission-menu-detail'
+import SelectColumns from '@/components/SelectColumns'
 export default {
-  components: { JyPermissionMenuDetail, JyPermissionMenuForm },
+  components: { JyPermissionMenuDetail, JyPermissionMenuForm, SelectColumns },
   data() {
     return {
       queryFormVisiable: true,
@@ -169,6 +172,22 @@ export default {
         current: null,
         record: []
       },
+      columnsData: {
+        visiable: false,
+        columns: [
+          { key: 'name', label: '菜单标题', _showed: true },
+          { key: 'code', label: '菜单标识', _showed: true },
+          { key: 'icon', label: '图标', _showed: true },
+          { key: 'type', label: '菜单类别', _showed: true },
+          { key: 'url', label: '路由地址', _showed: true },
+          { key: 'path', label: '组件路径', _showed: true },
+          { key: 'link', label: '外链', _showed: true },
+          { key: 'cache', label: '缓存', _showed: true },
+          { key: 'visiable', label: '可见', _showed: true },
+          { key: 'status', label: '状态', _showed: true },
+          { key: 'sort', label: '排序', _showed: true }
+        ]
+      },
       actionTreeData: []
     }
   },
@@ -184,6 +203,9 @@ export default {
         this.tableData.records = response.data
         this.tableData.loading = false
       })
+    },
+    selectColumns() {
+      this.columnsData.visiable = true
     },
     handleQuery() {
       this.getList()

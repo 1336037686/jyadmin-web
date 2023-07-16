@@ -31,6 +31,7 @@
         <el-row style="float: right">
           <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
           <el-button icon="el-icon-refresh" circle size="mini" @click="getList()" />
+          <el-button icon="el-icon-s-grid" circle size="mini" @click="selectColumns()" />
         </el-row>
       </div>
       <el-table
@@ -47,23 +48,23 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column type="index" width="55" label="序号" align="center" />
-        <el-table-column prop="name" label="文件名" align="center" show-overflow-tooltip />
-        <el-table-column prop="realName" label="原文件名称" align="center" show-overflow-tooltip />
-        <el-table-column prop="source" label="文件存储平台" align="center" show-overflow-tooltip>
+        <el-table-column v-if="checkColumnDisplayed('name', columnsData.columns)" prop="name" label="文件名" align="center" show-overflow-tooltip />
+        <el-table-column v-if="checkColumnDisplayed('realName', columnsData.columns)" prop="realName" label="原文件名称" align="center" show-overflow-tooltip />
+        <el-table-column v-if="checkColumnDisplayed('source', columnsData.columns)" prop="source" label="文件存储平台" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
             {{ getNameByCode(storageTypeOptions, scope.row.source) }}
           </template>
         </el-table-column>
-        <el-table-column prop="type" label="文件类型" align="center" width="100" show-overflow-tooltip />
-        <el-table-column prop="suffix" label="文件后缀" align="center" width="100" show-overflow-tooltip />
-        <el-table-column prop="relevance" label="业务标识" align="center" width="100" show-overflow-tooltip />
-        <el-table-column prop="size" label="文件大小" align="center" width="100" show-overflow-tooltip>
+        <el-table-column v-if="checkColumnDisplayed('type', columnsData.columns)" prop="type" label="文件类型" align="center" show-overflow-tooltip />
+        <el-table-column v-if="checkColumnDisplayed('suffix', columnsData.columns)" prop="suffix" label="文件后缀" align="center" show-overflow-tooltip />
+        <el-table-column v-if="checkColumnDisplayed('relevance', columnsData.columns)" prop="relevance" label="业务标识" align="center" show-overflow-tooltip />
+        <el-table-column v-if="checkColumnDisplayed('size', columnsData.columns)" prop="size" label="文件大小" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
             <span>{{ (scope.row.size / 1024).toFixed(2) }} kb</span>
           </template>
         </el-table-column>
-        <el-table-column prop="path" label="文件路径" align="center" show-overflow-tooltip />
-        <el-table-column prop="createTime" label="创建时间" width="180" align="center" />
+        <el-table-column v-if="checkColumnDisplayed('path', columnsData.columns)" prop="path" label="文件路径" align="center" show-overflow-tooltip />
+        <el-table-column v-if="checkColumnDisplayed('createTime', columnsData.columns)" prop="createTime" label="创建时间" width="180" align="center" />
         <el-table-column label="操作" width="120" align="center">
           <template slot-scope="scope">
             <el-button type="text" @click="download(scope.row)">下载</el-button>
@@ -82,13 +83,16 @@
         />
       </div>
     </el-card>
+    <select-columns :title="columnsData.title" :columns="columnsData.columns" :visible.sync="columnsData.visiable" />
   </div>
 </template>
 
 <script>
 import api from '@/api/system/file/jy-file-record'
 import processApi from '@/api/system/file/jy-file-process'
+import SelectColumns from '@/components/SelectColumns'
 export default {
+  components: { SelectColumns },
   data() {
     return {
       storageTypeOptions: [],
@@ -119,6 +123,20 @@ export default {
       selectData: {
         current: null,
         record: []
+      },
+      columnsData: {
+        visiable: false,
+        columns: [
+          { key: 'name', label: '文件名', _showed: true },
+          { key: 'realName', label: '原文件名称', _showed: true },
+          { key: 'source', label: '文件存储平台', _showed: true },
+          { key: 'type', label: '文件类型', _showed: true },
+          { key: 'suffix', label: '文件后缀', _showed: true },
+          { key: 'relevance', label: '业务标识', _showed: true },
+          { key: 'size', label: '文件大小', _showed: true },
+          { key: 'path', label: '文件路径', _showed: true },
+          { key: 'createTime', label: '创建时间', _showed: true }
+        ]
       }
     }
   },
@@ -136,6 +154,9 @@ export default {
         this.tableData.loading = false
         this.tableData = response
       })
+    },
+    selectColumns() {
+      this.columnsData.visiable = true
     },
     handleQuery() {
       this.tableData.pageNumber = 1

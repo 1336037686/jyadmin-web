@@ -56,6 +56,7 @@
             <el-row style="float: right">
               <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
               <el-button icon="el-icon-refresh" circle size="mini" @click="getActionList()" />
+              <el-button icon="el-icon-s-grid" circle size="mini" @click="selectColumns()" />
             </el-row>
           </div>
           <div>
@@ -93,10 +94,10 @@
           >
             <el-table-column type="selection" width="60" align="center" />
             <el-table-column type="index" width="55" label="序号" align="center" />
-            <el-table-column prop="name" label="接口名称" width="200" align="center" show-overflow-tooltip />
-            <el-table-column prop="code" label="权限标识" width="200" align="center" show-overflow-tooltip />
-            <el-table-column prop="sort" label="排序" align="center" width="80" />
-            <el-table-column prop="status" label="状态" width="150" align="center">
+            <el-table-column v-if="checkColumnDisplayed('name', columnsData.columns)" prop="name" label="接口名称" width="200" align="center" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('code', columnsData.columns)" prop="code" label="权限标识" width="200" align="center" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('sort', columnsData.columns)" prop="sort" label="排序" align="center" width="80" />
+            <el-table-column v-if="checkColumnDisplayed('status', columnsData.columns)" prop="status" label="状态" width="150" align="center">
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.status"
@@ -110,8 +111,8 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" width="220" align="center" />
-            <el-table-column prop="description" label="描述" :show-overflow-tooltip="true" />
+            <el-table-column v-if="checkColumnDisplayed('createTime', columnsData.columns)" prop="createTime" label="创建时间" width="220" align="center" />
+            <el-table-column v-if="checkColumnDisplayed('description', columnsData.columns)" prop="description" label="描述" :show-overflow-tooltip="true" />
           </el-table>
         </el-card>
       </el-col>
@@ -132,6 +133,7 @@
       :visible.sync="actionShowData.visiable"
       :group-name="actionShowData.groupName"
     />
+    <select-columns :title="columnsData.title" :columns="columnsData.columns" :visible.sync="columnsData.visiable" />
   </div>
 </template>
 
@@ -142,10 +144,10 @@ import JyPermissionGroupForm from '@/views/system/permission-action/permission-g
 import JyPermissionGroupDetail from '@/views/system/permission-action/permission-group-detail'
 import JyPermissionActionForm from '@/views/system/permission-action/permission-action-form'
 import JyPermissionActionDetail from '@/views/system/permission-action/permission-action-detail'
-
+import SelectColumns from '@/components/SelectColumns'
 export default {
   name: 'JyPermissionGroup',
-  components: { JyPermissionActionDetail, JyPermissionActionForm, JyPermissionGroupDetail, JyPermissionGroupForm },
+  components: { JyPermissionActionDetail, JyPermissionActionForm, JyPermissionGroupDetail, JyPermissionGroupForm, SelectColumns },
   data() {
     return {
       deleteLoading: false,
@@ -192,6 +194,17 @@ export default {
       actionSelectData: {
         current: null,
         record: []
+      },
+      columnsData: {
+        visiable: false,
+        columns: [
+          { key: 'name', label: '接口名称', _showed: true },
+          { key: 'code', label: '权限标识', _showed: true },
+          { key: 'sort', label: '排序', _showed: true },
+          { key: 'status', label: '状态', _showed: true },
+          { key: 'createTime', label: '创建时间', _showed: true },
+          { key: 'description', label: '描述', _showed: true }
+        ]
       }
     }
   },
@@ -276,6 +289,9 @@ export default {
         this.actionTableData.records = response.data
         this.actionTableData.loading = false
       })
+    },
+    selectColumns() {
+      this.columnsData.visiable = true
     },
     actionHandleReset() {
       this.actionQueryForm.name = ''

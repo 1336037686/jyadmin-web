@@ -67,6 +67,7 @@
             <el-row style="float: right">
               <el-button icon="el-icon-search" circle size="mini" @click="() => this.actionQueryFormVisiable = !this.actionQueryFormVisiable" />
               <el-button icon="el-icon-refresh" circle size="mini" @click="getActionList()" />
+              <el-button icon="el-icon-s-grid" circle size="mini" @click="selectColumns()" />
             </el-row>
           </div>
           <div>
@@ -104,10 +105,10 @@
           >
             <el-table-column type="selection" width="60" align="center" />
             <el-table-column type="index" label="序号" align="center" width="50" />
-            <el-table-column prop="name" label="字段名称" align="center" show-overflow-tooltip />
-            <el-table-column prop="code" label="字段编码" align="center" show-overflow-tooltip />
-            <el-table-column prop="createTime" label="创建时间" align="center" show-overflow-tooltip />
-            <el-table-column prop="remark" label="备注" width="200" align="center" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('name', columnsData.columns)" prop="name" label="字段名称" align="center" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('code', columnsData.columns)" prop="code" label="字段编码" align="center" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('createTime', columnsData.columns)" prop="createTime" label="创建时间" align="center" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('remark', columnsData.columns)" prop="remark" label="备注" width="200" align="center" show-overflow-tooltip />
           </el-table>
         </el-card>
       </el-col>
@@ -128,6 +129,7 @@
       :visible.sync="actionShowData.visiable"
       :group-name="actionShowData.groupName"
     />
+    <select-columns :title="columnsData.title" :columns="columnsData.columns" :visible.sync="columnsData.visiable" />
   </div>
 </template>
 
@@ -138,9 +140,10 @@ import JySimpleDictForm from '@/views/system/datadict/simple-dict/simple-dict-fo
 import JySimpleDictDetail from '@/views/system/datadict/simple-dict/simple-dict-detail'
 import JySimpleDictDetailForm from '@/views/system/datadict/simple-dict/simple-dict-detail-form'
 import JySimpleDictDetailInfo from '@/views/system/datadict/simple-dict/simple-dict-detail-info'
+import SelectColumns from '@/components/SelectColumns'
 
 export default {
-  components: { JySimpleDictDetailForm, JySimpleDictDetailInfo, JySimpleDictDetail, JySimpleDictForm },
+  components: { JySimpleDictDetailForm, JySimpleDictDetailInfo, JySimpleDictDetail, JySimpleDictForm, SelectColumns },
   data() {
     return {
       deleteLoading: false,
@@ -191,6 +194,15 @@ export default {
       actionSelectData: {
         current: null,
         record: []
+      },
+      columnsData: {
+        visiable: false,
+        columns: [
+          { key: 'name', label: '字段名称', _showed: true },
+          { key: 'code', label: '字段编码', _showed: true },
+          { key: 'createTime', label: '创建时间', _showed: true },
+          { key: 'remark', label: '备注', _showed: true }
+        ]
       }
     }
   },
@@ -339,6 +351,9 @@ export default {
     actionHandleTableRowClick(row, column, event) {
       this.actionSelectData.current = row
       this.$refs.actionTable.toggleRowSelection(row)
+    },
+    selectColumns() {
+      this.columnsData.visiable = true
     }
   }
 }
