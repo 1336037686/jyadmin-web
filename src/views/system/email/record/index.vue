@@ -34,6 +34,7 @@
         <el-row style="float: right">
           <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
           <el-button icon="el-icon-refresh" circle size="mini" @click="handleQuery()" />
+          <el-button icon="el-icon-s-grid" circle size="mini" @click="selectColumns()" />
         </el-row>
       </div>
       <el-table
@@ -50,16 +51,16 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column type="index" width="55" label="序号" align="center" />
-        <el-table-column prop="sender" label="发送人" align="center" show-overflow-tooltip />
-        <el-table-column prop="receiver" label="接收人" align="center" show-overflow-tooltip />
-        <el-table-column prop="source" label="发送平台" align="center" show-overflow-tooltip>
+        <el-table-column v-if="checkColumnDisplayed('sender', columnsData.columns)" prop="sender" label="发送人" align="center" show-overflow-tooltip />
+        <el-table-column v-if="checkColumnDisplayed('receiver', columnsData.columns)" prop="receiver" label="接收人" align="center" show-overflow-tooltip />
+        <el-table-column v-if="checkColumnDisplayed('source', columnsData.columns)" prop="source" label="发送平台" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
             {{ getNameByCode(storageTypeOptions, scope.row.source) }}
           </template>
         </el-table-column>
-        <el-table-column prop="relevance" label="业务标识" align="center" show-overflow-tooltip />
-        <el-table-column prop="subject" label="邮件主题" align="center" show-overflow-tooltip />
-        <el-table-column prop="createTime" label="创建时间" align="center" />
+        <el-table-column v-if="checkColumnDisplayed('relevance', columnsData.columns)" prop="relevance" label="业务标识" align="center" show-overflow-tooltip />
+        <el-table-column v-if="checkColumnDisplayed('subject', columnsData.columns)" prop="subject" label="邮件主题" align="center" show-overflow-tooltip />
+        <el-table-column v-if="checkColumnDisplayed('createTime', columnsData.columns)" prop="createTime" label="创建时间" align="center" />
         <el-table-column label="操作" width="120" align="center">
           <template slot-scope="scope">
             <el-button type="text" @click="preview(scope.row)">查看</el-button>
@@ -87,12 +88,15 @@
     >
       <div v-html="showData.data.body" />
     </el-drawer>
+    <select-columns :title="columnsData.title" :columns="columnsData.columns" :visible.sync="columnsData.visiable" />
   </div>
 </template>
 
 <script>
 import api from '@/api/system/email/jy-email-record'
+import SelectColumns from '@/components/SelectColumns'
 export default {
+  components: { SelectColumns },
   data() {
     return {
       storageTypeOptions: [],
@@ -124,6 +128,17 @@ export default {
       selectData: {
         current: null,
         record: []
+      },
+      columnsData: {
+        visiable: false,
+        columns: [
+          { key: 'sender', label: '发送人', _showed: true },
+          { key: 'receiver', label: '接收人', _showed: true },
+          { key: 'source', label: '发送平台', _showed: true },
+          { key: 'relevance', label: '业务标识', _showed: true },
+          { key: 'subject', label: '邮件主题', _showed: true },
+          { key: 'createTime', label: '创建时间', _showed: true }
+        ]
       }
     }
   },
@@ -141,6 +156,9 @@ export default {
         this.tableData.loading = false
         this.tableData = response
       })
+    },
+    selectColumns() {
+      this.columnsData.visiable = true
     },
     handleQuery() {
       this.tableData.pageNumber = 1
