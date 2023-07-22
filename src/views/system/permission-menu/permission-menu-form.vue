@@ -84,7 +84,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="路由地址：" prop="url">
-                <el-input v-model="form.url" />
+                <el-input v-model="form.url" placeholder="一级路由必须以/开头，如/system" />
               </el-form-item>
             </el-col>
             <el-col :span="12">

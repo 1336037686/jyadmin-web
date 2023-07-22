@@ -60,6 +60,11 @@
                 <el-tag>{{ getNameByCode(apiPermissionOptions, scope.row.apiPermission) }}</el-tag>
               </template>
             </el-table-column>
+            <el-table-column v-if="checkColumnDisplayed('dataScope', columnsData.columns)" prop="dataScope" label="数据范围" align="center" width="180" show-overflow-tooltip>
+              <template slot-scope="scope">
+                {{ getNameByCode(dataScopeOptions, scope.row.dataScope) }}
+              </template>
+            </el-table-column>
             <el-table-column v-if="checkColumnDisplayed('status', columnsData.columns)" prop="status" align="center" label="状态" width="100">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> 启 用 </el-tag>
@@ -174,6 +179,7 @@ export default {
           { key: 'name', label: '角色名称', _showed: true },
           { key: 'code', label: '角色编码', _showed: true },
           { key: 'apiPermission', label: '角色接口权限', _showed: true },
+          { key: 'dataScope', label: '数据范围', _showed: true },
           { key: 'status', label: '状态', _showed: true },
           { key: 'sort', label: '排序', _showed: true },
           { key: 'createTime', label: '创建时间', _showed: true },
@@ -181,18 +187,22 @@ export default {
         ]
       },
       menuTreeData: [],
-      apiPermissionOptions: []
+      apiPermissionOptions: [],
+      dataScopeOptions: []
     }
   },
   created() {
-    this.getApiPermissionOptions()
+    this.getDataDict()
     this.getList()
     this.getTree()
   },
   methods: {
-    getApiPermissionOptions() {
+    getDataDict() {
       this.getDictByCode('sys_role_api_permission').then(res => {
         this.apiPermissionOptions = res.data
+      })
+      this.getDictByCode('sys_role_data_scope').then(res => {
+        this.dataScopeOptions = res.data
       })
     },
     getList() {
