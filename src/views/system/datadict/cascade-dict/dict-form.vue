@@ -38,7 +38,7 @@
           />
         </el-form-item>
         <el-form-item label="字典排序：" prop="sort">
-          <el-input v-model="form.sort" />
+          <el-input v-model.number="form.sort" type="number" />
         </el-form-item>
       </el-form>
     </div>
@@ -72,6 +72,11 @@ export default {
     }
   },
   data() {
+    const validateParentId = (rule, value, callback) => {
+      if (value === '' || value === null || value === undefined) callback(new Error('上级字典不允许为空'))
+      else if (this.form.id && this.form.id === value) callback(new Error('上级字典不允许选择本身'))
+      else callback()
+    }
     return {
       tmpVisible: this.visible,
       initloading: false,
@@ -100,7 +105,8 @@ export default {
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ],
         parentId: [
-          { required: true, message: '不能为空', trigger: 'blur' }
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { validator: validateParentId, trigger: 'blur' }
         ],
         sort: [
           { required: true, message: '不能为空', trigger: 'blur' },

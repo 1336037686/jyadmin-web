@@ -295,6 +295,11 @@ export default {
     }
   },
   data() {
+    const validateParentId = (rule, value, callback) => {
+      if (value === '' || value === null || value === undefined) callback(new Error('上级目录不允许为空'))
+      else if (this.form.id && this.form.id === value) callback(new Error('上级目录不允许选择本身'))
+      else callback()
+    }
     return {
       initloading: false,
       submitLoading: false,
@@ -349,7 +354,8 @@ export default {
           { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ],
         parentId: [
-          { required: true, message: '不能为空', trigger: 'blur' }
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { validator: validateParentId, trigger: 'blur' }
         ],
         icon: [
           { required: true, message: '不能为空', trigger: 'blur' }
