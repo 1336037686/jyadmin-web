@@ -30,7 +30,7 @@
             <el-radio-button :label="1">是</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item v-show="form.isRoot === 0" label="上级部门：" prop="parentId">
+        <el-form-item v-if="form.isRoot === 0" label="上级部门：" prop="parentId">
           <treeselect
             v-model="form.parentId"
             :options="depts"
@@ -87,6 +87,7 @@ export default {
     const validateParentId = (rule, value, callback) => {
       if (this.form.isRoot === 0) {
         if (value === '' || value === null || value === undefined) callback(new Error('上级部门不允许为空'))
+        else if (this.form.id && this.form.id === value) callback(new Error('上级部门不允许选择本身'))
         else callback()
       } else {
         callback()
@@ -123,6 +124,7 @@ export default {
           { required: true, message: '不能为空', trigger: 'blur' }
         ],
         parentId: [
+          { required: true, message: '不能为空', trigger: 'blur' },
           { validator: validateParentId, trigger: 'blur' }
         ],
         sort: [
