@@ -44,8 +44,8 @@ service.interceptors.response.use(
     // 请求正常 res.code == 200
     if (res.code === 200) return res
 
-    // 请求异常 res.code == 10103 Token过期，自动续期重新发送请求
-    if (res.code === 10103) {
+    // 请求异常 res.code == 2201 0014 Token过期，自动续期重新发送请求
+    if (res.code === 22010014) {
       // 判断当前是否过期
       const decodedToken = jwt_decode(store.getters.token)
       const decodedRefreshToken = jwt_decode(store.getters.refreshToken)
@@ -65,8 +65,8 @@ service.interceptors.response.use(
       duration: 5 * 1000
     })
 
-    // 登陆失效
-    if (res.code === 10002 || res.code === 10008 || res.code === 10009) {
+    // 登陆失效 或者 token校验异常
+    if (res.code === 22010008 || res.code === 22010009 || res.code === 22010013 || res.code === 22010014 || res.code === 22010015) {
       // 重新登陆
       toReLogin()
     }
