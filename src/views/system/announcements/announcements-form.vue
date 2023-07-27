@@ -6,9 +6,18 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="30%"
+    class="jy-dialog"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+      <el-form
+        ref="form"
+        v-loading="initloading"
+        :rules="rules"
+        :model="form"
+        label-width="80px"
+        element-loading-text="加载中，请稍后..."
+        element-loading-spinner="el-icon-loading"
+      >
         <el-form-item label="公告标题" prop="title">
           <el-input v-model="form.title" />
         </el-form-item>
@@ -24,7 +33,7 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="resetForm('form')">取 消</el-button>
-      <el-button type="primary" @click="handleSubmit('form')">确 定</el-button>
+      <el-button type="primary" :loading="submitLoading" @click="handleSubmit('form')">确 定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -50,6 +59,8 @@ export default {
   },
   data() {
     return {
+      initloading: false,
+      submitLoading: false,
       tmpVisible: this.visible,
       type: 'insert',
       form: {
@@ -107,34 +118,40 @@ export default {
       })
     },
     handleCreate() {
+      this.submitLoading = true
       AnnouncementsApi.add(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '添加成功' })
         this.$parent.getList()
         this.tmpVisible = false
+        this.submitLoading = false
 
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '添加失败' })
+        this.submitLoading = false
       })
     },
     handleUpdate() {
+      this.submitLoading = true
       AnnouncementsApi.update(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '修改成功' })
         this.$parent.getList()
         this.tmpVisible = false
+        this.submitLoading = false
 
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '修改失败' })
+        this.submitLoading = false
       })
     },
     getById(id) {
+      this.initloading = true
       AnnouncementsApi.getById(id).then(response => {
+        this.initloading = false
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.initloading = false
       })
     },
     getStatusOptions() {

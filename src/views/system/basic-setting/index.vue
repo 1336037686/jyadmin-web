@@ -10,11 +10,10 @@
         <div slot="header" class="clearfix">
           <span><i class="el-icon-caret-right" />  系统基础信息配置</span>
         </div>
-
         <el-form ref="form" :model="form" :rules="rules" label-width="180px">
           <el-row>
-            <el-col v-for="(item, index) in form.tableData" :span="12">
-              <el-form-item :key="'form_' + index" :label="item.name + '：'">
+            <el-col v-for="(item, index) in form.tableData" :key="'form_col_' + index" :span="12">
+              <el-form-item :key="'form_item_' + index" :label="item.name + '：'">
                 <el-input v-model="item.value" :placeholder="'code为 ' + item.code">
                   <el-tooltip slot="append" class="item" effect="dark" :content="item.description" placement="top-start">
                     <el-button type="info" icon="el-icon-question" plain />
@@ -62,10 +61,12 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           console.log(this.form.tableData)
+          this.loading = true
           basicSettingApi.update(this.form.tableData).then(res => {
+            this.loading = false
             this.$notify.success({ title: '成功', message: '保存成功' })
           }).catch(e => {
-            this.$notify.error({ title: '失败', message: '保存失败' })
+            this.loading = false
           })
         }
       })
