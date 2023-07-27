@@ -223,14 +223,15 @@ export default {
       this.$confirm('此操作将永久删除选中数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        customClass: 'jy-message-box'
       }).then(() => {
         const ids = [this.configDetailSelectData.current.id]
         configDetailApi.remove(ids).then(response => {
           this.getConfigDetailList()
           this.$notify.success({ title: '成功', message: '删除成功' })
         }).catch(e => {
-          this.$notify.error({ title: '失败', message: '删除失败' })
+          console.error(e)
         })
       })
     },
@@ -239,7 +240,7 @@ export default {
         this.$notify.success({ title: '成功', message: '状态修改成功' })
         this.getConfigDetailList()
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '状态修改失败' })
+        console.error(e)
       })
     }
   }

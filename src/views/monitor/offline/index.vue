@@ -1,5 +1,10 @@
 <template>
-  <div style="margin: 10px">
+  <div
+    v-loading="deleteLoading"
+    style="margin: 10px;"
+    element-loading-text="删除中，请稍后..."
+    element-loading-spinner="el-icon-loading"
+  >
     <el-card class="box-card" shadow="always">
       <el-form :inline="true" :model="queryForm" label-width="100px">
         <el-form-item label="用户名：">
@@ -57,6 +62,7 @@ import jyOfflineApi from '@/api/monitor/offline/jy-offline'
 export default {
   data() {
     return {
+      deleteLoading: false,
       queryForm: {
         username: ''
       },
@@ -97,13 +103,16 @@ export default {
       this.$confirm('此操作将强制退出该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        customClass: 'jy-message-box'
       }).then(() => {
+        this.deleteLoading = true
         jyOfflineApi.forcedOffline(username).then(response => {
           this.getList()
+          this.deleteLoading = false
           this.$notify.success({ title: '成功', message: '强退成功' })
         }).catch(e => {
-          this.$notify.error({ title: '失败', message: '强退失败' })
+          this.deleteLoading = false
         })
       })
     },

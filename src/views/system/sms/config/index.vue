@@ -184,10 +184,12 @@ export default {
     onSubmit() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
+          this.loading = true
           smsConfigApi.update(this.form).then(res => {
+            this.loading = false
             this.$notify.success({ title: '成功', message: '保存成功' })
           }).catch(e => {
-            this.$notify.error({ title: '失败', message: '保存失败' })
+            this.loading = false
           })
         }
       })
