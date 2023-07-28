@@ -7,7 +7,7 @@
     <div class="user-profile">
       <div class="box-center">
         <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">
-          <div>Hello</div>
+          <div>Welcome jyadmin</div>
         </pan-thumb>
       </div>
       <div class="box-center">
@@ -25,19 +25,19 @@
       </div>
       <div class="user-education user-bio-section">
         <div class="user-bio-section-header">
-          <svg-icon icon-class="skill" /> <span>所在部门：</span>
+          <svg-icon icon-class="dept" /> <span>所在部门：</span>
           <span style="font-weight: normal">{{ user.departmentName }}</span>
         </div>
       </div>
       <div class="user-education user-bio-section">
         <div class="user-bio-section-header">
-          <svg-icon icon-class="skill" /> <span>所在岗位：</span>
+          <svg-icon icon-class="post" /> <span>所在岗位：</span>
           <span style="font-weight: normal">{{ user.postName }}</span>
         </div>
       </div>
       <div class="user-education user-bio-section">
         <div class="user-bio-section-header">
-          <svg-icon icon-class="skill" /> <span>账号角色：</span>
+          <svg-icon icon-class="account" /> <span>账号角色：</span>
           <span style="font-weight: normal">{{ user.roleNames.join('、') }}</span>
         </div>
       </div>

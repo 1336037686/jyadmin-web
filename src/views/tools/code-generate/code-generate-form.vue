@@ -8,7 +8,11 @@
     width="40%"
     class="jy-dialog"
   >
-    <div>
+    <div
+      v-loading="initloading"
+      element-loading-text="加载中，请稍后..."
+      element-loading-spinner="el-icon-loading"
+    >
       <div>
         <el-form :inline="true" size="mini" :model="queryForm" label-width="80px">
           <el-form-item label="表名称：">
@@ -81,6 +85,7 @@ export default {
   },
   data() {
     return {
+      initloading: false,
       tmpVisible: this.visible,
       queryForm: {
         tableName: ''
@@ -139,7 +144,7 @@ export default {
         this.$parent.getList()
         this.tmpVisible = false
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '导入失败' })
+        this.tableData.loading = false
       })
     },
     resetForm(formName) {
