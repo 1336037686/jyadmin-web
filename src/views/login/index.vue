@@ -58,8 +58,11 @@
                 <img width="100%" height="50px" :src="captchaImg" @click="reloadCaptcha">
               </el-col>
             </el-row>
-            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 陆</el-button>
+            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:10px;" @click.native.prevent="handleLogin">登 陆</el-button>
           </el-form>
+          <div style="text-align: right">
+            <a class="forget-pwd" @click="forgetPwd">忘记密码</a>
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -116,7 +119,8 @@ export default {
         sysMsgEnable: false,
         sysMsgContent: null,
         sysLoginOpenHtmlEnable: false,
-        sysLoginOpenHtml: null
+        sysLoginOpenHtml: null,
+        sysLoginForgetpwdMsg: null
       }
     }
   },
@@ -164,6 +168,7 @@ export default {
         this.loginBasicSettings.sysMsgContent = this.basicSettings['sys_msg_content']
         this.loginBasicSettings.sysLoginOpenHtmlEnable = this.basicSettings['sys_login_open_html_enable']
         this.loginBasicSettings.sysLoginOpenHtml = this.basicSettings['sys_login_open_html']
+        this.loginBasicSettings.sysLoginForgetpwdMsg = this.basicSettings['sys_login_forgetpwd_msg']
 
         // 在页面加载完成后根据配置信息判断是否弹出欢迎提示框
         if (this.loginBasicSettings.sysMsgEnable === '1') {
@@ -223,6 +228,13 @@ export default {
         }
         return acc
       }, {})
+    },
+    forgetPwd() {
+      const msg = this.loginBasicSettings.sysLoginForgetpwdMsg ? this.loginBasicSettings.sysLoginForgetpwdMsg : ''
+      this.$alert(msg, '提示', {
+        confirmButtonText: '确定',
+        customClass: 'jy-message-box'
+      })
     }
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
@@ -245,7 +257,15 @@ export default {
   }
 }
 </script>
-
+<style lang="scss">
+  .forget-pwd {
+    font-size: 14px;
+  }
+  .forget-pwd:hover {
+    color: #00a4ff; /* Set the link color to blue when hovering over it */
+    text-decoration: underline;
+  }
+</style>
 <style lang="scss">
 
 /* 修复input 背景不协调 和光标变色 */
@@ -293,7 +313,6 @@ $cursor: #000;
   }
 }
 </style>
-
 <style lang="scss" scoped>
 $bg: #2d3a4b;
 $dark_gray: #889aa4;
