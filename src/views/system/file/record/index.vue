@@ -69,6 +69,7 @@
           </template>
         </el-table-column>
         <el-table-column v-if="checkColumnDisplayed('path', columnsData.columns)" prop="path" label="文件路径" align="center" show-overflow-tooltip />
+        <el-table-column v-if="checkColumnDisplayed('relativePath', columnsData.columns)" prop="relativePath" label="相对路径" align="center" show-overflow-tooltip />
         <el-table-column v-if="checkColumnDisplayed('createTime', columnsData.columns)" prop="createTime" label="创建时间" width="180" align="center" />
         <el-table-column label="操作" width="120" align="center">
           <template slot-scope="scope">
@@ -141,6 +142,7 @@ export default {
           { key: 'relevance', label: '业务标识', _showed: true },
           { key: 'size', label: '文件大小', _showed: true },
           { key: 'path', label: '文件路径', _showed: true },
+          { key: 'relativePath', label: '相对路径', _showed: true },
           { key: 'createTime', label: '创建时间', _showed: true }
         ]
       }

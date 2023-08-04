@@ -93,8 +93,10 @@ export default {
     return {
       dialogVisible: false,
       fileList: [],
+      imgUrlPrefix: '/api/file-process/download/',
       result: {
-        url: null
+        fileRecordId: '',
+        url: ''
       },
       currUserInfo: {
         createTime: null,
@@ -170,17 +172,18 @@ export default {
       })
       fileProcessApi.upload(relevance, formData).then(res => {
         this.result = res.data
+        if (!this.result.url) this.result.url = this.imgUrlPrefix + this.result.fileRecordId
         // 清空上传文件
         this.$refs.fileUpload.fileList.splice(0, 1)
         this.fileList.splice(0, 1)
       })
     },
     uploadAvatarSubmit() {
-      if (!this.result.url) {
+      if (!this.result.fileRecordId) {
         this.$message.error('请先上传头像!')
         return
       }
-      this.currUserInfo.avatar = this.result.url
+      this.currUserInfo.avatar = this.imgUrlPrefix + this.result.fileRecordId
       this.dialogVisible = false
     },
     reset() {
