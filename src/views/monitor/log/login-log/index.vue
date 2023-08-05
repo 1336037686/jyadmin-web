@@ -51,6 +51,7 @@
         <el-table-column prop="ipArea" label="所属地区" align="center" show-overflow-tooltip />
         <el-table-column prop="browser" label="浏览器" align="center" />
         <el-table-column prop="application" label="设备" align="center" />
+        <el-table-column prop="executeTime" label="耗时(ms)" align="center" width="100" />
         <el-table-column prop="requestTime" label="请求时间" align="center" show-overflow-tooltip />
       </el-table>
       <div style="text-align: center;margin-top: 10px">
