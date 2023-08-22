@@ -2,6 +2,10 @@
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
 
+const webpack = require('webpack')
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const productionGzipExtensions = ['html', 'js', 'css', 'png', 'jpg', 'jpeg', 'svg']
+
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
@@ -54,7 +58,21 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
-    }
+    },
+    plugins: [
+      // 配置compression-webpack-plugin压缩
+      new CompressionWebpackPlugin({
+        algorithm: 'gzip',
+        test: new RegExp('\.(' + productionGzipExtensions.join('|') + ')$'),
+        threshold: 102400, // 对超过100k的数据压缩
+        minRatio: 0.9,
+        deleteOriginalAssets: false // 是否删除原文件
+      }),
+      new webpack.optimize.LimitChunkCountPlugin({
+        maxChunks: 8, // 最大块数量
+        minChunkSize: 10240 // 最小块大小
+      })
+    ]
   },
   chainWebpack(config) {
     // 它可以提高首屏速度，建议开启预加载
@@ -95,13 +113,18 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()
           config
             .optimization.splitChunks({
               chunks: 'all',
+              minSize: 30000,
+              maxSize: 300000,
+              minChunks: 1,
+              maxAsyncRequests: 8,
+              maxInitialRequests: 5,
               cacheGroups: {
                 libs: {
                   name: 'chunk-libs',
@@ -120,6 +143,11 @@ module.exports = {
                   minChunks: 3, //  minimum common number
                   priority: 5,
                   reuseExistingChunk: true
+                },
+                default: {
+                  minChunks: 2, // 模块至少被引用的次数
+                  priority: -20, // 缓存组的优先级
+                  reuseExistingChunk: true // 如果模块已经存在于其他块中，则复用现有的块
                 }
               }
             })
