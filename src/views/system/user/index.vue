@@ -87,30 +87,33 @@
             @select="handleTableRowSelect"
           >
             <el-table-column type="selection" width="55" align="center" />
-            <el-table-column type="index" width="55" label="序号" align="center" />
-            <el-table-column v-if="checkColumnDisplayed('username', columnsData.columns)" prop="username" label="用户名" align="center" show-overflow-tooltip />
-            <el-table-column v-if="checkColumnDisplayed('nickname', columnsData.columns)" prop="nickname" label="昵称" align="center" show-overflow-tooltip />
-            <el-table-column v-if="checkColumnDisplayed('phone', columnsData.columns)" prop="phone" label="电话" align="center" />
-            <el-table-column v-if="checkColumnDisplayed('roles', columnsData.columns)" prop="roles" label="当前角色" align="center">
+            <el-table-column type="index" width="55" label="序号" align="center" fixed />
+            <el-table-column v-if="checkColumnDisplayed('username', columnsData.columns)" prop="username" label="用户名" align="center" width="180" fixed show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('nickname', columnsData.columns)" prop="nickname" label="昵称" align="center" width="180" fixed show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('phone', columnsData.columns)" prop="phone" label="电话" align="center" fixed width="180" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('roles', columnsData.columns)" prop="roles" label="当前角色" width="180" align="center">
               <template slot-scope="scope">
                 {{ scope.row.roleNames.join('、') }}
               </template>
             </el-table-column>
-            <el-table-column v-if="checkColumnDisplayed('departmentName', columnsData.columns)" prop="departmentName" label="所属部门" align="center" show-overflow-tooltip />
-            <el-table-column v-if="checkColumnDisplayed('postName', columnsData.columns)" prop="postName" label="所属岗位" align="center" show-overflow-tooltip />
-            <el-table-column v-if="checkColumnDisplayed('type', columnsData.columns)" prop="type" label="用户类型" width="150" align="center">
+            <el-table-column v-if="checkColumnDisplayed('departmentName', columnsData.columns)" prop="departmentName" label="所属部门" width="180" align="center" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('postName', columnsData.columns)" prop="postName" label="所属岗位" align="center" width="180" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('type', columnsData.columns)" prop="type" label="账号类型" width="100" align="center">
               <template slot-scope="scope">
+                <el-tag v-if="scope.row.type === 2" size="mini" effect="plain" type="warning"> 系统会员 </el-tag>
                 <el-tag v-if="scope.row.type === 1" size="mini" effect="plain"> 管理员 </el-tag>
                 <el-tag v-if="scope.row.type === 0" size="mini" effect="plain" type="success"> 普通用户 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkColumnDisplayed('status', columnsData.columns)" prop="status" label="用户状态" width="150" align="center">
+            <el-table-column v-if="checkColumnDisplayed('status', columnsData.columns)" prop="status" label="账号状态" width="100" align="center">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> 启 用 </el-tag>
                 <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> 禁 用 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkColumnDisplayed('createTime', columnsData.columns)" prop="createTime" label="创建时间" width="220" align="center" />
+            <el-table-column v-if="checkColumnDisplayed('lastLoginTime', columnsData.columns)" prop="lastLoginTime" label="最后一次登陆时间" width="180" align="center" />
+            <el-table-column v-if="checkColumnDisplayed('lastLoginIp', columnsData.columns)" prop="lastLoginIp" label="最后一次登陆IP" width="180" align="center" />
+            <el-table-column v-if="checkColumnDisplayed('createTime', columnsData.columns)" prop="createTime" label="创建时间" width="200" align="center" />
           </el-table>
           <div style="text-align: center;margin-top: 10px">
             <el-pagination
@@ -202,6 +205,8 @@ export default {
           { key: 'postName', label: '所属岗位', _showed: true },
           { key: 'type', label: '用户类型', _showed: true },
           { key: 'status', label: '用户状态', _showed: true },
+          { key: 'lastLoginTime', label: '最后一次登陆时间', _showed: true },
+          { key: 'lastLoginIp', label: '最后一次登陆IP', _showed: true },
           { key: 'createTime', label: '创建时间', _showed: true }
         ]
       },
