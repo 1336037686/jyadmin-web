@@ -51,9 +51,18 @@ service.interceptors.response.use(
       const decodedRefreshToken = jwt_decode(store.getters.refreshToken)
       const currentTime = Date.now() / 1000 // 将毫秒转成秒
       // access token 过期 且 refresh token 未过期，发送续期请求，获取新 access token，并重新发起请求
+      console.log('currentTime=', currentTime, 'decodedToken=', decodedToken, 'decodedRefreshToken=', decodedRefreshToken)
       if (currentTime > decodedToken.exp && currentTime <= decodedRefreshToken.exp) {
         await store.dispatch('user/refreshToken')
         return service.request(response.config) // 重新发起请求
+      }
+      // access token 过期 且 refresh token 过期，标识登录过期，退回登录界面
+      if (currentTime > decodedToken.exp && currentTime > decodedRefreshToken.exp) {
+        store.dispatch('user/resetToken').then(() => {
+          location.reload()
+        })
+        // 返回错误
+        return Promise.reject(new Error('登陆已过期'))
       }
     }
 
@@ -66,11 +75,12 @@ service.interceptors.response.use(
     })
 
     // 登陆失效 或者 token校验异常
-    if (res.code === 22010008 || res.code === 22010009 || res.code === 22010013 || res.code === 22010014 || res.code === 22010015) {
+    if (res.code === 22010008 || res.code === 22010009 || res.code === 22010013 || res.code === 22010015) {
       // 重新登陆
       toReLogin()
+      // 返回错误
+      return Promise.reject(new Error('登陆已过期'))
     }
-
     // 返回错误
     return Promise.reject(new Error(res.msg || '服务异常'))
   },
