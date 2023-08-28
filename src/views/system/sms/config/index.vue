@@ -18,8 +18,10 @@
                   <el-option v-for="(item, index) in storageTypeOptions" :key="'storageType_' + index" :label="item.name" :value="item.code" />
                 </el-select>
               </el-form-item>
-              <el-form-item label="配置前缀：" prop="config">
-                <el-input v-model="form.config" readonly />
+              <el-form-item label="相应配置：" prop="config">
+                <el-select v-model="form.config" placeholder="请选择相应配置" style="width: 100%" @change="configChange">
+                  <el-option v-for="(item, index) in configOptions" :key="'config_' + index" :label="item.name" :value="item.code" />
+                </el-select>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" style="float: right; margin-left: 10px" @click="onSubmit">保存配置</el-button>
@@ -32,35 +34,28 @@
         <el-col :span="17" style="margin-left: 20px">
           <el-card shadow="never">
             <div slot="header" class="clearfix">
-              <span><i class="el-icon-caret-right" />  配置列表</span>
+              <span><i class="el-icon-caret-right" />  所选配置详情</span>
             </div>
-            <el-empty v-if="!configOptions || configOptions.length === 0" description="暂无配置" />
-            <el-collapse v-else accordion>
-              <el-collapse-item v-for="(item, index) in configOptions" :key="'configOptions_' + index" :title="'（' + (index + 1) + '）' + item.name + ' ' + item.code" :name="index">
-                <div>
-                  <el-table
-                    :key="'configDetailInfoTable_' + index"
-                    border
-                    :data="item.jsonObjs"
-                    highlight-current-row
-                    style="width: 100%"
-                    empty-text="暂无数据"
-                    :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
-                  >
-                    <el-table-column prop="name" label="字段名称" width="150" align="center" show-overflow-tooltip />
-                    <el-table-column prop="code" label="字段编码" width="150" align="center" show-overflow-tooltip />
-                    <el-table-column prop="type" label="字段类型" width="150" align="center" show-overflow-tooltip>
-                      <template slot-scope="scope">
-                        {{ getNameByCode(fieldTypeOptions, scope.row.type) }}
-                      </template>
-                    </el-table-column>
-                    <el-table-column prop="defaultValue" label="缺省值" width="150" align="center" show-overflow-tooltip />
-                    <el-table-column prop="value" label="具体值" width="150" align="center" show-overflow-tooltip />
-                    <el-table-column prop="comment" label="注释" align="center" show-overflow-tooltip />
-                  </el-table>
-                </div>
-              </el-collapse-item>
-            </el-collapse>
+            <el-table
+              ref="configDetailInfoTable"
+              border
+              :data="form.jsonObjs"
+              highlight-current-row
+              style="width: 100%"
+              empty-text="暂无数据"
+              :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
+            >
+              <el-table-column prop="name" label="字段名称" width="150" align="center" show-overflow-tooltip />
+              <el-table-column prop="code" label="字段编码" width="150" align="center" show-overflow-tooltip />
+              <el-table-column prop="type" label="字段类型" width="150" align="center" show-overflow-tooltip>
+                <template slot-scope="scope">
+                  {{ getNameByCode(fieldTypeOptions, scope.row.type) }}
+                </template>
+              </el-table-column>
+              <el-table-column prop="defaultValue" label="缺省值" width="150" align="center" show-overflow-tooltip />
+              <el-table-column prop="value" label="具体值" width="150" align="center" show-overflow-tooltip />
+              <el-table-column prop="comment" label="注释" align="center" show-overflow-tooltip />
+            </el-table>
           </el-card>
         </el-col>
       </el-row>
@@ -86,6 +81,7 @@
 import smsConfigApi from '@/api/system/sms/jy-sms-config'
 import smsProcessApi from '@/api/system/sms/jy-sms-process'
 import { guid } from '@/utils'
+import fileConfigApi from '@/api/system/file/jy-file-config'
 
 export default {
   data() {
@@ -127,7 +123,7 @@ export default {
         ]
       },
       smsForm: {
-        body: [guid()],
+        uniqueId: guid(),
         relevance: 'test',
         receiver: null
       },
@@ -136,9 +132,6 @@ export default {
           { required: true, validator: validatePhone, trigger: 'blur' }
         ],
         subject: [
-          { required: true, message: '不能为空', trigger: 'blur' }
-        ],
-        body: [
           { required: true, message: '不能为空', trigger: 'blur' }
         ]
       },
@@ -163,8 +156,14 @@ export default {
         this.loading = false
         this.form = res.data
         if (this.form.storageType) {
-          smsConfigApi.getConfigDetails(this.form.storageType).then(res2 => {
+          fileConfigApi.getConfigDetails(this.form.storageType).then(res2 => {
             this.configOptions = res2.data
+            for (let i = 0; i < this.configOptions.length; i++) {
+              if (this.form.config === this.configOptions[i].code) {
+                this.form.jsonObjs = this.configOptions[i].jsonObjs
+                break
+              }
+            }
           })
         }
       })
@@ -172,14 +171,16 @@ export default {
     storageTypeChange(val) {
       smsConfigApi.getConfigDetails(val).then(res2 => {
         this.configOptions = res2.data
-      }).then(() => {
-        if (!this.configOptions || this.configOptions.length === 0) {
-          this.form.config = null
-          return
-        }
-        const code = this.configOptions[0].code
-        this.form.config = code.substring(0, code.indexOf('CONFIG') + 7)
       })
+      this.form.config = null
+    },
+    configChange(val) {
+      for (let i = 0; i < this.configOptions.length; i++) {
+        if (this.form.config === this.configOptions[i].code) {
+          this.form.jsonObjs = this.configOptions[i].jsonObjs
+          break
+        }
+      }
     },
     onSubmit() {
       this.$refs['form'].validate((valid) => {

@@ -36,7 +36,6 @@
             <div slot="header" class="clearfix">
               <span><i class="el-icon-caret-right" />  所选配置详情</span>
             </div>
-
             <el-table
               ref="configDetailInfoTable"
               border
