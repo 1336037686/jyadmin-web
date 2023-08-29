@@ -1,6 +1,5 @@
 import router from './router'
 import store from './store'
-import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
@@ -45,9 +44,10 @@ router.beforeEach(async(to, from, next) => {
           // 设置replace: true，这样导航就不会留下历史记录
           next({ ...to, replace: true })
         } catch (error) {
+          console.error(error)
           // 删除令牌并转到登录页面重新登录
           await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
+          // Message.error(error || 'Has Error')
           next(`/login?redirect=${to.path}`)
           NProgress.done()
         }

@@ -34,7 +34,7 @@ service.interceptors.response.use(
   /**
    * 如果您想获得http信息，如标头或状态 return  response => response
    * 自定义代码确定请求状态
-  */
+   */
   async response => {
     const res = response.data
     // 如果是文件下载
@@ -51,19 +51,19 @@ service.interceptors.response.use(
       const decodedRefreshToken = jwt_decode(store.getters.refreshToken)
       const currentTime = Date.now() / 1000 // 将毫秒转成秒
       // access token 过期 且 refresh token 未过期，发送续期请求，获取新 access token，并重新发起请求
-      console.log('currentTime=', currentTime, 'decodedToken=', decodedToken, 'decodedRefreshToken=', decodedRefreshToken)
       if (currentTime > decodedToken.exp && currentTime <= decodedRefreshToken.exp) {
         await store.dispatch('user/refreshToken')
         return service.request(response.config) // 重新发起请求
       }
-      // access token 过期 且 refresh token 过期，标识登录过期，退回登录界面
-      if (currentTime > decodedToken.exp && currentTime > decodedRefreshToken.exp) {
-        store.dispatch('user/resetToken').then(() => {
-          location.reload()
-        })
-        // 返回错误
-        return Promise.reject(new Error('登陆已过期'))
-      }
+    }
+
+    // 登陆失效 或者 token校验异常
+    if (res.code === 22010008 || res.code === 22010009 || res.code === 22010013 || res.code === 22010014 || res.code === 22010015) {
+      Notification({ title: '失败', message: '登录过期，请重新登录', type: 'error', duration: 5 * 1000 })
+      // 重新登陆
+      toReLogin()
+      // 返回错误
+      return Promise.reject(new Error('登录过期，请重新登录'))
     }
 
     // 请求异常 res.code != 200
@@ -74,13 +74,6 @@ service.interceptors.response.use(
       duration: 5 * 1000
     })
 
-    // 登陆失效 或者 token校验异常
-    if (res.code === 22010008 || res.code === 22010009 || res.code === 22010013 || res.code === 22010015) {
-      // 重新登陆
-      toReLogin()
-      // 返回错误
-      return Promise.reject(new Error('登陆已过期'))
-    }
     // 返回错误
     return Promise.reject(new Error(res.msg || '服务异常'))
   },
@@ -101,7 +94,8 @@ function toReLogin() {
   MessageBox.confirm('当前账号登陆失效，您可以重新登录', '退出确认', {
     confirmButtonText: '重新登录',
     cancelButtonText: '取消',
-    type: 'warning'
+    type: 'warning',
+    customClass: 'jy-message-box'
   }).then(() => {
     store.dispatch('user/resetToken').then(() => {
       location.reload()
