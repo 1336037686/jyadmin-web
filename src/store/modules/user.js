@@ -1,4 +1,4 @@
-import { login, refreshToken, logout, getInfo } from '@/api/system/auth/jy-auth'
+import { login, register, refreshToken, logout, getInfo } from '@/api/system/auth/jy-auth'
 import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken, removeRefreshToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -63,6 +63,21 @@ const actions = {
     const { username, password, uniqueId, captcha } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password, uniqueId, captcha }).then(response => {
+        const { data } = response
+        commit('SET_TOKEN', data.accessToken)
+        commit('SET_REFRESH_TOKEN', data.refreshToken)
+        setToken(data.accessToken)
+        setRefreshToken(data.refreshToken)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  register({ commit }, registerInfo) {
+    const { phone, uniqueId, captcha } = registerInfo
+    return new Promise((resolve, reject) => {
+      register({ phone: phone.trim(), uniqueId: uniqueId, captcha }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.accessToken)
         commit('SET_REFRESH_TOKEN', data.refreshToken)

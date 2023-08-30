@@ -4,7 +4,8 @@
       <el-col v-if="loginBasicSettings.sysLoginOpenHtmlEnable === '1'" :span="16" :offset="1" v-html="loginBasicSettings.sysLoginOpenHtml" />
       <el-col :span="5" :offset="loginBasicSettings.sysLoginOpenHtmlEnable === '1' ? 1 : 18">
         <el-card>
-          <el-form ref="loginForm" :model="loginForm" :rules="loginRules" autocomplete="on" label-position="left">
+          <!--登录-->
+          <el-form v-show="isLogin" ref="loginForm" :model="loginForm" :rules="loginRules" autocomplete="on" label-position="left">
             <div class="title-container">
               <h3 class="title"> {{ loginBasicSettings.sysSiteName }} </h3>
             </div>
@@ -43,15 +44,7 @@
                   <span class="svg-container">
                     <svg-icon icon-class="chart" />
                   </span>
-                  <el-input
-                    ref="username"
-                    v-model="loginForm.captcha"
-                    placeholder="验证码"
-                    name="captcha"
-                    type="text"
-                    tabindex="1"
-                    autocomplete="on"
-                  />
+                  <el-input ref="username" v-model="loginForm.captcha" placeholder="验证码" name="captcha" type="text" tabindex="1" autocomplete="on" />
                 </el-form-item>
               </el-col>
               <el-col :span="9" style="padding-left: 10px">
@@ -60,8 +53,37 @@
             </el-row>
             <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:10px;" @click.native.prevent="handleLogin">登 陆</el-button>
           </el-form>
+          <!--注册-->
+          <el-form v-show="!isLogin" ref="registerForm" :model="registerForm" :rules="registerRules" autocomplete="on" label-position="left">
+            <div class="title-container">
+              <h3 class="title"> {{ loginBasicSettings.sysSiteName }} </h3>
+            </div>
+            <el-form-item prop="phone">
+              <span class="svg-container">
+                <svg-icon icon-class="user" />
+              </span>
+              <el-input ref="registerForm-phone" v-model="registerForm.phone" placeholder="手机号" name="phone" type="text" tabindex="1" autocomplete="on" />
+            </el-form-item>
+            <el-row>
+              <el-col :span="15">
+                <el-form-item prop="captcha">
+                  <span class="svg-container">
+                    <svg-icon icon-class="chart" />
+                  </span>
+                  <el-input ref="registerForm-captcha" v-model="registerForm.captcha" placeholder="验证码" name="captcha" type="text" tabindex="1" autocomplete="on" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="9" style="padding-left: 5px">
+                <el-button v-if="!retryLoading" type="primary" style="width: 100%;height: 50px" @click="getPhoneCaptcha">获取验证码</el-button>
+                <el-button v-if="retryLoading" style="width: 100%;height: 50px">{{ retryCountDown }}秒后重新获取</el-button>
+              </el-col>
+            </el-row>
+            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:10px;" @click.native.prevent="handleRegister">注 册</el-button>
+          </el-form>
           <div style="text-align: right">
-            <a class="forget-pwd" @click="forgetPwd">忘记密码</a>
+            <span v-if="isLogin"><a class="forget-pwd" @click="isLogin = false">用户注册</a> / </span>
+            <span v-if="!isLogin"><a class="forget-pwd" @click="isLogin = true">用户登录</a> / </span>
+            <span><a class="forget-pwd" @click="forgetPwd">忘记密码</a></span>
           </div>
         </el-card>
       </el-col>
@@ -74,6 +96,7 @@
 import { mapGetters } from 'vuex'
 import { guid, deepClone } from '@/utils'
 import { encryptByRSA } from '@/utils/rsa-util'
+import SmsProcessApi from '@/api/system/sms/jy-sms-process'
 export default {
   name: 'Login',
   data() {
@@ -94,6 +117,7 @@ export default {
     return {
       captchaImg: null,
       captchaUniqueId: null,
+      isLogin: true,
       loginForm: {
         username: 'admin',
         password: 'admin123',
@@ -111,6 +135,23 @@ export default {
       showDialog: false,
       redirect: undefined,
       otherQuery: {},
+      registerForm: {
+        phone: null,
+        uniqueId: null,
+        captcha: null
+      },
+      registerRules: {
+        phone: [
+          { required: true, message: '手机号不能为空', trigger: 'blur' },
+          { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式不正确', trigger: 'blur' }
+        ],
+        captcha: [
+          { required: true, message: '验证码不能为空', trigger: 'blur' }
+        ]
+      },
+      retryLoading: false,
+      retryCountDown: 60,
+      retryTimer: null,
       loginBasicSettings: {
         sysSiteName: null,
         sysLogo: null,
@@ -201,13 +242,52 @@ export default {
     },
     handleLogin() {
       this.loginForm.uniqueId = this.captchaUniqueId
-      this.$refs.loginForm.validate(valid => {
+      this.$refs['loginForm'].validate(valid => {
         if (valid) {
           this.loading = true
           // 拷贝表单
           const cloneLoginForm = deepClone(this.loginForm)
           cloneLoginForm.password = encryptByRSA(cloneLoginForm.password)
           this.$store.dispatch('user/login', cloneLoginForm)
+            .then(() => {
+              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              this.loading = false
+            })
+            .catch(() => {
+              this.loading = false
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    getPhoneCaptcha() {
+      // 对phone字段进行校验
+      this.$refs['registerForm'].validateField(['phone'], errorMessage => {
+        if (!errorMessage) {
+          this.registerForm.uniqueId = guid().replaceAll('-', '')
+          SmsProcessApi.sendVerificationCode(
+            { uniqueId: this.registerForm.uniqueId, receiver: this.registerForm.phone, relevance: 'register' }
+          ).then(res => {
+            this.retryLoading = true
+            this.retryTimer = setInterval(() => {
+              this.retryCountDown -= 1
+              if (this.retryCountDown === 0) {
+                this.retryLoading = false
+                if (this.retryTimer != null) clearInterval(this.retryTimer)
+                this.retryCountDown = 60
+                this.retryTimer = null
+              }
+            }, 1000)
+          })
+        }
+      })
+    },
+    handleRegister() {
+      this.$refs['registerForm'].validate(valid => {
+        if (valid) {
+          this.$store.dispatch('user/register', this.registerForm)
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
