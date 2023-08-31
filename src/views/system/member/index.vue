@@ -6,38 +6,8 @@
     element-loading-spinner="el-icon-loading"
   >
     <el-row style="margin-top: 10px">
-      <!-- 左 -->
-      <el-col :span="5" style="padding-right: 15px">
-        <el-card
-          v-loading="deptTreeData.loading"
-          class="box-card"
-          shadow="always"
-          style="margin-top: 5px"
-          element-loading-text="加载中，请稍后..."
-          element-loading-spinner="el-icon-loading"
-        >
-          <div slot="header" class="clearfix">
-            <span><i class="el-icon-caret-right" /> 部门列表</span>
-          </div>
-          <el-tree
-            ref="deptTree"
-            :data="deptTreeData.records"
-            node-key="id"
-            empty-text="暂无数据"
-            highlight-current
-            :check-strictly="true"
-            :props="{children: 'children', label: 'name' }"
-            @node-click="clickDeptTreeNode"
-          >
-            <span slot-scope="{ node, data }" class="custom-tree-node">
-              <span v-if="data.type === 'showAll'" style="font-size: 14px;color: #4A9FF9"><b>{{ node.label }}</b></span>
-              <span v-else style="font-size: 14px;">{{ node.label }}</span>
-            </span>
-          </el-tree>
-        </el-card>
-      </el-col>
       <!-- 右 -->
-      <el-col :span="19" style="padding-right: 15px">
+      <el-col :span="24" style="padding-right: 15px">
         <el-card class="box-card" shadow="always" style="margin-top: 5px">
           <div slot="header" class="clearfix">
             <span><i class="el-icon-caret-right" /> 用户列表</span>
@@ -66,8 +36,6 @@
 
             <div style="margin-top: 5px">
               <el-button v-permission="['user:show']" type="primary" size="mini" icon="el-icon-view" @click="handleShow">查 看</el-button>
-              <el-button v-permission="['user:add']" type="success" size="mini" icon="el-icon-plus" @click="handleCreate">新 增</el-button>
-              <el-button v-permission="['user:role']" type="success" size="mini" icon="el-icon-user-solid" @click="handleRole">角色分配</el-button>
               <el-button v-permission="['user:update']" type="warning" size="mini" icon="el-icon-edit-outline" @click="handleUpdate">修 改</el-button>
               <el-button v-permission="['user:resetpwd']" type="warning" size="mini" icon="el-icon-s-tools" @click="handleUpdatePassword">重置密码</el-button>
               <el-button v-permission="['user:delete']" type="danger" size="mini" icon="el-icon-delete" @click="handleRemove">删 除</el-button>
@@ -87,25 +55,23 @@
             @select="handleTableRowSelect"
           >
             <el-table-column type="selection" width="55" align="center" />
-            <el-table-column type="index" width="55" label="序号" align="center" fixed />
-            <el-table-column v-if="checkColumnDisplayed('username', columnsData.columns)" prop="username" label="用户名" align="center" width="180" fixed show-overflow-tooltip />
-            <el-table-column v-if="checkColumnDisplayed('nickname', columnsData.columns)" prop="nickname" label="昵称" align="center" width="180" fixed show-overflow-tooltip />
-            <el-table-column v-if="checkColumnDisplayed('phone', columnsData.columns)" prop="phone" label="电话" align="center" fixed width="180" show-overflow-tooltip />
-            <el-table-column v-if="checkColumnDisplayed('roles', columnsData.columns)" prop="roles" label="当前角色" width="180" align="center">
+            <el-table-column type="index" width="55" label="序号" align="center" />
+            <el-table-column v-if="checkColumnDisplayed('username', columnsData.columns)" prop="username" label="用户名" align="center" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('nickname', columnsData.columns)" prop="nickname" label="昵称" align="center" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('phone', columnsData.columns)" prop="phone" label="电话" show-overflow-tooltip />
+            <el-table-column v-if="checkColumnDisplayed('roles', columnsData.columns)" prop="roles" label="当前角色" align="center">
               <template slot-scope="scope">
                 {{ scope.row.roleNames.join('、') }}
               </template>
             </el-table-column>
-            <el-table-column v-if="checkColumnDisplayed('departmentName', columnsData.columns)" prop="departmentName" label="所属部门" width="180" align="center" show-overflow-tooltip />
-            <el-table-column v-if="checkColumnDisplayed('postName', columnsData.columns)" prop="postName" label="所属岗位" align="center" width="180" show-overflow-tooltip />
-            <el-table-column v-if="checkColumnDisplayed('type', columnsData.columns)" prop="type" label="账号类型" width="100" align="center">
+            <el-table-column v-if="checkColumnDisplayed('type', columnsData.columns)" prop="type" label="账号类型" align="center">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.type === 2" size="mini" effect="plain" type="warning"> 系统会员 </el-tag>
                 <el-tag v-if="scope.row.type === 1" size="mini" effect="plain"> 管理员 </el-tag>
                 <el-tag v-if="scope.row.type === 0" size="mini" effect="plain" type="success"> 普通用户 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkColumnDisplayed('status', columnsData.columns)" prop="status" label="账号状态" width="100" align="center">
+            <el-table-column v-if="checkColumnDisplayed('status', columnsData.columns)" prop="status" label="账号状态" align="center">
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.status === 1" size="mini" effect="plain" type="success"> 启 用 </el-tag>
                 <el-tag v-if="scope.row.status === 0" size="mini" effect="plain" type="danger"> 禁 用 </el-tag>
@@ -129,25 +95,21 @@
         </el-card>
       </el-col>
     </el-row>
-
     <user-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
     <user-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
-    <user-role :id="roleEditData.id" :name="roleEditData.name" :title="roleEditData.title" :visible.sync="roleEditData.visiable" />
     <user-password :id="passwordEditData.id" :name="passwordEditData.name" :title="passwordEditData.title" :visible.sync="passwordEditData.visiable" />
     <select-columns :title="columnsData.title" :columns="columnsData.columns" :visible.sync="columnsData.visiable" />
   </div>
 </template>
 
 <script>
-import deptApi from '@/api/system/department/jy-department'
 import userApi from '@/api/system/user/jy-user'
 import UserDetail from './user-detail'
 import UserForm from './user-form'
-import UserRole from './user-role'
 import UserPassword from './user-password'
 import SelectColumns from '@/components/SelectColumns'
 export default {
-  components: { UserPassword, UserRole, UserForm, UserDetail, SelectColumns },
+  components: { UserPassword, UserForm, UserDetail, SelectColumns },
   data() {
     return {
       queryFormVisiable: true,
@@ -156,7 +118,7 @@ export default {
         username: '',
         nickname: '',
         phone: '',
-        excludeRoles: 'member',
+        roles: 'member',
         department: null
       },
       tableData: {
@@ -172,12 +134,6 @@ export default {
       editData: {
         visiable: false,
         title: '',
-        id: null
-      },
-      roleEditData: {
-        visiable: false,
-        title: '',
-        name: '',
         id: null
       },
       passwordEditData: {
@@ -202,42 +158,19 @@ export default {
           { key: 'nickname', label: '昵称', _showed: true },
           { key: 'phone', label: '电话', _showed: true },
           { key: 'roles', label: '当前角色', _showed: true },
-          { key: 'departmentName', label: '所属部门', _showed: true },
-          { key: 'postName', label: '所属岗位', _showed: true },
           { key: 'type', label: '用户类型', _showed: true },
           { key: 'status', label: '用户状态', _showed: true },
           { key: 'lastLoginTime', label: '最后一次登陆时间', _showed: true },
           { key: 'lastLoginIp', label: '最后一次登陆IP', _showed: true },
           { key: 'createTime', label: '创建时间', _showed: true }
         ]
-      },
-      deptTreeData: {
-        loading: false,
-        records: [
-          {
-            id: null,
-            name: '默认展示',
-            type: 'showAll'
-          }
-        ]
       }
     }
   },
   created() {
-    this.getDeptTree()
+    this.getList()
   },
   methods: {
-    getDeptTree() {
-      this.deptTreeData.loading = true
-      deptApi.layer({ status: 1 }).then(res => {
-        const datas = [{ id: null, name: '默认展示', type: 'showAll' }]
-        if (res.data && res.data.length > 0) for (let i = 0; i < res.data.length; i++) datas.push(res.data[i])
-        this.deptTreeData.records = datas
-        this.deptTreeData.loading = false
-        // 默认加载全部
-        this.clickDeptTreeNode(datas[0])
-      })
-    },
     getList() {
       this.tableData.loading = true
       const queryForm = { ...this.queryForm, pageNumber: this.tableData.pageNumber, pageSize: this.tableData.pageSize }
@@ -248,10 +181,6 @@ export default {
     },
     selectColumns() {
       this.columnsData.visiable = true
-    },
-    clickDeptTreeNode(data) {
-      this.queryForm.department = data.id
-      this.handleReset()
     },
     handleQuery() {
       this.tableData.pageNumber = 1
@@ -272,21 +201,6 @@ export default {
       this.showData.title = '查看用户'
       this.showData.id = this.selectData.current.id
       this.showData.visiable = true
-    },
-    handleCreate() {
-      this.editData.title = '新增用户'
-      this.editData.id = null
-      this.editData.visiable = true
-    },
-    handleRole() {
-      if (!this.selectData.current) {
-        this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
-        return
-      }
-      this.roleEditData.title = '角色分配'
-      this.roleEditData.id = this.selectData.current.id
-      this.roleEditData.name = this.selectData.current.username
-      this.roleEditData.visiable = true
     },
     handleUpdate() {
       if (!this.selectData.current) {
