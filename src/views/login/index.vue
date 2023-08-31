@@ -137,7 +137,7 @@ export default {
       otherQuery: {},
       registerForm: {
         phone: null,
-        uniqueId: null,
+        uniqueId: guid().replaceAll('-', ''),
         captcha: null
       },
       registerRules: {
