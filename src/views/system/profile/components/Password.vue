@@ -37,17 +37,6 @@ export default {
       }
     }
   },
-  watch: {
-    user: {
-      handler(newVal, oldVal) {
-        if (newVal) {
-          this.currUserInfo.id = this.user.id
-        }
-      },
-      // 开启深度监听
-      deep: true
-    }
-  },
   data() {
     const validatePass = (rule, value, callback) => {
       if (value === '') {
@@ -91,6 +80,17 @@ export default {
       }
     }
   },
+  watch: {
+    user: {
+      handler(newVal, oldVal) {
+        if (newVal) {
+          this.currUserInfo.id = this.user.id
+        }
+      },
+      // 开启深度监听
+      deep: true
+    }
+  },
   methods: {
     submit() {
       this.$refs['form'].validate((valid) => {
@@ -98,15 +98,14 @@ export default {
           userApi.updateUserPassword(this.currUserInfo).then(res => {
             this.$notify.success({ title: '成功', message: '修改成功，请重新登陆!' })
             this.logout()
-          }).catch(e => {
-            this.$notify.error({ title: '失败', message: '修改失败!' })
           })
         }
       })
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      await this.$store.dispatch('user/logout').then(() => {
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      })
     }
   }
 }

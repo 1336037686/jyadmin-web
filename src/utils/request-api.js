@@ -58,7 +58,8 @@ service.interceptors.response.use(
     }
 
     // 登陆失效 或者 token校验异常
-    if (res.code === 22010008 || res.code === 22010009 || res.code === 22010013 || res.code === 22010014 || res.code === 22010015) {
+    if (res.code === 22010008 || res.code === 22010009 || res.code === 22010010 ||
+      res.code === 22010013 || res.code === 22010014 || res.code === 22010015) {
       Notification({ title: '失败', message: '登录过期，请重新登录', type: 'error', duration: 5 * 1000 })
       // 重新登陆
       toReLogin()

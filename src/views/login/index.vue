@@ -200,17 +200,8 @@ export default {
     async loadBasicSettings() {
       await this.$store.dispatch('basicSettings/getRsaPublicKey')
       await this.$store.dispatch('basicSettings/getBasicSettings').then(() => {
-        this.loginBasicSettings.sysSiteName = this.basicSettings['sys_site_name']
-        this.loginBasicSettings.sysLogo = this.basicSettings['sys_logo']
-        this.loginBasicSettings.sysLoginWallpaper = this.basicSettings['sys_login_wallpaper']
-        if (!this.loginBasicSettings.sysLoginWallpaper) this.loginBasicSettings.sysLoginWallpaper = '/bg.jpg' // 登录背景默认使用 /bg.jpg
-        this.loginBasicSettings.sysCopyright = this.basicSettings['sys_copyright']
-        this.loginBasicSettings.sysMsgEnable = this.basicSettings['sys_msg_enable']
-        this.loginBasicSettings.sysMsgContent = this.basicSettings['sys_msg_content']
-        this.loginBasicSettings.sysLoginOpenHtmlEnable = this.basicSettings['sys_login_open_html_enable']
-        this.loginBasicSettings.sysLoginOpenHtml = this.basicSettings['sys_login_open_html']
-        this.loginBasicSettings.sysLoginForgetpwdMsg = this.basicSettings['sys_login_forgetpwd_msg']
-
+        // 加载属性
+        this.setLoginBasicSettingsParams()
         // 在页面加载完成后根据配置信息判断是否弹出欢迎提示框
         if (this.loginBasicSettings.sysMsgEnable === '1') {
           this.$notify({
@@ -221,6 +212,18 @@ export default {
           })
         }
       })
+    },
+    setLoginBasicSettingsParams() {
+      this.loginBasicSettings.sysSiteName = this.basicSettings['sys_site_name']
+      this.loginBasicSettings.sysLogo = this.basicSettings['sys_logo']
+      this.loginBasicSettings.sysLoginWallpaper = this.basicSettings['sys_login_wallpaper']
+      if (!this.loginBasicSettings.sysLoginWallpaper) this.loginBasicSettings.sysLoginWallpaper = '/bg.jpg' // 登录背景默认使用 /bg.jpg
+      this.loginBasicSettings.sysCopyright = this.basicSettings['sys_copyright']
+      this.loginBasicSettings.sysMsgEnable = this.basicSettings['sys_msg_enable']
+      this.loginBasicSettings.sysMsgContent = this.basicSettings['sys_msg_content']
+      this.loginBasicSettings.sysLoginOpenHtmlEnable = this.basicSettings['sys_login_open_html_enable']
+      this.loginBasicSettings.sysLoginOpenHtml = this.basicSettings['sys_login_open_html']
+      this.loginBasicSettings.sysLoginForgetpwdMsg = this.basicSettings['sys_login_forgetpwd_msg']
     },
     reloadCaptcha() {
       this.captchaUniqueId = guid().replaceAll('-', '')

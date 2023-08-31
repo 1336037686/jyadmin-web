@@ -2,7 +2,7 @@
   <div class="block">
     <el-timeline>
       <el-timeline-item v-for="(item,index) of timeline" :key="index" :timestamp="item.timestamp" placement="top">
-        <el-card>
+        <el-card shadow="never">
           <h4>{{ item.title }}</h4>
           <p>{{ item.content }}</p>
         </el-card>
@@ -30,6 +30,11 @@ export default {
       }
     }
   },
+  data() {
+    return {
+      timeline: []
+    }
+  },
   watch: {
     user: {
       handler(newVal, oldVal) {
@@ -39,11 +44,6 @@ export default {
       },
       // 开启深度监听
       deep: true
-    }
-  },
-  data() {
-    return {
-      timeline: []
     }
   },
   methods: {
